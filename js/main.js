@@ -241,6 +241,7 @@ const sections = {
         sub: 'BRIC + NYC Data x Design exhibition · with Aida Razavilar',
         tags: ['Installation', 'Exhibition', 'Collaboration'],
         image: 'images/works/tower-of-babel.jpeg',
+        description: 'Exhibited at Data by Design 2025 at BRIC. An interactive installation in which visitors select any New York City community district via pushbutton. A generated creole\u2014derived from the three most spoken diaspora languages in that district, weighted by their relative distribution\u2014appears on an e-ink display, accompanied by a text-to-speech voice narrating the district\u2019s history in the new tongue. The work imagines a city unmoored from English as its default, proposing a speculative future in which linguistic exchange, rather than assimilation, shapes how communities speak and remember.',
       },
       {
         title: 'America Kept its Word',
