@@ -972,7 +972,7 @@ of your body and slink silently down your gizzard` },
       { label: 'Substack', href: 'https://substack.com/@paulsplace' },
     ],
     contact: 'paul@paul.place',
-    resume: 'https://freight.cargo.site/m/F2186811692568998833482857283326/Paul-Hanna-Resume-2025.pdf',
+    resume: 'PaulHanna_Resume.pdf',
   }
 };
 
