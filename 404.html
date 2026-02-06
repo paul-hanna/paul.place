@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — paul.place</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- SPA redirect: preserve the path so index.html can route to the right work -->
+<script>
+  var l = window.location;
+  l.replace(
+    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+    '/?/' + l.pathname.slice(1).replace(/&/g, '~and~') +
+    (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+    l.hash
+  );
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@1&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    color: #e8e4dc;
+  }
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(3rem, 8vw, 6rem);
+    opacity: 0.6;
+    margin-bottom: 1rem;
+  }
+  p {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.3;
+    margin-bottom: 2rem;
+  }
+  a {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ff4f1a;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  a:hover { opacity: 1; }
+</style>
+</head>
+<body>
+  <h1>404</h1>
+  <p>nooooooooooooooooooooooooo</p>
+  <a href="/">back to paul.place</a>
+</body>
+</html>

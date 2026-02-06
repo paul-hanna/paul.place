@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Hanna — Director, Writer, Producer, Multimedia Artist | paul.place</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RD0WKDV1GD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RD0WKDV1GD');
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type":   "Person",
+  "name":    "Paul Hanna",
+  "jobTitle":"Director, Producer, Writer, Multimedia Artist",
+  "url":     "https://paul.place",
+  "@id":     "https://paul.place#paulhanna",
+  "image":   "https://paul.place/images/og-image.png",
+  "sameAs": [
+    "https://www.linkedin.com/in/paulhanna361/",
+    "https://github.com/paul-hanna",
+    "https://www.imdb.com/name/nm13039736/",
+    "https://www.instagram.com/p.aulhanna/",
+    "https://x.com/paullhanna",
+    "https://substack.com/@paulsplace",
+    "https://www.youtube.com/@paullhanna",
+    "https://vimeo.com/user206178305",
+    "https://laidlawscholars.network/users/404754-paul-hanna",
+    "https://muckrack.com/paul-hanna-1",
+    "https://soundcloud.com/paul_hanna",
+    "https://paul.tube/waitingleaving",
+    "https://paul.tube/",
+    "https://imdb.me/paulhanna"
+  ],
+    "description": "NYC-based director, producer, writer, and multimedia artist.",
+      "birthDate": "2001-02-02"
+
+}
+</script>
+
+
+<!-- SEO & Social -->
+<meta name="description" content="Paul Hanna — director, writer, producer, and multimedia artist based in NYC. Film, multimedia, and writing.">
+<meta name="author" content="Paul Hanna">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://paul.place">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Paul Hanna — Director / Writer / Producer / Multimedia Artist">
+<meta property="og:description" content="NYC-based director, writer, producer, and multimedia artist. Film, multimedia, and writing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://paul.place">
+<meta property="og:site_name" content="paul.place">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://paul.place/images/og-image.png">
+<meta property="og:image:alt" content="Paul Hanna — Director, Writer, Producer, Multimedia Artist">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Paul Hanna — Director / Writer / Producer / Multimedia Artist">
+<meta name="twitter:description" content="NYC-based director, writer, producer, and multimedia artist. Film, multimedia, and writing.">
+<meta name="twitter:image" content="https://paul.place/images/og-image.png">
+<meta name="twitter:image:alt" content="Paul Hanna">
+<meta name="twitter:site" content="@paullhanna">
+<meta name="twitter:creator" content="@paullhanna">
+
+<!-- Favicon -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+
+<!-- Stylesheet -->
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Hidden video element for texture -->
+<video id="reel-video" src="reel.mp4" loop muted playsinline crossorigin="anonymous"></video>
+
+<!-- UI Layer -->
+<div class="corner-tl">paul.place</div>
+
+<div class="center-name" id="center-name">
+  Paul Hanna
+  <div class="center-sub">Director / Writer / Producer / Multimedia Artist</div>
+</div>
+
+<a class="nav-label" id="nav-film" data-idx="01" data-section="film">Film</a>
+<a class="nav-label" id="nav-multimedia" data-idx="02" data-section="multimedia">Multimedia</a>
+<a class="nav-label" id="nav-writing" data-idx="03" data-section="writing">Writing</a>
+<a class="nav-label" id="nav-about" data-idx="04" data-section="about">About</a>
+
+<div class="bottom-info">
+  <span>NYC — 2026</span>
+  <a href="mailto:paul@paul.place">paul@paul.place</a>
+</div>
+
+<!-- Panel -->
+<div class="panel-overlay" id="panel-overlay"></div>
+<div class="panel" id="panel">
+  <button class="panel-close" id="panel-close">&larr; back to frog</button>
+  <div id="panel-content"></div>
+</div>
+
+<!-- Scripts -->
+<!-- SPA routing: decode redirect from 404.html back to clean URL -->
+<script>
+  (function(l) {
+    if (l.search[1] === '/') {
+      var decoded = l.search.slice(1).split('&').map(function(s) {
+        return s.replace(/~and~/g, '&');
+      }).join('?');
+      window.history.replaceState(null, null,
+        l.pathname.slice(0, -1) + decoded + l.hash
+      );
+    }
+  }(window.location));
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

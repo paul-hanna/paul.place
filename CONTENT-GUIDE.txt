@@ -1,0 +1,74 @@
+PAUL.PLACE — CONTENT GUIDE
+===========================
+
+All content lives in: js/main.js
+Look for the `sections` object near the top of the file.
+
+
+ADDING A NEW WORK
+-----------------
+Find the section you want (film, multimedia, writing, about)
+and add a new object to its `items` array:
+
+  {
+    title: 'Project Name',
+    sub: 'Role · Year',
+    description: 'Short description for the detail page.',
+    tags: ['Tag1', 'Tag2'],
+    image: 'assets/my-thumbnail.jpg',
+    images: ['assets/1.jpg', 'assets/2.jpg'],
+    embed: 'https://player.vimeo.com/video/VIMEO_ID?autoplay=1&title=0&byline=0&portrait=0',
+    link: 'https://example.com',
+    linkLabel: 'Watch',
+    body: '<p>Full long-form text here...</p>',
+    bodyType: 'prose',
+  },
+
+
+FIELD REFERENCE
+---------------
+Required:
+  title       — Display name
+  sub         — Subtitle (role, year, medium)
+
+Optional (detail page):
+  description — Short blurb shown above the body text
+  tags        — Array of tag strings, shown as chips
+  image       — Single image path (list thumbnail + detail hero)
+  images      — Array of image paths (detail gallery; first = thumbnail)
+  embed       — Vimeo/YouTube embed URL (takes priority over hero image)
+  link        — External URL
+  linkLabel   — Button text for the link (default: "View")
+  body        — Full HTML content (essays, poetry, long-form text)
+  bodyType    — 'prose' (default) or 'poetry' (preserves line breaks)
+
+
+IMAGE FILES
+-----------
+Drop thumbnails/images into the assets/ folder.
+Recommended: JPG, ~800px wide, under 200KB each.
+
+
+VIDEO EMBEDS
+------------
+Use the Vimeo player embed format:
+  https://player.vimeo.com/video/YOUR_ID?autoplay=1&title=0&byline=0&portrait=0
+
+YouTube works too:
+  https://www.youtube.com/embed/YOUR_ID?autoplay=1
+
+
+WRITING (POETRY & ESSAYS)
+--------------------------
+Use the `body` field with HTML. Set `bodyType` to control formatting.
+
+Poetry example:
+  body: 'the frog sits<br>on the lily pad<br>and waits<br><br>for nothing',
+  bodyType: 'poetry',
+
+Essay/prose example:
+  body: '<p>First paragraph here.</p><p>Second paragraph here.</p>',
+  bodyType: 'prose',
+
+You can also load from separate files by placing .html snippets in
+assets/writing/ and fetching them (advanced — not set up by default).
