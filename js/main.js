@@ -225,6 +225,8 @@ const sections = {
         sub: 'Image to sound to image process · 2025',
         tags: ['Experimental'],
         image: 'images/works/spectrograms.png',
+        video: 'spectrograms.mp4',
+        galleryCols: 3,
         images: ['images/works/spectrograms-of-my-mother-gallery-1.png','images/works/spectrograms-of-my-mother-gallery-2.png','images/works/spectrograms-of-my-mother-gallery-3.png'],
       },
       {
@@ -1237,8 +1239,12 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${s.title}</button>`;
   html += `<h2>${item.title}</h2>`;
 
+  // self-hosted video — takes top priority
+  if (item.video) {
+    html += `<video class="detail-hero" src="${item.video}" controls playsinline preload="metadata" style="width:100%;border-radius:4px;margin-bottom:1.5rem;background:#000;"></video>`;
+  }
   // embed (video) — takes priority over hero image
-  if (item.embed) {
+  else if (item.embed) {
     html += `<div class="detail-embed"><iframe src="${item.embed}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
   }
   // hero image (only if no embed, and no gallery)
@@ -1248,10 +1254,11 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 
   // image gallery
   if (item.images && item.images.length) {
-    html += `<div class="detail-gallery">`;
+    const colStyle = item.galleryCols ? ` style="grid-template-columns:repeat(${item.galleryCols},1fr)"` : '';
+    html += `<div class="detail-gallery"${colStyle}>`;
     item.images.forEach((src, i) => {
-      // first image spans full width if gallery has odd count
-      const wide = (i === 0 && item.images.length % 2 === 1) ? ' class="wide"' : '';
+      // first image spans full width if gallery has odd count (skip when custom cols)
+      const wide = (!item.galleryCols && i === 0 && item.images.length % 2 === 1) ? ' class="wide"' : '';
       html += `<img${wide} src="${src}" alt="${item.title} — ${i + 1}" loading="lazy">`;
     });
     html += `</div>`;
