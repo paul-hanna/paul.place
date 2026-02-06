@@ -1395,10 +1395,22 @@ const bgVert = `
 const bgFrag = `
   uniform sampler2D uVideo;
   uniform float uTime;
+  uniform float uVideoAspect;
+  uniform float uScreenAspect;
   varying vec2 vUv;
 
   void main() {
+    // Cover-crop: keep video aspect ratio, crop excess
     vec2 uv = vUv;
+    if (uScreenAspect > uVideoAspect) {
+      // screen wider than video — crop top/bottom
+      float scale = uVideoAspect / uScreenAspect;
+      uv.y = uv.y * scale + (1.0 - scale) * 0.5;
+    } else {
+      // screen taller than video — crop left/right
+      float scale = uScreenAspect / uVideoAspect;
+      uv.x = uv.x * scale + (1.0 - scale) * 0.5;
+    }
 
     // very subtle barrel distortion
     vec2 centered = uv - 0.5;
@@ -1423,7 +1435,7 @@ const bgFrag = `
     col.r *= 0.94;
 
     // darken to sit behind the frog
-    col *= 0.45;
+    col *= 0.55;
 
     // vignette
     float vig = clamp(1.0 - dist * 1.4, 0.0, 1.0);
@@ -1442,6 +1454,8 @@ const bgMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uVideo: { value: videoTexture },
     uTime: { value: 0 },
+    uVideoAspect: { value: 16 / 9 },
+    uScreenAspect: { value: window.innerWidth / window.innerHeight },
   },
   depthWrite: false,
 });
@@ -1703,6 +1717,7 @@ function handleResize() {
   const newHalfH = Math.tan(THREE.MathUtils.degToRad(20)) * bgDist;
   bgPlane.geometry.dispose();
   bgPlane.geometry = new THREE.PlaneGeometry(newHalfH * 2 * newAspect, newHalfH * 2);
+  bgMaterial.uniforms.uScreenAspect.value = newAspect;
 }
 window.addEventListener('resize', handleResize);
 window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));
