@@ -1073,7 +1073,7 @@ function renderSectionList(key) {
         const bgStyle = thumb ? ` style="background-image:url('${thumb}')"` : '';
         const groupClass = item.group ? ' is-group' : '';
         const extClass = item.link ? ' is-external' : '';
-        const extBadge = item.link ? '<span class="item-ext">↗</span>' : '';
+        const extBadge = item.link ? '<span class="item-ext">\u2197\uFE0E</span>' : '';
         return `
         <div class="panel-item${thumb ? ' has-thumb' : ''}${groupClass}${extClass}" data-section="${key}" data-idx="${idx}"${bgStyle}>
           <div class="item-text">
@@ -1105,7 +1105,7 @@ function renderGroup(sectionKey, groupIdx) {
   const s = sections[sectionKey];
   const group = s.items[groupIdx];
   panelContent.innerHTML = `
-    <button class="detail-back" id="group-back">← ${s.title}</button>
+    <button class="detail-back" id="group-back">\u2190\uFE0E ${s.title}</button>
     <h2>${group.title}</h2>
     ${group.sub ? `<p>${group.sub}</p>` : ''}
     <div class="group-list">
@@ -1151,7 +1151,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
     document.querySelector(`[data-section="${sectionKey}"]`).classList.add('active');
   }
 
-  let html = `<button class="detail-back" id="detail-back">← ${group.title}</button>`;
+  let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${group.title}</button>`;
   html += `<h2>${item.title}</h2>`;
 
   if (item.sub) {
@@ -1168,7 +1168,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
   }
 
   if (item.link) {
-    html += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} →</a>`;
+    html += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} \u2192\uFE0E</a>`;
   }
 
   panelContent.innerHTML = html;
@@ -1212,7 +1212,7 @@ function renderAbout() {
       <div class="about-label">Contact</div>
       <a class="about-contact" href="mailto:${s.contact}">${s.contact}</a>
     </div>
-    ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume →</a></div>` : ''}
+    ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume \u2192\uFE0E</a></div>` : ''}
   `;
 }
 
@@ -1234,7 +1234,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     document.querySelector(`[data-section="${sectionKey}"]`).classList.add('active');
   }
 
-  let html = `<button class="detail-back" id="detail-back">← ${s.title}</button>`;
+  let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${s.title}</button>`;
   html += `<h2>${item.title}</h2>`;
 
   // embed (video) — takes priority over hero image
@@ -1275,7 +1275,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 
   // link
   if (item.link) {
-    html += `<a class="detail-link-btn" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View project'} ↗</a>`;
+    html += `<a class="detail-link-btn" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View project'} \u2197\uFE0E</a>`;
   }
 
   panelContent.innerHTML = html;
