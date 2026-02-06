@@ -626,8 +626,8 @@ of your body and slink silently down your gizzard` },
         ],
       },
       {
-        title: 'Fiction',
-        sub: 'Short stories',
+        title: 'Fiction and Screenplays',
+        sub: 'Short stories, pilots, and features',
         group: true,
         children: [
           {
@@ -678,6 +678,27 @@ of your body and slink silently down your gizzard` },
 <p>I say, yes, sure, that's dogmatically true.</p>
 
 <p>Mina walks out of the bathroom with wet hair and says hello dear. I say, hello Mina, and give her a kiss on the cheek. Brent walks up to me and hands me a slimy red crayon with teeth indentations. Mina asks him what two and two makes. Brent sputters a bit before saying th-th-th-th-threeeeeeeee.</p>`,
+          },
+          {
+            title: 'Jannah',
+            sub: 'TV Pilot',
+            tags: ['Screenplay', 'Pilot'],
+            bodyType: 'prose',
+            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p>`,
+          },
+          {
+            title: 'Ivory',
+            sub: 'Feature',
+            tags: ['Screenplay', 'Feature'],
+            bodyType: 'prose',
+            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p>`,
+          },
+          {
+            title: 'Unlocked',
+            sub: 'TV Pilot',
+            tags: ['Screenplay', 'Pilot'],
+            bodyType: 'prose',
+            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p>`,
           },
         ],
       },
