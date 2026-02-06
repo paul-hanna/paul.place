@@ -187,7 +187,7 @@ ${extraLd ? `<script type="application/ld+json">\n${extraLd}\n</script>` : ''}
 <meta name="twitter:image" content="${DOMAIN}/${ogImage || OG_IMAGE}">
 <meta name="twitter:site" content="@paullhanna">
 <meta name="twitter:creator" content="@paullhanna">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="frog_favicon.gif" type="image/gif">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
