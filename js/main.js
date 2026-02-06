@@ -194,7 +194,7 @@ const sections = {
         title: 'Disposal',
         sub: 'Paul Hanna & Maya Castronovo · 2024',
         description: 'Filmed at Shirley Chisholm State Park, site of the defunct Fountain Avenue Landfill in Brooklyn. From 1961 to 1985, the landfill received hundreds of thousands of tons of trash and illegal hazardous waste. The film\'s cyclical, embodied camera encourages us to consider how violence is encoded within the landscape itself. By refusing conventional cinematic closure, Disposal situates these traces of violence within frameworks of ecological restoration and renewal.',
-        tags: ['Experimental', 'Collaboration'],
+        tags: ['Experimental'],
         embed: 'https://player.vimeo.com/video/942757123?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/disposal.png',
       },
@@ -239,7 +239,7 @@ const sections = {
       {
         title: 'Tower of Babel',
         sub: 'BRIC + NYC Data x Design exhibition · with Aida Razavilar',
-        tags: ['Installation', 'Exhibition', 'Collaboration'],
+        tags: ['Installation', 'Exhibition'],
         image: 'images/works/tower-of-babel.jpeg',
         description: 'Exhibited at Data by Design 2025 at BRIC. An interactive installation in which visitors select any New York City community district via pushbutton. A generated creole\u2014derived from the three most spoken diaspora languages in that district, weighted by their relative distribution\u2014appears on an e-ink display, accompanied by a text-to-speech voice narrating the district\u2019s history in the new tongue. The work imagines a city unmoored from English as its default, proposing a speculative future in which linguistic exchange, rather than assimilation, shapes how communities speak and remember.',
       },
