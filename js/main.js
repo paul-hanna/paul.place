@@ -4,6 +4,16 @@ function track(event, params) {
   if (typeof gtag === 'function') gtag('event', event, params);
 }
 
+function trackPageView(path, title) {
+  if (typeof gtag === 'function') {
+    gtag('event', 'page_view', {
+      page_path: '/' + (path || ''),
+      page_title: title || document.title,
+      page_location: window.location.origin + '/' + (path || ''),
+    });
+  }
+}
+
 let viewStart = null;
 let currentView = null;
 
@@ -1017,6 +1027,7 @@ function openPanel(key) {
   document.querySelector(`[data-section="${key}"]`).classList.add('active');
 
   track('section_open', { section: key });
+  trackPageView(key, s.title + ' — Paul Hanna');
   startViewTimer('section/' + key);
 }
 
@@ -1143,10 +1154,12 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
   panel.scrollTop = 0;
 
   track('detail_open', { section: sectionKey, item: item.title });
+  trackPageView(item._slug, item.title + ' — Paul Hanna');
   startViewTimer('detail/' + sectionKey + '/' + item.title);
 
   document.getElementById('detail-back').addEventListener('click', () => {
     history.pushState({ section: sectionKey }, '', '/');
+    trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
     renderGroup(sectionKey, groupIdx);
   });
 }
@@ -1248,6 +1261,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   panel.scrollTop = 0;
 
   track('detail_open', { section: sectionKey, item: item.title });
+  trackPageView(item._slug, item.title + ' — Paul Hanna');
   startViewTimer('detail/' + sectionKey + '/' + item.title);
 
   // back button
@@ -1255,6 +1269,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     history.pushState({ section: sectionKey }, '', '/');
     renderSectionList(sectionKey);
     panel.scrollTop = 0;
+    trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
     startViewTimer('section/' + sectionKey);
   });
 }
@@ -1269,6 +1284,7 @@ function closePanel(skipPush) {
   }
 
   track('panel_close', { section: currentSection });
+  trackPageView('', 'Paul Hanna — Director, Writer, Producer, Multimedia Artist | paul.place');
   startViewTimer('home');
   currentSection = null;
 }
