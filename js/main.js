@@ -263,8 +263,85 @@ const sections = {
   },
   writing: {
     title: 'Writing',
-    description: 'Poetry, journals, and screenplays. Contact for screenplays (television, shorts, and features).',
+    description: 'Screenplays, poetry, and journals.',
     items: [
+      {
+        title: 'Fiction and Screenplays',
+        sub: 'Short stories, pilots, and features',
+        group: true,
+        children: [
+          {
+            title: 'Jannah',
+            sub: 'TV Pilot',
+            tags: ['Screenplay', 'Pilot'],
+            bodyType: 'prose',
+            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+          },
+          {
+            title: 'Ivory',
+            sub: 'Feature',
+            tags: ['Screenplay', 'Feature'],
+            bodyType: 'prose',
+            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+          },
+          {
+            title: 'Unlocked',
+            sub: 'TV Pilot',
+            tags: ['Screenplay', 'Pilot'],
+            bodyType: 'prose',
+            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+          },
+          {
+            title: 'Probably Just as Much, Maybe More',
+            sub: 'Short story',
+            tags: ['Fiction'],
+            bodyType: 'prose',
+            body: `<p>I wake up and there's a notification on my phone—some actor went and offed himself. The Guardian says they don't want to speculate, the New York Post says it was a hanging, a noose dusted with cocaine and glitter, some liberal propaganda. I really can't believe it, and not because it's too morose or anything like that. I'm used to this stuff. As a matter of fact, I'm actually thinking about ending it probably just as much, maybe more, than that sorry guy ever did.</p>
+
+<p>I'm standing in my bathrobe in my kitchen and I give my lawyer a call and ask him if my will's still intact. He says to me, of course, Theo, it hasn't changed a bit. I say to him, thanks for that, and he asks if everything is alright. I don't respond for a second and then I tell him that it's all great before I hang up.</p>
+
+<p>I've got the day off work, the lucky duck I am, and I'm home by myself. Brent's at school, probably real lost about what two and two equals. In both cases it's four, I tell him time and again, doesn't matter if you multiply or add, but it doesn't ever stick, and he finishes unwrapping another crayon in its entirety for no discernible reason. Brent's a sensitive kid—I'm sure if he could read the news today he'd be beside himself.</p>
+
+<p>I sit down at my kitchen table and start to write on a loose sheet of paper, <em>to all who have ever loved or known me</em>. That's a little melodramatic, so I try less sappy: <em>to those that this concerns</em>. I think both of these are pretty unremarkable, so I figure I have writer's block and decide to browse the web in hopes that I'll be spurred to write something beautiful. Woolf started her note with "dearest" but I don't love Mina enough to dedicate the entire goodbye to her.</p>
+
+<p>I type "Virginia Woolf suicide?" into Google just to get some of the details, and it says she filled her pockets with stones and jumped into a river. Drowning looks to be a rotten way to go if you ask me. So I write that down on a new sheet of paper and immediately cross it out.</p>
+
+<p>I reach a point where I'm scrolling through a Wikipedia page filled with 21st century suicides, and the reasons seem to be depression, drugs, molestation charges, or some combination of the three. There are a couple folks who set themselves on fire for political reasons but I don't feel strongly about anything in the news today so I cross that off the list too.</p>
+
+<p>I call my lawyer again and I ask him if he needs me to sign the will. He says to me, Theo, you've already signed it. Of course I've signed it. I say that I've got a new signature, something more stately, more presidential. He asks me what all the fuss is about. I tell him that I'm trying to take everything in my life more seriously. He says, Theo, what with all this talk it sounds like you're about to kill yourself. I laugh and I tell him that the thought has crossed my mind but I'm in a better place now. He doesn't say anything to that and I hear this long exhale. I tell him I've got to run and he says goodbye now.</p>
+
+<p>I grab my keys and step outside and hop into my 2009 Honda Accord. It should take me twenty-two minutes to get to Kroger. Ten minutes in, I'm on this two way road and I keep thinking about veering into oncoming traffic. The thing is, I haven't finished writing my note so it might look like a total accident, and it may be very painful. Sometimes people survive car accidents with a couple of broken bones and sometimes the car sets itself on fire and flambés everyone within ten feet of it. I have already decided I do not want to self-immolate, so I keep driving to Kroger.</p>
+
+<p>I'm trying to back into a parking space when I spot Brent's crusty elephant plush in the back seat. Brent's a toother, he toothes on this thing—it's disgusting. The elephant looks like a balding man in his fifties who has just lost his house and car betting it all on red in Vegas. I once asked Brent what he named the elephant. He stammered and shouted, Theo! His name is THEO! Brent doesn't know that my name isn't dad so I try not to take it personally.</p>
+
+<p>I go through the aisles with a shopping cart. Eggs aren't as expensive as they used to be. I think about calling Mina to tell her, then don't, and leave the eggs in the fridge. I push my cart forward without looking and bump into an employee. Before he can say anything I ask him if he's got any rope in stock, that I've got a project I'm working on. He asks me what the project is. I can't think of anything fast enough and I tell him I'm building a house. He gives me a dumbfounded look and says that this might not be the right place to buy house-building materials.</p>
+
+<p>I tell him that I'm also looking for nonhouse-building rope. He says he might have some and tells me to follow him. We walk towards the gardening section and he tells me that if it's anything heavy duty I'm probably better off going to a Home Depot because the best thing I could do with the rope they've got in store is grow some pea plants or try to tie a bundle.</p>
+
+<p>I tell the guy that I think Epstein was probably killed with rope of that thickness. It was almost like a wire. The guy looks at me and can't seem to respond. I say, come on, don't tell me you think he actually killed himself. There wasn't even blood on the sheet that was found around his neck! You figure he'd bleed onto the very thing that caused the bleeding. I can't stand it with the justice department saying whatever it is about suicide. You know he had bail coming up? His lawyers said he wasn't even depressed. Hell, I've got more reason to kill myself than he does.</p>
+
+<p>The employee's staring at me now and I reach for the rope. He stutters and says to me o-o-okay sir, I hope that was what you were looking for, before sprinting to another aisle. I take a closer look at the rope and it's more of a twine and I figure it won't do—it won't support my weight. If I'm going to hang myself it's got to be definite, no maybes or perchances. I wander around the aisle some more and my eyes glaze past the shovels, terracotta pots, the sunflower seeds, and land on some rat poison.</p>
+
+<p>I pull out my phone and Google "how much rat poison to kill a man." This site called RatPoisonFacts.org says I'd need to eat a lot of the stuff, dozens and dozens of boxes worth. I size up the different bags and seriously consider the thought but I realize quickly that I'd need to shovel pounds of poisonous rat bait into my mouth before anything might happen. I'm not opposed to the idea of poisoning, but I'd like to leave room for a last meal or snack and I think this rat poison might taste abhorrent. And, if I'm not careful, Brent might find me, post-poison, and eat some of it. I don't want Brent to eat rat poison, because I know he will, even if he realizes it's bad for him and in fact meant for rats.</p>
+
+<p>I'm leaving the gardening section with an empty cart and I stare at this bag of charcoal briquettes. The bag's on fire, or at least it's designed to look that way. I can't help but stare at the flames and think about the eternal pain of those who are on fire right now. Searing and searing until their bodies give out wholly. No, I certainly could not do that. I shift my attention to a box containing a putting green meant for guys in suits to put next to their cubicles.</p>
+
+<p>I call my lawyer again and ask him if he's remembered to add the bit where in my passing I'd give Brent all of my golf clubs. My lawyer says, Theo, Theo—if you're so concerned about this will, let's find a time to meet, let's look it over, you sound anxious. I tell him that I am not anxious, I'm being prudent, and that those golf clubs are worth a great deal and I'd hate for them to be the center of a postmortem rift among my family members with little Brent unable to stand up for himself given he's a dolt. My lawyer says Theo, isn't the kid three? How much of a dolt can he be? I tell him more of a dolt than you can believe, and I hang up.</p>
+
+<p>Now you might be wondering, Theo, what about a gun? Have you thought about using a gun? A giant, double barrel shotgun, like Hemingway? That must be effective—the mortality rate there is pretty high.</p>
+
+<p>Well, I don't want to condone violence. I like to set a good example for my kid, you know. And I'm a lousy shot. I'd probably need to shoot a couple times and by that point I'm sure my neighbors might think there's a gunfight in my home, come to investigate, and see me still sitting with the double barrel clean in my mouth trying to figure out how to reload the damn thing. I don't own a gun.</p>
+
+<p>I walk past the cash registers with my empty cart and drive home. A little while later, Brent and Mina are there. Brent comes up to me in the living room while Mina's taking a shower and he gives me this look, an opossum-like stare. I say to him, what's with you? Don't you know I'm horribly depressed? And Brent says to me, Theo, you revel in melancholy. You're deeply obsessed with the romance behind killing yourself but you'll never act on it. You'll never be a martyr. I say back, well, Brent, what do you know about reveling in melancholy? Ever since your mother started that new job at Deloitte I have this sneaking suspicion that she's having an affair with Jeff, that temp. That makes me melancholic.</p>
+
+<p>Brent says, Theo, she'd never do that to you. She's a devoted wife. You know, Camus says that there is but one truly serious philosophical problem, and that is suicide.</p>
+
+<p>I say, yes, sure, that's dogmatically true.</p>
+
+<p>Mina walks out of the bathroom with wet hair and says hello dear. I say, hello Mina, and give her a kiss on the cheek. Brent walks up to me and hands me a slimy red crayon with teeth indentations. Mina asks him what two and two makes. Brent sputters a bit before saying th-th-th-th-threeeeeeeee.</p>`,
+          },
+        ],
+      },
       {
         title: 'Poetry',
         sub: 'Selected poems',
@@ -623,83 +700,6 @@ I'm in theatre why justify? I know ugly ducks
 when I spot them. Drink your kirshwasser or
 it will perfectly reach the temperature
 of your body and slink silently down your gizzard` },
-        ],
-      },
-      {
-        title: 'Fiction and Screenplays',
-        sub: 'Short stories, pilots, and features',
-        group: true,
-        children: [
-          {
-            title: 'Probably Just as Much, Maybe More',
-            sub: 'Short story',
-            tags: ['Fiction'],
-            bodyType: 'prose',
-            body: `<p>I wake up and there's a notification on my phone—some actor went and offed himself. The Guardian says they don't want to speculate, the New York Post says it was a hanging, a noose dusted with cocaine and glitter, some liberal propaganda. I really can't believe it, and not because it's too morose or anything like that. I'm used to this stuff. As a matter of fact, I'm actually thinking about ending it probably just as much, maybe more, than that sorry guy ever did.</p>
-
-<p>I'm standing in my bathrobe in my kitchen and I give my lawyer a call and ask him if my will's still intact. He says to me, of course, Theo, it hasn't changed a bit. I say to him, thanks for that, and he asks if everything is alright. I don't respond for a second and then I tell him that it's all great before I hang up.</p>
-
-<p>I've got the day off work, the lucky duck I am, and I'm home by myself. Brent's at school, probably real lost about what two and two equals. In both cases it's four, I tell him time and again, doesn't matter if you multiply or add, but it doesn't ever stick, and he finishes unwrapping another crayon in its entirety for no discernible reason. Brent's a sensitive kid—I'm sure if he could read the news today he'd be beside himself.</p>
-
-<p>I sit down at my kitchen table and start to write on a loose sheet of paper, <em>to all who have ever loved or known me</em>. That's a little melodramatic, so I try less sappy: <em>to those that this concerns</em>. I think both of these are pretty unremarkable, so I figure I have writer's block and decide to browse the web in hopes that I'll be spurred to write something beautiful. Woolf started her note with "dearest" but I don't love Mina enough to dedicate the entire goodbye to her.</p>
-
-<p>I type "Virginia Woolf suicide?" into Google just to get some of the details, and it says she filled her pockets with stones and jumped into a river. Drowning looks to be a rotten way to go if you ask me. So I write that down on a new sheet of paper and immediately cross it out.</p>
-
-<p>I reach a point where I'm scrolling through a Wikipedia page filled with 21st century suicides, and the reasons seem to be depression, drugs, molestation charges, or some combination of the three. There are a couple folks who set themselves on fire for political reasons but I don't feel strongly about anything in the news today so I cross that off the list too.</p>
-
-<p>I call my lawyer again and I ask him if he needs me to sign the will. He says to me, Theo, you've already signed it. Of course I've signed it. I say that I've got a new signature, something more stately, more presidential. He asks me what all the fuss is about. I tell him that I'm trying to take everything in my life more seriously. He says, Theo, what with all this talk it sounds like you're about to kill yourself. I laugh and I tell him that the thought has crossed my mind but I'm in a better place now. He doesn't say anything to that and I hear this long exhale. I tell him I've got to run and he says goodbye now.</p>
-
-<p>I grab my keys and step outside and hop into my 2009 Honda Accord. It should take me twenty-two minutes to get to Kroger. Ten minutes in, I'm on this two way road and I keep thinking about veering into oncoming traffic. The thing is, I haven't finished writing my note so it might look like a total accident, and it may be very painful. Sometimes people survive car accidents with a couple of broken bones and sometimes the car sets itself on fire and flambés everyone within ten feet of it. I have already decided I do not want to self-immolate, so I keep driving to Kroger.</p>
-
-<p>I'm trying to back into a parking space when I spot Brent's crusty elephant plush in the back seat. Brent's a toother, he toothes on this thing—it's disgusting. The elephant looks like a balding man in his fifties who has just lost his house and car betting it all on red in Vegas. I once asked Brent what he named the elephant. He stammered and shouted, Theo! His name is THEO! Brent doesn't know that my name isn't dad so I try not to take it personally.</p>
-
-<p>I go through the aisles with a shopping cart. Eggs aren't as expensive as they used to be. I think about calling Mina to tell her, then don't, and leave the eggs in the fridge. I push my cart forward without looking and bump into an employee. Before he can say anything I ask him if he's got any rope in stock, that I've got a project I'm working on. He asks me what the project is. I can't think of anything fast enough and I tell him I'm building a house. He gives me a dumbfounded look and says that this might not be the right place to buy house-building materials.</p>
-
-<p>I tell him that I'm also looking for nonhouse-building rope. He says he might have some and tells me to follow him. We walk towards the gardening section and he tells me that if it's anything heavy duty I'm probably better off going to a Home Depot because the best thing I could do with the rope they've got in store is grow some pea plants or try to tie a bundle.</p>
-
-<p>I tell the guy that I think Epstein was probably killed with rope of that thickness. It was almost like a wire. The guy looks at me and can't seem to respond. I say, come on, don't tell me you think he actually killed himself. There wasn't even blood on the sheet that was found around his neck! You figure he'd bleed onto the very thing that caused the bleeding. I can't stand it with the justice department saying whatever it is about suicide. You know he had bail coming up? His lawyers said he wasn't even depressed. Hell, I've got more reason to kill myself than he does.</p>
-
-<p>The employee's staring at me now and I reach for the rope. He stutters and says to me o-o-okay sir, I hope that was what you were looking for, before sprinting to another aisle. I take a closer look at the rope and it's more of a twine and I figure it won't do—it won't support my weight. If I'm going to hang myself it's got to be definite, no maybes or perchances. I wander around the aisle some more and my eyes glaze past the shovels, terracotta pots, the sunflower seeds, and land on some rat poison.</p>
-
-<p>I pull out my phone and Google "how much rat poison to kill a man." This site called RatPoisonFacts.org says I'd need to eat a lot of the stuff, dozens and dozens of boxes worth. I size up the different bags and seriously consider the thought but I realize quickly that I'd need to shovel pounds of poisonous rat bait into my mouth before anything might happen. I'm not opposed to the idea of poisoning, but I'd like to leave room for a last meal or snack and I think this rat poison might taste abhorrent. And, if I'm not careful, Brent might find me, post-poison, and eat some of it. I don't want Brent to eat rat poison, because I know he will, even if he realizes it's bad for him and in fact meant for rats.</p>
-
-<p>I'm leaving the gardening section with an empty cart and I stare at this bag of charcoal briquettes. The bag's on fire, or at least it's designed to look that way. I can't help but stare at the flames and think about the eternal pain of those who are on fire right now. Searing and searing until their bodies give out wholly. No, I certainly could not do that. I shift my attention to a box containing a putting green meant for guys in suits to put next to their cubicles.</p>
-
-<p>I call my lawyer again and ask him if he's remembered to add the bit where in my passing I'd give Brent all of my golf clubs. My lawyer says, Theo, Theo—if you're so concerned about this will, let's find a time to meet, let's look it over, you sound anxious. I tell him that I am not anxious, I'm being prudent, and that those golf clubs are worth a great deal and I'd hate for them to be the center of a postmortem rift among my family members with little Brent unable to stand up for himself given he's a dolt. My lawyer says Theo, isn't the kid three? How much of a dolt can he be? I tell him more of a dolt than you can believe, and I hang up.</p>
-
-<p>Now you might be wondering, Theo, what about a gun? Have you thought about using a gun? A giant, double barrel shotgun, like Hemingway? That must be effective—the mortality rate there is pretty high.</p>
-
-<p>Well, I don't want to condone violence. I like to set a good example for my kid, you know. And I'm a lousy shot. I'd probably need to shoot a couple times and by that point I'm sure my neighbors might think there's a gunfight in my home, come to investigate, and see me still sitting with the double barrel clean in my mouth trying to figure out how to reload the damn thing. I don't own a gun.</p>
-
-<p>I walk past the cash registers with my empty cart and drive home. A little while later, Brent and Mina are there. Brent comes up to me in the living room while Mina's taking a shower and he gives me this look, an opossum-like stare. I say to him, what's with you? Don't you know I'm horribly depressed? And Brent says to me, Theo, you revel in melancholy. You're deeply obsessed with the romance behind killing yourself but you'll never act on it. You'll never be a martyr. I say back, well, Brent, what do you know about reveling in melancholy? Ever since your mother started that new job at Deloitte I have this sneaking suspicion that she's having an affair with Jeff, that temp. That makes me melancholic.</p>
-
-<p>Brent says, Theo, she'd never do that to you. She's a devoted wife. You know, Camus says that there is but one truly serious philosophical problem, and that is suicide.</p>
-
-<p>I say, yes, sure, that's dogmatically true.</p>
-
-<p>Mina walks out of the bathroom with wet hair and says hello dear. I say, hello Mina, and give her a kiss on the cheek. Brent walks up to me and hands me a slimy red crayon with teeth indentations. Mina asks him what two and two makes. Brent sputters a bit before saying th-th-th-th-threeeeeeeee.</p>`,
-          },
-          {
-            title: 'Jannah',
-            sub: 'TV Pilot',
-            tags: ['Screenplay', 'Pilot'],
-            bodyType: 'prose',
-            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p>`,
-          },
-          {
-            title: 'Ivory',
-            sub: 'Feature',
-            tags: ['Screenplay', 'Feature'],
-            bodyType: 'prose',
-            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p>`,
-          },
-          {
-            title: 'Unlocked',
-            sub: 'TV Pilot',
-            tags: ['Screenplay', 'Pilot'],
-            bodyType: 'prose',
-            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p>`,
-          },
         ],
       },
       {
