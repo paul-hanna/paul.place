@@ -1,0 +1,41 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://paul.place/sitemap.xml
+
+# Block aggressive crawlers (matching existing Cargo site config)
+User-Agent: CuteStat
+Disallow: /
+
+User-Agent: SemrushBot-BA
+Disallow: /
+
+User-Agent: SemrushBot-SI
+Disallow: /
+
+User-Agent: SemrushBot-SWA
+Disallow: /
+
+User-Agent: SemrushBot-CT
+Disallow: /
+
+User-Agent: SemrushBot-COUB
+Disallow: /
+
+User-Agent: MJ12bot
+Disallow: /
+
+User-Agent: PetalBot
+Disallow: /
+
+User-Agent: SiteAuditBot
+Disallow: /
+
+User-Agent: SplitSignalBot
+Disallow: /
+
+User-Agent: rogerbot
+Disallow: /
+
+User-Agent: dotbot
+Disallow: /
