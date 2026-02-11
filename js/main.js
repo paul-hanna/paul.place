@@ -221,6 +221,13 @@ const sections = {
         image: 'images/works/panopticon.png',
       },
       {
+        title: 'Fifth Amendment',
+        sub: 'Web art · Three.js',
+        link: 'https://paul.tube/maxwell/',
+        linkLabel: 'View',
+        image: 'images/works/ghislaine.png',
+      },
+      {
         title: 'Spectrograms of my mother at her wedding',
         sub: 'Image to sound to image process · 2025',
         tags: ['Experimental'],
