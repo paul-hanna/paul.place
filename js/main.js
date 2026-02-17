@@ -130,7 +130,7 @@ const sections = {
       {
         title: 'Hallway',
         sub: 'Writer, Director, Editor · 2023',
-        tags: ['Short Film', 'Director'],
+        tags: ['Experimental', 'Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/TpkrhPAQSlM?autoplay=1',
         image: 'images/works/hallway.png',
       },
