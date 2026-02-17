@@ -121,11 +121,11 @@ const sections = {
         image: 'images/works/free-money.png',
       },
       {
-        title: 'The Unavailable Memory of',
-        sub: 'Writer, Director, Editor, Producer · 2022',
-        tags: ['Short Film', 'Director', 'Writer'],
-        embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
-        image: 'images/works/unavailable-memory.png',
+        title: 'You, Me, and Her',
+        sub: 'Black Hibiscus · Producer · 2023',
+        tags: ['Music Video', 'Producer'],
+        embed: 'https://www.youtube.com/embed/8yCKJpMeSPQ?autoplay=1',
+        image: 'images/works/you-me-and-her.png',
       },
       {
         title: 'Hallway',
@@ -133,6 +133,13 @@ const sections = {
         tags: ['Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/TpkrhPAQSlM?autoplay=1',
         image: 'images/works/hallway.png',
+      },
+      {
+        title: 'The Unavailable Memory of',
+        sub: 'Writer, Director, Editor, Producer · 2022',
+        tags: ['Short Film', 'Director', 'Writer'],
+        embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
+        image: 'images/works/unavailable-memory.png',
       },
       {
         title: 'Movies in the Daytime',
@@ -148,13 +155,6 @@ const sections = {
         tags: ['Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/d-2IfeDv95o?autoplay=1',
         image: 'images/works/absence.png',
-      },
-      {
-        title: 'You, Me, and Her',
-        sub: 'Black Hibiscus · Producer · 2023',
-        tags: ['Music Video', 'Producer'],
-        embed: 'https://www.youtube.com/embed/8yCKJpMeSPQ?autoplay=1',
-        image: 'images/works/you-me-and-her.png',
       },
       {
         title: 'Circonstances',
