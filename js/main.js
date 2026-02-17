@@ -86,13 +86,6 @@ const sections = {
         images: ['images/works/right-where-you-want-me-gallery-1.JPG','images/works/right-where-you-want-me-gallery-2.JPG','images/works/right-where-you-want-me-gallery-3.JPG','images/works/right-where-you-want-me-gallery-4.JPG','images/works/right-where-you-want-me-gallery-5.JPG','images/works/right-where-you-want-me-gallery-6.JPG','images/works/right-where-you-want-me-gallery-7.JPG','images/works/right-where-you-want-me-gallery-8.JPG','images/works/right-where-you-want-me-gallery-9.JPG','images/works/right-where-you-want-me-gallery-10.JPG','images/works/right-where-you-want-me-gallery-11.JPG','images/works/right-where-you-want-me-gallery-12.JPG'],
       },
       {
-        title: 'O Superman',
-        sub: 'Writer, Director, Producer, Editor · 2023',
-        tags: ['Short Film', 'Director', 'Writer'],
-        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
-        image: 'images/works/o-superman.png',
-      },
-      {
         title: 'Creative Liberties',
         sub: 'Rachel Bochner · Director, Producer, Editor · 2024',
         tags: ['Music Video', 'Director'],
@@ -100,11 +93,25 @@ const sections = {
         image: 'images/works/creative-liberties.png',
       },
       {
-        title: 'The Unavailable Memory of',
-        sub: 'Writer, Director, Editor, Producer · 2022',
+        title: 'Jersey in July',
+        sub: 'Dom Innarella · Production Coordinator · 2025',
+        tags: ['Music Video', 'Production'],
+        embed: 'https://www.youtube.com/embed/SD-hi9vG0O8?autoplay=1',
+        image: 'images/works/jersey-in-july.jpg',
+      },
+      {
+        title: 'Proud of Me',
+        sub: 'Eva Westphal · Producer · 2023',
+        tags: ['Music Video', 'Producer'],
+        embed: 'https://www.youtube.com/embed/2zCubXGT2gY?autoplay=1',
+        image: 'images/works/proud-of-me.png',
+      },
+      {
+        title: 'O Superman',
+        sub: 'Writer, Director, Producer, Editor · 2023',
         tags: ['Short Film', 'Director', 'Writer'],
-        embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
-        image: 'images/works/unavailable-memory.png',
+        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
+        image: 'images/works/o-superman.png',
       },
       {
         title: 'Free Money',
@@ -112,6 +119,13 @@ const sections = {
         link: 'https://insigniafilms.com/Free-Money',
         linkLabel: 'View',
         image: 'images/works/free-money.png',
+      },
+      {
+        title: 'The Unavailable Memory of',
+        sub: 'Writer, Director, Editor, Producer · 2022',
+        tags: ['Short Film', 'Director', 'Writer'],
+        embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
+        image: 'images/works/unavailable-memory.png',
       },
       {
         title: 'Hallway',
@@ -155,20 +169,6 @@ const sections = {
         tags: ['Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/xoj-ExKy6hg?autoplay=1',
         image: 'images/works/monday.png',
-      },
-      {
-        title: 'Jersey in July',
-        sub: 'Dom Innarella · Production Coordinator · 2025',
-        tags: ['Music Video', 'Production'],
-        embed: 'https://www.youtube.com/embed/SD-hi9vG0O8?autoplay=1',
-        image: 'images/works/jersey-in-july.jpg',
-      },
-      {
-        title: 'Proud of Me',
-        sub: 'Eva Westphal · Producer · 2023',
-        tags: ['Music Video', 'Producer'],
-        embed: 'https://www.youtube.com/embed/2zCubXGT2gY?autoplay=1',
-        image: 'images/works/proud-of-me.png',
       },
     ]
   },
