@@ -86,6 +86,13 @@ const sections = {
         images: ['images/works/right-where-you-want-me-gallery-1.JPG','images/works/right-where-you-want-me-gallery-2.JPG','images/works/right-where-you-want-me-gallery-3.JPG','images/works/right-where-you-want-me-gallery-4.JPG','images/works/right-where-you-want-me-gallery-5.JPG','images/works/right-where-you-want-me-gallery-6.JPG','images/works/right-where-you-want-me-gallery-7.JPG','images/works/right-where-you-want-me-gallery-8.JPG','images/works/right-where-you-want-me-gallery-9.JPG','images/works/right-where-you-want-me-gallery-10.JPG','images/works/right-where-you-want-me-gallery-11.JPG','images/works/right-where-you-want-me-gallery-12.JPG'],
       },
       {
+        title: 'O Superman',
+        sub: 'Writer, Director, Producer, Editor · 2023',
+        tags: ['Short Film', 'Director', 'Writer'],
+        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
+        image: 'images/works/o-superman.png',
+      },
+      {
         title: 'Creative Liberties',
         sub: 'Rachel Bochner · Director, Producer, Editor · 2024',
         tags: ['Music Video', 'Director'],
@@ -105,13 +112,6 @@ const sections = {
         tags: ['Music Video', 'Producer'],
         embed: 'https://www.youtube.com/embed/2zCubXGT2gY?autoplay=1',
         image: 'images/works/proud-of-me.png',
-      },
-      {
-        title: 'O Superman',
-        sub: 'Writer, Director, Producer, Editor · 2023',
-        tags: ['Short Film', 'Director', 'Writer'],
-        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
-        image: 'images/works/o-superman.png',
       },
       {
         title: 'Free Money',
@@ -874,7 +874,6 @@ of your body and slink silently down your gizzard` },
 <p>This leads to perhaps the most fundamental difference between Dumping Core and our contemporary technological lives. The installation inherently recognizes that there is ultimately a return to the real world\u2014the programming is finite, ending after a set duration and repeating, and it exists in the context of other works that don\u2019t necessarily evoke the same experience in a viewer. There is always an ultimate end to Bender\u2019s work. When we consider smartphones and today\u2019s internet landscape, our relationship with media seems to blur. There isn\u2019t a real escape from the technological hyperreality. Our phones exist as extensions of ourselves\u2014Donna Haraway astutely describes in her work A Cyborg Manifesto that living beings and technology ultimately merge to form a human nature and culture that relies on technology, and is inseparable from it. Cell phones are extensions of the self\u2014human social interaction and other innate natural instincts are now literally impossible to execute in today\u2019s social context without a phone. There\u2019s a sort of social ostracization that might occur if you were to walk up to someone and befriend them, then promptly whip out a flip phone to store their contact information instead of an iPhone. Such behavior is social deviance.</p>
 
 <p>To be honest, Bender\u2019s piece feels like a warning sign from the 80s, despite her claim that an \u201Cacceleration\u201D can \u201Creveal structures or open windows to the development of a critical consciousness we can\u2019t yet perceive.\u201D Maybe it is the case that we can\u2019t quite perceive the consciousness since we\u2019re currently living in it. Yet, her piece now appears to embody that period and gives viewers a retroactive sense of what that critical consciousness may have been like in the 80s. Today, however, Dumping Core is exaggerated, brash, and at times impossibly incoherent. The television as a symbol of media overstimulation is classic, but dated. They\u2019re not as mobile as cell phones, far less interactive than computers, and relatively uninteractive. What is particularly distressing, however, is that despite the knowledge of the horrid and negative impacts of technology proliferating across the postmodern era, we have continued to develop these technologies. They are even more invasive and integrated than ever before. It is as if, collectively, we decided that we would stay on Bender\u2019s bench and watch the programming in hopes of reaching some critical consciousness, and chose to ignore the light beam that promised a world of relative tangibility and natural instinct free of false realities.</p>` },
-          { title: 'Theme parks as masochism', sub: '09.21.2024' },
           { title: 'Dinner and a movie', sub: '07.16.2024', bodyType: 'prose', image: 'images/works/journal-dinner-and-a-movie.jpg', body: `<p>I recently went to see the film The Cook, the Thief, His Wife, & Her Lover, directed by Peter Greenaway, masterfully scored by Michael Nyman, and gorgeously costumed by Jean Paul Gaultier. Before going to watch the movie at the IFC Center, I took myself out to dinner.</p>
 
 <p>There\u2019s this restaurant on Sullivan right before you get onto Houston called Three of Cups. It\u2019s a bizarre restaurant, a mix of American and French cuisine, to a degree, but to me, it reads more as a restaurant where the chef had a few good ideas and no way to piece them all together under a cohesive culinary culture. This is totally fine. In fact, I think there might be a world of dining experience to be explored, a world where nothing really makes sense in context and where the menu logic baffles critics and diners alike.</p>
