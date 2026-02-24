@@ -86,18 +86,18 @@ const sections = {
         images: ['images/works/right-where-you-want-me-gallery-1.JPG','images/works/right-where-you-want-me-gallery-2.JPG','images/works/right-where-you-want-me-gallery-3.JPG','images/works/right-where-you-want-me-gallery-4.JPG','images/works/right-where-you-want-me-gallery-5.JPG','images/works/right-where-you-want-me-gallery-6.JPG','images/works/right-where-you-want-me-gallery-7.JPG','images/works/right-where-you-want-me-gallery-8.JPG','images/works/right-where-you-want-me-gallery-9.JPG','images/works/right-where-you-want-me-gallery-10.JPG','images/works/right-where-you-want-me-gallery-11.JPG','images/works/right-where-you-want-me-gallery-12.JPG'],
       },
       {
-        title: 'O Superman',
-        sub: 'Writer, Director, Producer, Editor · 2023',
-        tags: ['Short Film', 'Director', 'Writer'],
-        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
-        image: 'images/works/o-superman.png',
-      },
-      {
         title: 'Creative Liberties',
         sub: 'Rachel Bochner · Director, Producer, Editor · 2024',
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/9AQtCG8GiHY?autoplay=1',
         image: 'images/works/creative-liberties.png',
+      },
+      {
+        title: 'O Superman',
+        sub: 'Writer, Director, Producer, Editor · 2023',
+        tags: ['Short Film', 'Director', 'Writer'],
+        embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
+        image: 'images/works/o-superman.png',
       },
       {
         title: 'Jersey in July',
