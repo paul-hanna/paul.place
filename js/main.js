@@ -285,21 +285,21 @@ const sections = {
             sub: 'TV Pilot',
             tags: ['Screenplay', 'Pilot'],
             bodyType: 'prose',
-            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700" style="color:#c43d14;">+1 310 988 7700</a></p>`,
           },
           {
             title: 'Ivory',
             sub: 'Feature',
             tags: ['Screenplay', 'Feature'],
             bodyType: 'prose',
-            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700" style="color:#c43d14;">+1 310 988 7700</a></p>`,
           },
           {
             title: 'Unlocked',
             sub: 'TV Pilot',
             tags: ['Screenplay', 'Pilot'],
             bodyType: 'prose',
-            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact <a href="mailto:paul@paul.place" style="color:#c43d14;">paul@paul.place</a></p>`,
+            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p><p style="margin-top:1.5rem;font-size:0.8rem;opacity:0.6;">For the full screenplay, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700" style="color:#c43d14;">+1 310 988 7700</a></p>`,
           },
           {
             title: 'Probably Just as Much, Maybe More',
@@ -1002,6 +1002,7 @@ of your body and slink silently down your gizzard` },
       { label: 'Substack', href: 'https://substack.com/@paulsplace' },
     ],
     contact: 'paul@paul.place',
+    management: { name: 'Shelby Eggers', company: 'Lit Entertainment Group', phone: '+1 310 988 7700' },
     resume: 'PaulHanna_Resume.pdf',
   }
 };
@@ -1220,6 +1221,11 @@ function renderAbout() {
     <div class="about-section">
       <div class="about-label">Contact</div>
       <a class="about-contact" href="mailto:${s.contact}">${s.contact}</a>
+    </div>
+    <div class="about-section">
+      <div class="about-label">Management</div>
+      <div class="about-contact">${s.management.name} &middot; ${s.management.company}</div>
+      <a class="about-contact" href="tel:${s.management.phone}">${s.management.phone}</a>
     </div>
     ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume \u2192\uFE0E</a></div>` : ''}
   `;
