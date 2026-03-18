@@ -1224,7 +1224,7 @@ function renderAbout() {
     </div>
     <div class="about-section">
       <div class="about-label">Management</div>
-      <div class="about-contact">${s.management.name} &middot; ${s.management.company}</div>
+      <div>${s.management.name} &middot; ${s.management.company}</div>
       <a class="about-contact" href="tel:${s.management.phone}">${s.management.phone}</a>
     </div>
     ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume \u2192\uFE0E</a></div>` : ''}
