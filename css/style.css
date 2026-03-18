@@ -143,7 +143,7 @@ canvas { display: block; }
   font-weight: 500;
   font-size: clamp(2rem, 5vw, 3.2rem);
   color: #1a1a1a;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 .panel p {
@@ -457,7 +457,7 @@ canvas { display: block; }
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 .about-portrait {
   width: 140px;
@@ -475,7 +475,7 @@ canvas { display: block; }
   .about-portrait { width: 120px; }
 }
 .about-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 .about-label {
   font-size: 0.6rem;
