@@ -56,6 +56,13 @@ const sections = {
     description: 'Narrative, experimental, and commercial directing work.',
     items: [
       {
+        title: 'Vellum - Find time for you',
+        sub: 'Director, Writer · 2026',
+        tags: ['Commercial', 'Director', 'Writer'],
+        embed: 'https://player.vimeo.com/video/1176290293?badge=0&autopause=0&player_id=0&app_id=58479',
+        image: 'images/works/vellum-find-time-for-you.png',
+      },
+      {
         title: 'Vellum Product Launch',
         sub: 'Director, Writer, Soundtrack · 2026',
         tags: ['Commercial', 'Director', 'Writer'],
