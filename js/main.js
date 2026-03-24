@@ -245,7 +245,7 @@ const sections = {
       },
       {
         title: 'Locating',
-        sub: 'Unreal Engine',
+        sub: 'Unreal Engine · 2026',
         tags: ['Experimental'],
         embed: 'https://player.vimeo.com/video/1176747824?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/locating.png',
