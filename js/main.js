@@ -244,6 +244,13 @@ const sections = {
         images: ['images/works/spectrograms-of-my-mother-gallery-1.png','images/works/spectrograms-of-my-mother-gallery-2.png','images/works/spectrograms-of-my-mother-gallery-3.png'],
       },
       {
+        title: 'Locating',
+        sub: 'Unreal Engine',
+        tags: ['Experimental'],
+        embed: 'https://player.vimeo.com/video/1176747824?badge=0&autopause=0&player_id=0&app_id=58479',
+        image: 'images/works/locating.png',
+      },
+      {
         title: 'I Know it When I See It',
         sub: 'Resin cast, Sylvania television, antenna, foam · 2023',
         tags: ['Sculpture', 'Installation'],
