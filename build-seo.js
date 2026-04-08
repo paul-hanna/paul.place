@@ -16,6 +16,7 @@ const DOMAIN = 'https://paul.place';
 const GA_ID = 'G-RD0WKDV1GD';
 const PORTRAIT = 'images/works/paul-portrait.png';
 const OG_IMAGE = 'images/og-image.png';
+const BUILD_DATE = new Date().toISOString().split('T')[0];
 
 // ── 1. Extract data from main.js ──────────────────────────────────────────────
 
@@ -61,6 +62,15 @@ function stripHtml(html) {
 function stripContactParagraph(html) {
   if (!html) return html;
   return html.replace(/<p[^>]*>For all professional inquiries[\s\S]*?<\/p>/gi, '').trim();
+}
+
+// Extract ISO upload date from item — year from sub field, fall back to build date
+function extractUploadDate(item) {
+  if (item.sub) {
+    const m = item.sub.match(/\b(20\d{2})\b/);
+    if (m) return m[1] + '-01-01';
+  }
+  return BUILD_DATE;
 }
 
 function truncate(str, len) {
@@ -153,10 +163,22 @@ function itemLd(item, slug, sectionKey) {
   if (type === 'VideoObject' || type === 'Film') {
     ld.director = { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" };
   }
+  if (type === 'VideoObject') {
+    ld['@id'] = DOMAIN + '/' + slug + '#video';
+    ld.uploadDate = extractUploadDate(item);
+  }
   if (type === 'BlogPosting') ld.headline = item.title;
   const cleanBody = stripContactParagraph(item.body);
-  const desc = item.description ? stripHtml(stripContactParagraph(item.description)) : cleanBody ? stripHtml(cleanBody) : item.sub;
-  if (desc) ld.description = truncate(desc, 300);
+  // VideoObject: only use a real prose description — credit lines (sub) are not descriptions
+  let desc;
+  if (type === 'VideoObject') {
+    desc = item.description ? truncate(stripHtml(stripContactParagraph(item.description)), 300) : null;
+  } else {
+    desc = item.description ? truncate(stripHtml(stripContactParagraph(item.description)), 300)
+         : cleanBody ? truncate(stripHtml(cleanBody), 300)
+         : item.sub || null;
+  }
+  if (desc) ld.description = desc;
   const itemImage = (item.image || (item.images && item.images[0]));
   ld.image = DOMAIN + '/' + (itemImage || OG_IMAGE);
   if (type === 'VideoObject') ld.thumbnailUrl = DOMAIN + '/' + (itemImage || OG_IMAGE);
@@ -330,6 +352,11 @@ for (const [slug, entry] of Object.entries(slugMap)) {
     ],
     noscriptContent: nsc,
   }));
+
+  // Warn about VideoObject items missing a prose description
+  if (getSchemaType(entry.sectionKey, item) === 'VideoObject' && !item.description) {
+    console.warn(`  ⚠  Missing description on VideoObject: /${slug}`);
+  }
 
   allUrls.push({ loc: DOMAIN + '/' + slug, priority: '0.7', changefreq: 'monthly' });
   generated++;
