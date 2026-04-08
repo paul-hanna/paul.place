@@ -57,6 +57,12 @@ function stripHtml(html) {
     .trim();
 }
 
+// Remove the "For all professional inquiries" contact paragraph before schema/meta use
+function stripContactParagraph(html) {
+  if (!html) return html;
+  return html.replace(/<p[^>]*>For all professional inquiries[\s\S]*?<\/p>/gi, '').trim();
+}
+
 function truncate(str, len) {
   if (!str) return '';
   if (str.length <= len) return str;
@@ -73,8 +79,8 @@ function esc(str) {
 }
 
 function getDescription(item) {
-  if (item.description) return truncate(stripHtml(item.description), 160);
-  if (item.body) return truncate(stripHtml(item.body), 160);
+  if (item.description) return truncate(stripHtml(stripContactParagraph(item.description)), 160);
+  if (item.body) return truncate(stripHtml(stripContactParagraph(item.body)), 160);
   if (item.sub) return item.sub;
   return 'By Paul Hanna — director, writer, producer, and multimedia artist based in NYC.';
 }
@@ -105,14 +111,19 @@ const PERSON_LD = JSON.stringify({
     "https://laidlawscholars.network/users/404754-paul-hanna",
     "https://muckrack.com/paul-hanna-1",
     "https://soundcloud.com/paul_hanna",
-    "https://paul.tube/waitingleaving",
     "https://paul.tube/",
-    "https://imdb.me/paulhanna",
     "https://www.wikidata.org/wiki/Q139032793",
     "https://orcid.org/0009-0000-8347-679X"
   ],
   "description": "NYC-based director, producer, writer, and multimedia artist.",
-  "birthDate": "2001-02-02"
+  "birthDate": "2001-02-02",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "representative",
+    "name": "Lit Entertainment Group",
+    "telephone": "+1-310-988-7700",
+    "areaServed": "US"
+  }
 }, null, 2);
 
 function getSchemaType(sectionKey, item) {
@@ -142,15 +153,16 @@ function itemLd(item, slug, sectionKey) {
   if (type === 'VideoObject' || type === 'Film') {
     ld.director = { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" };
   }
-  const desc = item.description ? stripHtml(item.description) : item.body ? stripHtml(item.body) : item.sub;
+  if (type === 'BlogPosting') ld.headline = item.title;
+  const cleanBody = stripContactParagraph(item.body);
+  const desc = item.description ? stripHtml(stripContactParagraph(item.description)) : cleanBody ? stripHtml(cleanBody) : item.sub;
   if (desc) ld.description = truncate(desc, 300);
-  if (item.image) {
-    ld.image = DOMAIN + '/' + item.image;
-    if (type === 'VideoObject') ld.thumbnailUrl = DOMAIN + '/' + item.image;
-  }
+  const itemImage = (item.image || (item.images && item.images[0]));
+  ld.image = DOMAIN + '/' + (itemImage || OG_IMAGE);
+  if (type === 'VideoObject') ld.thumbnailUrl = DOMAIN + '/' + (itemImage || OG_IMAGE);
   if (item.embed) ld.embedUrl = item.embed.replace(/\?autoplay=1/, '');
-  if (type === 'Poem' && item.body) ld.text = stripHtml(item.body);
-  if (type === 'BlogPosting' && item.body) ld.articleBody = truncate(stripHtml(item.body), 500);
+  if (type === 'Poem' && cleanBody) ld.text = stripHtml(cleanBody);
+  if (type === 'BlogPosting' && cleanBody) ld.articleBody = truncate(stripHtml(cleanBody), 500);
   return JSON.stringify(ld, null, 2);
 }
 
