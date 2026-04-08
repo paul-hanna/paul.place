@@ -107,25 +107,88 @@ const PERSON_LD = JSON.stringify({
     "https://soundcloud.com/paul_hanna",
     "https://paul.tube/waitingleaving",
     "https://paul.tube/",
-    "https://imdb.me/paulhanna"
+    "https://imdb.me/paulhanna",
+    "https://www.wikidata.org/wiki/Q139032793",
+    "https://orcid.org/0009-0000-8347-679X"
   ],
   "description": "NYC-based director, producer, writer, and multimedia artist.",
   "birthDate": "2001-02-02"
 }, null, 2);
 
-function itemLd(item, slug) {
+function getSchemaType(sectionKey, item) {
+  if (sectionKey === 'film') return 'VideoObject';
+  if (sectionKey === 'multimedia' && item.embed) return 'VideoObject';
+  if (sectionKey === 'writing' && item.bodyType === 'poetry') return 'Poem';
+  if (sectionKey === 'writing') return 'BlogPosting';
+  return 'CreativeWork';
+}
+
+function getOgType(sectionKey, item) {
+  if (sectionKey === 'film' || (sectionKey === 'multimedia' && item.embed)) return 'video.other';
+  if (sectionKey === 'writing') return 'article';
+  return 'article';
+}
+
+function itemLd(item, slug, sectionKey) {
+  const type = getSchemaType(sectionKey, item);
   const ld = {
     "@context": "https://schema.org",
-    "@type": "CreativeWork",
+    "@type": type,
     "name": item.title,
     "url": DOMAIN + '/' + slug,
-    "author": { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" }
+    "author": { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" },
+    "inLanguage": "en"
   };
+  if (type === 'VideoObject' || type === 'Film') {
+    ld.director = { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" };
+  }
   const desc = item.description ? stripHtml(item.description) : item.body ? stripHtml(item.body) : item.sub;
   if (desc) ld.description = truncate(desc, 300);
-  if (item.image) ld.image = DOMAIN + '/' + item.image;
+  if (item.image) {
+    ld.image = DOMAIN + '/' + item.image;
+    if (type === 'VideoObject') ld.thumbnailUrl = DOMAIN + '/' + item.image;
+  }
   if (item.embed) ld.embedUrl = item.embed.replace(/\?autoplay=1/, '');
+  if (type === 'Poem' && item.body) ld.text = stripHtml(item.body);
+  if (type === 'BlogPosting' && item.body) ld.articleBody = truncate(stripHtml(item.body), 500);
   return JSON.stringify(ld, null, 2);
+}
+
+function breadcrumbLd(sectionKey, sectionTitle, itemTitle, slug) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Paul Hanna", "item": DOMAIN + "/" },
+      { "@type": "ListItem", "position": 2, "name": sectionTitle, "item": DOMAIN + "/" + sectionKey },
+      { "@type": "ListItem", "position": 3, "name": itemTitle, "item": DOMAIN + "/" + slug }
+    ]
+  }, null, 2);
+}
+
+function itemListLd(sectionKey, section) {
+  const items = [];
+  let position = 1;
+  if (section.items) {
+    for (const item of section.items) {
+      if (item.group && item.children) {
+        for (const child of item.children) {
+          if (child._slug) {
+            items.push({ "@type": "ListItem", "position": position++, "url": DOMAIN + '/' + child._slug, "name": child.title });
+          }
+        }
+      } else if (item._slug) {
+        items.push({ "@type": "ListItem", "position": position++, "url": DOMAIN + '/' + item._slug, "name": item.title });
+      }
+    }
+  }
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": section.title,
+    "url": DOMAIN + '/' + sectionKey,
+    "itemListElement": items
+  }, null, 2);
 }
 
 // ── 4. HTML template ──────────────────────────────────────────────────────────
@@ -154,7 +217,8 @@ const SPA_BODY = `
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="js/main.js"></script>`;
 
-function pageHtml({ title, description, canonical, ogImage, ogType, extraLd, noscriptContent }) {
+function pageHtml({ title, description, canonical, ogImage, ogType, extraLds, noscriptContent }) {
+  const ldBlocks = (extraLds || []).map(ld => `<script type="application/ld+json">\n${ld}\n</script>`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,7 +231,7 @@ function pageHtml({ title, description, canonical, ogImage, ogType, extraLd, nos
 <script type="application/ld+json">
 ${PERSON_LD}
 </script>
-${extraLd ? `<script type="application/ld+json">\n${extraLd}\n</script>` : ''}
+${ldBlocks}
 <meta name="description" content="${esc(description)}">
 <meta name="author" content="Paul Hanna">
 <meta name="theme-color" content="#000000">
@@ -181,6 +245,8 @@ ${extraLd ? `<script type="application/ld+json">\n${extraLd}\n</script>` : ''}
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="${DOMAIN}/${ogImage || OG_IMAGE}">
 <meta property="og:image:alt" content="${esc(title)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
@@ -237,6 +303,7 @@ for (const [slug, entry] of Object.entries(slugMap)) {
     nsc += `<p><a href="${item.link}">${item.linkLabel || 'View project'} →</a></p>\n`;
   }
 
+  const sectionKey = entry.sectionKey;
   const dir = path.join(ROOT, slug);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), pageHtml({
@@ -244,7 +311,11 @@ for (const [slug, entry] of Object.entries(slugMap)) {
     description: getDescription(item),
     canonical: DOMAIN + '/' + slug,
     ogImage: getImage(item),
-    extraLd: itemLd(item, slug),
+    ogType: getOgType(sectionKey, item),
+    extraLds: [
+      itemLd(item, slug, sectionKey),
+      breadcrumbLd(sectionKey, sections[sectionKey].title, item.title, slug)
+    ],
     noscriptContent: nsc,
   }));
 
@@ -305,6 +376,7 @@ for (const [key, meta] of Object.entries(sectionPages)) {
     description: meta.desc,
     canonical: DOMAIN + '/' + key,
     ogType: 'website',
+    extraLds: [itemListLd(key, section)],
     noscriptContent: nsc,
   }));
 
@@ -336,6 +408,7 @@ fs.writeFileSync(path.join(aboutDir, 'index.html'), pageHtml({
   canonical: DOMAIN + '/about',
   ogImage: OG_IMAGE,
   ogType: 'profile',
+  extraLds: [],
   noscriptContent: aboutNsc,
 }));
 

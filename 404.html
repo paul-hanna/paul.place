@@ -7,13 +7,31 @@
 <link rel="icon" href="frog_favicon.gif" type="image/gif">
 <!-- SPA redirect: preserve the path so index.html can route to the right work -->
 <script>
+  var redirects = {
+    '/04-14-2025-a-dream-i-had': '/a-dream-i-had',
+    '/multimediafold': '/multimedia',
+    '/you,-me,-and-her': '/you-me-and-her',
+    '/10-17-2025-debussy\'s-1st-arabesque,-lily-chou-chou-and-hyperfixation': '/debussys-1st-arabesque-lily-chou-chou-and-hyperfixation',
+    '/home': '/',
+    '/about-button': '/about',
+    '/filmfold': '/film',
+    '/probablyjustasmuch': '/probably-just-as-much-maybe-more',
+    '/mvmm': '/film',
+    '/spectrograms-of-my-mother': '/spectrograms-of-my-mother-at-her-wedding',
+    '/film-2': '/film'
+  };
   var l = window.location;
-  l.replace(
-    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-    '/?/' + l.pathname.slice(1).replace(/&/g, '~and~') +
-    (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-    l.hash
-  );
+  var dest = redirects[l.pathname] || redirects[decodeURIComponent(l.pathname)];
+  if (dest) {
+    l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + dest);
+  } else {
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      '/?/' + l.pathname.slice(1).replace(/&/g, '~and~') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  }
 </script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@1&display=swap');
