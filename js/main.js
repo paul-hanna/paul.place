@@ -735,7 +735,7 @@ of your body and slink silently down your gizzard` },
 
 <p>As I\u2019ve come to write a lot more fiction and screenplays, I\u2019ve (re)explored the whole notion of writing plot and developing characters; creating scenarios that feel rooted in some experienced reality or some extrapolated one. I\u2019m revisiting Before Sunset after a long spell of experiences and tons of introspection.</p>
 
-<p>It\u2019s hard not to revisit this series and think about my experience with someone I had an experience with which might be comparable to Before Sunset (read: my entry on <a href="/past-lives-before-sunrise-and-life-decisions">Past Lives and Before Sunrise</a> for more context). The sequel follows Jesse and Celine ten years later, not having seen or spoken with each other during the entire span. At some point, while attempting to recount whether or not the two slept together, Celine says:</p>
+<p>It\u2019s hard not to revisit this series and think about my experience with someone which might be comparable to Before Sunset (read: my entry on <a href="/past-lives-before-sunrise-and-life-decisions">Past Lives and Before Sunrise</a> for more context). The sequel follows Jesse and Celine ten years later, not having seen or spoken with each other during the entire span. At some point, while attempting to recount whether or not the two slept together, Celine says:</p>
 
 <p><em>I remember that night better than I do entire years.</em></p>
 
