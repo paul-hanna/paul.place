@@ -1494,8 +1494,23 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ─── REEL ───
+const REEL_EMBED = 'https://player.vimeo.com/video/1135207939?autoplay=1';
+function openReel(skipPush) {
+  if (!skipPush) history.pushState({ reel: true }, '', '/reel');
+  lightbox.dataset.route = 'reel';
+  openLightboxEmbed(REEL_EMBED);
+  track('reel_open', {});
+  trackPageView('reel', 'Director Reel — Paul Hanna');
+  startViewTimer('reel');
+}
+
 document.querySelectorAll('.nav-label').forEach(el => {
   el.addEventListener('click', () => openPanel(el.dataset.section));
+});
+document.getElementById('reel-link').addEventListener('click', (e) => {
+  e.preventDefault();
+  openReel();
 });
 panelClose.addEventListener('click', () => closePanel());
 overlay.addEventListener('click', () => closePanel());
@@ -1503,6 +1518,7 @@ overlay.addEventListener('click', () => closePanel());
 // ─── URL ROUTING ───
 function routeFromPath() {
   const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+  if (path === 'reel') { openReel(true); return true; }
   if (path && slugMap[path]) {
     const entry = slugMap[path];
     if (entry.childIdx !== undefined) {
@@ -1522,6 +1538,10 @@ function routeFromPath() {
 
 // Handle browser back/forward
 window.addEventListener('popstate', () => {
+  if (lightboxIsOpen()) {
+    delete lightbox.dataset.route; // history already moved — don't push again
+    closeLightbox();
+  }
   if (!routeFromPath()) closePanel(true);
 });
 

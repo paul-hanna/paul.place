@@ -243,6 +243,7 @@ const SPA_BODY = `
 <a class="nav-label" id="nav-about" data-idx="04" data-section="about">About</a>
 <div class="bottom-info">
   <span>NYC &mdash; 2026</span>
+  <a href="/reel" id="reel-link">watch reel</a>
   <a href="mailto:paul@paul.place">paul@paul.place</a>
 </div>
 <div class="panel-overlay" id="panel-overlay"></div>
@@ -460,6 +461,31 @@ fs.writeFileSync(path.join(aboutDir, 'index.html'), pageHtml({
 
 allUrls.push({ loc: DOMAIN + '/about', priority: '0.8', changefreq: 'monthly' });
 console.log('Generated 4 section pages (film, multimedia, writing, about)');
+
+// Reel page
+const reelDir = path.join(ROOT, 'reel');
+fs.mkdirSync(reelDir, { recursive: true });
+fs.writeFileSync(path.join(reelDir, 'index.html'), pageHtml({
+  title: 'Director Reel — Paul Hanna',
+  description: 'Director reel of Paul Hanna — narrative, commercial, and music video work.',
+  canonical: DOMAIN + '/reel',
+  ogType: 'video.other',
+  extraLds: [JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "Paul Hanna — Director Reel",
+    "url": DOMAIN + '/reel',
+    "embedUrl": "https://player.vimeo.com/video/1135207939",
+    "director": { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" },
+    "author": { "@type": "Person", "name": "Paul Hanna", "@id": DOMAIN + "#paulhanna" },
+    "@id": DOMAIN + '/reel#video',
+    "description": "Director reel of Paul Hanna — narrative, commercial, and music video work.",
+    "image": DOMAIN + '/' + OG_IMAGE,
+    "thumbnailUrl": DOMAIN + '/' + OG_IMAGE
+  }, null, 2)],
+  noscriptContent: '<h1>Director Reel</h1>\n<p><a href="https://vimeo.com/1135207939">Watch on Vimeo →</a></p>\n',
+}));
+allUrls.push({ loc: DOMAIN + '/reel', priority: '0.9', changefreq: 'monthly' });
 
 // ── 7. Generate sitemap.xml ───────────────────────────────────────────────────
 
