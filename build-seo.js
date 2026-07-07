@@ -16,7 +16,6 @@ const DOMAIN = 'https://paul.place';
 const GA_ID = 'G-RD0WKDV1GD';
 const PORTRAIT = 'images/works/paul-portrait.png';
 const OG_IMAGE = 'images/og-image.png';
-const BUILD_DATE = new Date().toISOString().split('T')[0];
 
 // ── 1. Extract data from main.js ──────────────────────────────────────────────
 
@@ -276,6 +275,7 @@ ${ldBlocks}
 <meta name="theme-color" content="#000000">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="${canonical}">
+<link rel="alternate" type="application/rss+xml" title="Paul Hanna — Journal" href="${DOMAIN}/feed.xml">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="${ogType || 'article'}">
@@ -502,14 +502,12 @@ allUrls.push({ loc: DOMAIN + '/reel', priority: '0.9', changefreq: 'monthly' });
 
 // ── 7. Generate sitemap.xml ───────────────────────────────────────────────────
 
-const today = new Date().toISOString().split('T')[0];
 let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
 sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
 for (const u of allUrls) {
   sitemap += `  <url>\n`;
   sitemap += `    <loc>${u.loc}</loc>\n`;
-  sitemap += `    <lastmod>${today}</lastmod>\n`;
   sitemap += `    <changefreq>${u.changefreq}</changefreq>\n`;
   sitemap += `    <priority>${u.priority}</priority>\n`;
   sitemap += `  </url>\n`;
@@ -566,5 +564,39 @@ Disallow: /
 
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), robots);
 console.log('Generated robots.txt');
+
+// ── 9. Generate RSS feed (journal) ───────────────────────────────────────────
+
+const journalGroup = (sections.writing.items || []).find(i => i.group && /journal/i.test(i.title));
+if (journalGroup) {
+  const entries = journalGroup.children
+    .map(c => {
+      // prefer ISO date field; fall back to MM.DD.YYYY sub
+      let iso = c.date;
+      if (!iso && c.sub && /^\d{2}\.\d{2}\.\d{4}$/.test(c.sub)) {
+        const [mm, dd, yyyy] = c.sub.split('.');
+        iso = `${yyyy}-${mm}-${dd}`;
+      }
+      if (!iso) console.warn(`  ⚠  Journal entry missing date: ${c.title}`);
+      return { item: c, iso };
+    })
+    .filter(e => e.iso)
+    .sort((a, b) => b.iso.localeCompare(a.iso));
+
+  let rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n`;
+  rss += `<title>Paul Hanna — Journal</title>\n<link>${DOMAIN}/writing</link>\n`;
+  rss += `<description>Journal entries by Paul Hanna — director, writer, and multimedia artist.</description>\n`;
+  rss += `<language>en-us</language>\n`;
+  rss += `<atom:link href="${DOMAIN}/feed.xml" rel="self" type="application/rss+xml"/>\n`;
+  for (const { item, iso } of entries) {
+    const url = `${DOMAIN}/${item._slug}`;
+    rss += `<item>\n<title>${esc(item.title)}</title>\n<link>${url}</link>\n<guid>${url}</guid>\n`;
+    rss += `<pubDate>${new Date(iso + 'T12:00:00Z').toUTCString()}</pubDate>\n`;
+    rss += `<description>${esc(truncate(stripHtml(item.body || ''), 300))}</description>\n</item>\n`;
+  }
+  rss += `</channel>\n</rss>\n`;
+  fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss);
+  console.log(`Generated feed.xml with ${entries.length} entries`);
+}
 
 console.log('\nDone! Run "node build-seo.js" again after updating content in main.js.');
