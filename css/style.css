@@ -1,5 +1,10 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+  --accent: #c43d14;
+  --accent-bright: #ff4f1a;
+}
+
 body {
   background: #000;
   overflow: hidden;
@@ -72,7 +77,7 @@ canvas { display: block; }
 }
 .nav-label.active {
   opacity: 1;
-  color: #ff4f1a;
+  color: var(--accent-bright);
 }
 
 #nav-film { top: 25%; left: 5%; }
@@ -355,7 +360,7 @@ canvas { display: block; }
   font-size: 0.8rem;
   opacity: 0.6;
 }
-.body-contact a { color: var(--accent, #c43d14); }
+.body-contact a { color: var(--accent); }
 
 .detail-link {
   display: inline-block;
@@ -363,7 +368,7 @@ canvas { display: block; }
   font-weight: 450;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #c43d14;
+  color: var(--accent);
   text-decoration: none;
   opacity: 0.7;
   transition: opacity 0.3s;
@@ -518,7 +523,7 @@ canvas { display: block; }
 }
 .about-links a:hover {
   opacity: 1;
-  border-bottom-color: #c43d14;
+  border-bottom-color: var(--accent);
 }
 .about-contact {
   font-size: 0.9rem;
@@ -529,7 +534,7 @@ canvas { display: block; }
   transition: opacity 0.3s, border-color 0.3s;
 }
 .about-contact:hover {
-  border-bottom-color: #c43d14;
+  border-bottom-color: var(--accent);
 }
 
 

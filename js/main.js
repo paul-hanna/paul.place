@@ -1113,7 +1113,20 @@ const panelContent = document.getElementById('panel-content');
 const panelClose = document.getElementById('panel-close');
 let currentSection = null;
 
+const SECTION_ACCENTS = {
+  film:       { accent: '#c43d14', bright: '#ff4f1a' },
+  multimedia: { accent: '#1f7a4d', bright: '#3dff7a' },
+  writing:    { accent: '#a3690b', bright: '#e8a33d' },
+  about:      { accent: '#c43d14', bright: '#ff4f1a' },
+};
+function setAccent(key) {
+  const a = SECTION_ACCENTS[key] || SECTION_ACCENTS.about;
+  document.documentElement.style.setProperty('--accent', a.accent);
+  document.documentElement.style.setProperty('--accent-bright', a.bright);
+}
+
 function ensurePanelOpen(key) {
+  setAccent(key);
   currentSection = key;
   panel.classList.add('open');
   overlay.classList.add('open');
