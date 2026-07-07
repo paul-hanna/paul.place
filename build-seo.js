@@ -64,13 +64,15 @@ function stripContactParagraph(html) {
   return html.replace(/<p[^>]*>For all professional inquiries[\s\S]*?<\/p>/gi, '').trim();
 }
 
-// Extract ISO upload date from item — year from sub field, fall back to build date
+// Extract ISO upload date from item — prefer structured date/year fields
 function extractUploadDate(item) {
+  if (item.date) return item.date;
+  if (item.year) return item.year + '-01-01';
   if (item.sub) {
     const m = item.sub.match(/\b(20\d{2})\b/);
     if (m) return m[1] + '-01-01';
   }
-  return BUILD_DATE;
+  return null;
 }
 
 function truncate(str, len) {
@@ -165,7 +167,8 @@ function itemLd(item, slug, sectionKey) {
   }
   if (type === 'VideoObject') {
     ld['@id'] = DOMAIN + '/' + slug + '#video';
-    ld.uploadDate = extractUploadDate(item);
+    const up = extractUploadDate(item);
+    if (up) ld.uploadDate = up;
   }
   if (type === 'BlogPosting') ld.headline = item.title;
   const cleanBody = stripContactParagraph(item.body);

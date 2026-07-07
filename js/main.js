@@ -53,21 +53,21 @@ const sections = {
     items: [
       {
         title: 'Vellum - Find time for you',
-        sub: 'Director, Writer · 2026',
+        roles: ['Director', 'Writer'], year: 2026,
         tags: ['Commercial', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/1176290293?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-find-time-for-you.png',
       },
       {
         title: 'Vellum Product Launch',
-        sub: 'Director, Writer, Soundtrack · 2026',
+        roles: ['Director', 'Writer', 'Soundtrack'], year: 2026,
         tags: ['Commercial', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/1154409548?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-product-launch.png',
       },
       {
         title: 'FALLOUT',
-        sub: 'Low.bō · Director, Producer, Editor · 2025',
+        client: 'Low.bō', roles: ['Director', 'Producer', 'Editor'], year: 2025,
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/qzZZQFI49PU?autoplay=1',
         image: 'images/works/fallout.png',
@@ -75,14 +75,14 @@ const sections = {
       },
       {
         title: 'Alchemical',
-        sub: 'Rachel Bochner · Director, Editor · 2024',
+        client: 'Rachel Bochner', roles: ['Director', 'Editor'], year: 2024,
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/wJqFHxVUhOg?autoplay=1',
         image: 'images/works/alchemical.png',
       },
       {
         title: 'rightwhereyouwantme',
-        sub: 'Issadora Ava · Director, Producer, Editor, Colorist · 2025',
+        client: 'Issadora Ava', roles: ['Director', 'Producer', 'Editor', 'Colorist'], year: 2025,
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/FrSuiM0eRH8?autoplay=1',
         image: 'images/works/rightwhereyouwantme.png',
@@ -90,28 +90,28 @@ const sections = {
       },
       {
         title: 'Creative Liberties',
-        sub: 'Rachel Bochner · Director, Producer, Editor · 2024',
+        client: 'Rachel Bochner', roles: ['Director', 'Producer', 'Editor'], year: 2024,
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/9AQtCG8GiHY?autoplay=1',
         image: 'images/works/creative-liberties.png',
       },
       {
         title: 'O Superman',
-        sub: 'Writer, Director, Producer, Editor · 2023',
+        roles: ['Writer', 'Director', 'Producer', 'Editor'], year: 2023,
         tags: ['Short Film', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
         image: 'images/works/o-superman.png',
       },
       {
         title: 'Jersey in July',
-        sub: 'Dom Innarella · Production Coordinator · 2025',
+        client: 'Dom Innarella', roles: ['Production Coordinator'], year: 2025,
         tags: ['Music Video', 'Production'],
         embed: 'https://www.youtube.com/embed/SD-hi9vG0O8?autoplay=1',
         image: 'images/works/jersey-in-july.jpg',
       },
       {
         title: 'Proud of Me',
-        sub: 'Eva Westphal · Producer · 2023',
+        client: 'Eva Westphal', roles: ['Producer'], year: 2023,
         tags: ['Music Video', 'Producer'],
         embed: 'https://www.youtube.com/embed/2zCubXGT2gY?autoplay=1',
         image: 'images/works/proud-of-me.png',
@@ -125,28 +125,28 @@ const sections = {
       },
       {
         title: 'You, Me, and Her',
-        sub: 'Black Hibiscus · Producer · 2023',
+        client: 'Black Hibiscus', roles: ['Producer'], year: 2023,
         tags: ['Music Video', 'Producer'],
         embed: 'https://www.youtube.com/embed/8yCKJpMeSPQ?autoplay=1',
         image: 'images/works/you-me-and-her.png',
       },
       {
         title: 'Hallway',
-        sub: 'Writer, Director, Editor · 2023',
+        roles: ['Writer', 'Director', 'Editor'], year: 2023,
         tags: ['Experimental', 'Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/TpkrhPAQSlM?autoplay=1',
         image: 'images/works/hallway.png',
       },
       {
         title: 'The Unavailable Memory of',
-        sub: 'Writer, Director, Editor, Producer · 2022',
+        roles: ['Writer', 'Director', 'Editor', 'Producer'], year: 2022,
         tags: ['Short Film', 'Director', 'Writer'],
         embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
         image: 'images/works/unavailable-memory.png',
       },
       {
         title: 'Movies in the Daytime',
-        sub: 'Isa Bruder · Director, Producer, Editor · 2025',
+        client: 'Isa Bruder', roles: ['Director', 'Producer', 'Editor'], year: 2025,
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/Z2kKyP2e-Hk?autoplay=1',
         image: 'images/works/movies-in-the-daytime.png',
@@ -154,21 +154,21 @@ const sections = {
       },
       {
         title: 'Absence',
-        sub: 'Writer, Director, Editor · 2024',
+        roles: ['Writer', 'Director', 'Editor'], year: 2024,
         tags: ['Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/d-2IfeDv95o?autoplay=1',
         image: 'images/works/absence.png',
       },
       {
         title: 'Circonstances',
-        sub: 'Director, Cinematographer, Editor · 2022',
+        roles: ['Director', 'Cinematographer', 'Editor'], year: 2022,
         tags: ['Short Film', 'Director', 'DP'],
         embed: 'https://www.youtube.com/embed/kKkkDe9-Q2s?autoplay=1',
         image: 'images/works/circonstances.png',
       },
       {
         title: 'Monday',
-        sub: 'Writer, Director, Editor, Producer · 2021',
+        roles: ['Writer', 'Director', 'Editor', 'Producer'], year: 2021,
         tags: ['Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/xoj-ExKy6hg?autoplay=1',
         image: 'images/works/monday.png',
@@ -182,6 +182,7 @@ const sections = {
       {
         title: 'Placement',
         sub: 'ITP Thesis · 2026',
+        year: 2026,
         tags: ['Installation', 'Machine Learning'],
         image: 'images/works/placement.gif',
         description: `<p style="margin-bottom:1.5rem;"><a class="detail-link-btn" href="https://paul.tube/placement" target="_blank" rel="noopener">View project ↗︎</a></p><p>Presented as Paul Hanna's 2026 ITP thesis at NYU Tisch. <a href="https://itp.nyu.edu/thesis/archive/2026/12524-paul-hanna/" target="_blank" rel="noopener">View on the ITP Thesis Archive ↗︎</a></p><p>Commercial cinema has long operated as a dual medium: a vehicle for narrative and, simultaneously, a platform for brand communication. Product placement&mdash;the contractual embedding of logos, products, and corporate identities within the mise-en-scène&mdash;functions through studied inconspicuousness, relying on the viewer's absorption in story to render commerce invisible and subliminal.</p><p><em>Placement</em> isolates and foregrounds this secondary register.</p><p>Employing a custom computer vision pipeline trained on object detection, the piece systematically scans a feature film frame by frame, identifying and extracting every instance of brand presence. The source footage is discarded. What remains is an uninterrupted cropped and sequenced stream composed entirely of product placements.</p><p>Severed from narrative context, these fragments take on an unsettling quality. Logos drift through frameless space; audio exists only in the context of brand presence; corporate insignia recur with the rhythm of a pattern rather than the logic of a scene.</p><p>In doing so, <em>Placement</em> positions itself within a lineage of appropriation and re-contextualization, from the found-footage traditions of structural film to contemporary practices of database cinema, while directing its attention toward the specific economy of attention that underwrites commercial moviemaking.</p><p><strong>Technical:</strong> A YOLOv8 object detection model trained on OpenLogo and LogoDet identifies logos and brands across films; FFMPEG then isolates the matching frames and reassembles them into a continuous, infinite stream.</p>`,
@@ -203,6 +204,7 @@ const sections = {
       {
         title: 'Disposal',
         sub: 'Paul Hanna & Maya Castronovo · 2024',
+        year: 2024,
         description: 'Filmed at Shirley Chisholm State Park, site of the defunct Fountain Avenue Landfill in Brooklyn. From 1961 to 1985, the landfill received hundreds of thousands of tons of trash and illegal hazardous waste. The film\'s cyclical, embodied camera encourages us to consider how violence is encoded within the landscape itself. By refusing conventional cinematic closure, Disposal situates these traces of violence within frameworks of ecological restoration and renewal.',
         tags: ['Experimental'],
         embed: 'https://player.vimeo.com/video/942757123?badge=0&autopause=0&player_id=0&app_id=58479',
@@ -211,6 +213,7 @@ const sections = {
       {
         title: 'Translated',
         sub: 'FFMPEG, OCR, spectrograms, TTS · 2025',
+        year: 2025,
         description: 'This piece features FFMPEG text-to-video translations, OCR, spectrograms, and TTS.',
         tags: ['Data Translation', 'Experimental'],
         embed: 'https://www.youtube.com/embed/dgcPde-KUTI?autoplay=1',
@@ -240,6 +243,7 @@ const sections = {
       {
         title: 'Spectrograms of my mother at her wedding',
         sub: 'Image to sound to image process · 2025',
+        year: 2025,
         tags: ['Experimental'],
         image: 'images/works/spectrograms.png',
         video: 'spectrograms.mp4',
@@ -248,7 +252,7 @@ const sections = {
       },
       {
         title: 'Locating',
-        sub: 'Unreal Engine · 2026',
+        roles: ['Unreal Engine'], year: 2026,
         tags: ['Experimental'],
         embed: 'https://player.vimeo.com/video/1176747824?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/locating.png',
@@ -256,6 +260,7 @@ const sections = {
       {
         title: 'I Know it When I See It',
         sub: 'Resin cast, Sylvania television, antenna, foam · 2023',
+        year: 2023,
         tags: ['Sculpture', 'Installation'],
         image: 'images/works/i-know-it-when-i-see-it.jpg',
         images: ['images/works/i-know-it-when-i-see-it-gallery-1.jpg','images/works/i-know-it-when-i-see-it-gallery-2.jpg','images/works/i-know-it-when-i-see-it-gallery-3.jpg','images/works/i-know-it-when-i-see-it-gallery-4.jpg','images/works/i-know-it-when-i-see-it-gallery-5.jpg','images/works/i-know-it-when-i-see-it-gallery-6.jpg','images/works/i-know-it-when-i-see-it-gallery-7.jpg','images/works/i-know-it-when-i-see-it-gallery-8.jpg','images/works/i-know-it-when-i-see-it-gallery-9.jpg','images/works/i-know-it-when-i-see-it-gallery-10.jpg'],
@@ -263,26 +268,27 @@ const sections = {
       {
         title: 'Tower of Babel',
         sub: 'BRIC + NYC Data x Design exhibition · with Aida Razavilar',
+        year: 2025,
         tags: ['Installation', 'Exhibition'],
         image: 'images/works/tower-of-babel.jpeg',
         description: 'Exhibited at Data by Design 2025 at BRIC. An interactive installation in which visitors select any New York City community district via pushbutton. A generated creole\u2014derived from the three most spoken diaspora languages in that district, weighted by their relative distribution\u2014appears on an e-ink display, accompanied by a text-to-speech voice narrating the district\u2019s history in the new tongue. The work imagines a city unmoored from English as its default, proposing a speculative future in which linguistic exchange, rather than assimilation, shapes how communities speak and remember.',
       },
       {
         title: 'America Kept its Word',
-        sub: '2024',
+        year: 2024,
         embed: 'https://www.youtube.com/embed/bMIkaV6jo7Q?autoplay=1',
         image: 'images/works/america-kept-its-word.png',
       },
       {
         title: 'Can We Bring Them Back',
-        sub: '2023',
+        year: 2023,
         description: 'I have always been particularly moved when I\'ve happened across a dead animal. In the city, birds are the most common. They spend most of their time in open air, unrestricted. Rats you find less often. As a child, I cried each time I saw a finch sprawled out in a field and prayed to God that the bird would stand back up and fly away. I still feel that way.',
         embed: 'https://www.youtube.com/embed/UYHwQlAasFk?autoplay=1',
         image: 'images/works/can-we-bring-them-back.png',
       },
       {
         title: 'Passage',
-        sub: '2023',
+        year: 2023,
         embed: 'https://player.vimeo.com/video/856221377?h=6f48b3fef0',
         image: 'images/works/passage.png',
       },
@@ -374,7 +380,7 @@ const sections = {
         sub: 'Selected poems',
         group: true,
         children: [
-          { title: 'Next time', sub: '2024', bodyType: 'poetry', body: `Next time you spit upon the streets of the West Village
+          { title: 'Next time', sub: '2024', year: 2024, bodyType: 'poetry', body: `Next time you spit upon the streets of the West Village
 because the patterns around my neck
 imply a form of savagery,
 spit at me clearly
@@ -410,7 +416,7 @@ despite the splutter
 
 Next time please feel comfortable enough
 to do the same` },
-          { title: 'Cafeteria', sub: '2024', bodyType: 'poetry', body: `For on certain days,
+          { title: 'Cafeteria', sub: '2024', year: 2024, bodyType: 'poetry', body: `For on certain days,
 when your heart beats
                                         with an unusual cadence
 and your hands, wrists, forearms
@@ -446,7 +452,7 @@ and the calcified remnants of an apple tart
 
 And if you can't finish the salad,
                               can you hold onto your seat?` },
-          { title: 'Fifteen Matches', sub: '2022', bodyType: 'poetry', body: `Fifteen matches to light one cigarette
+          { title: 'Fifteen Matches', sub: '2022', year: 2022, bodyType: 'poetry', body: `Fifteen matches to light one cigarette
 never did understand how they worked
 or how the leagues blew and the pages
 keep turning always to some entry, DEC
@@ -474,7 +480,7 @@ Never did understand the atom shake
 hum drum muffle of old Chevy at harbor
 when it's out smoke another but before dip
 your rugged fingers into the air for a minute` },
-          { title: 'Lux Aeterna', sub: '2023', bodyType: 'poetry', body: `Twelve thirty across the Pacific is not the same.
+          { title: 'Lux Aeterna', sub: '2023', year: 2023, bodyType: 'poetry', body: `Twelve thirty across the Pacific is not the same.
 Words whirlwinding, divorced from my window seat
 As trunks shuffle on and off, grating and screaming.
 There are so many people in this city, and where
@@ -510,7 +516,7 @@ Until they sound like static. I'm trying
 To reconstruct that melody I said
 I'd play. It sounded pretty then. Think
 It would sound pretty soon.` },
-          { title: 'Sharuunaqia', sub: 'Michigan Quarterly Review · 2022', bodyType: 'poetry', body: `we cannot understand what you are saying
+          { title: 'Sharuunaqia', sub: 'Michigan Quarterly Review · 2022', year: 2022, bodyType: 'poetry', body: `we cannot understand what you are saying
 show us the word instead
                                                   I turn
 my phone their eyes fixate on the Arabic
@@ -567,7 +573,7 @@ in the in-between goop of their cocoons
 I must admit that I think I will hatch eventually
 but the only remnants of my larval period
 will be befuddlement and regret` },
-          { title: 'Sweet Dumpling', sub: 'Michigan Quarterly Review · 2022', bodyType: 'poetry', body: `looming over the island I have just uncovered
+          { title: 'Sweet Dumpling', sub: 'Michigan Quarterly Review · 2022', year: 2022, bodyType: 'poetry', body: `looming over the island I have just uncovered
 the Italian secrets of the pasta roller
 ravioli is but a dumpling in the grand scheme
 of cuisine and what is better than globalization
@@ -618,7 +624,7 @@ consequences of scalding oil
 a cold shower now and I am staring at the
 entrails of ambitious dessert and I am
 palpitating and I am sorry` },
-          { title: 'Presently', sub: '2023', bodyType: 'poetry', body: `In a room, Oxforded colleagues congregated
+          { title: 'Presently', sub: '2023', year: 2023, bodyType: 'poetry', body: `In a room, Oxforded colleagues congregated
 There's suits you'll never wear; suits them
 Gossamers of gabble adorn walls
 Strike my face, like footslogged trees
@@ -653,7 +659,7 @@ Lay down to rise
 Cross leg and vein pinches
 Call me a hyposthesiac
 At least my cat can hear me flail.` },
-          { title: 'Orthographic', sub: '2023', bodyType: 'poetry', body: `Scribbled lines and swirls enough to call handwriting
+          { title: 'Orthographic', sub: '2023', year: 2023, bodyType: 'poetry', body: `Scribbled lines and swirls enough to call handwriting
 On a piece of olive oil stained card stock from that restaurant
 Up the road, thought it better than the phone calls we ordered
 
@@ -687,7 +693,7 @@ How could you expect a letter?
 I've moved along with them
 Stamps enough and address
 Illegible` },
-          { title: 'Allegory of a train gone by', sub: '2023', bodyType: 'poetry', body: `I'm staring at some electric wires
+          { title: 'Allegory of a train gone by', sub: '2023', year: 2023, bodyType: 'poetry', body: `I'm staring at some electric wires
 Tsunamis of cables and posts wash past
 Lingering enough to galvanize, pull open the aorta
 Passing by and leaving behind no sutures
@@ -713,7 +719,7 @@ Stepping onto the platform
 I'm waiting for the train to stop.
 The trains may go. Tracks always end.
 Trains can come back. Trains do.` },
-          { title: 'Elegy for Jane', sub: '2022', bodyType: 'poetry', body: `At 7:33am, infiltrated the supersonics of my haze
+          { title: 'Elegy for Jane', sub: '2022', year: 2022, bodyType: 'poetry', body: `At 7:33am, infiltrated the supersonics of my haze
 voices instead of platitude text I followed with a Google, a Marin, Musgrove website set place in a dorm room seven sisters or fewer now
 
 Heart pounds all my eternal sang out of my fingers
@@ -734,7 +740,7 @@ of your body and slink silently down your gizzard` },
         sub: 'Selected entries',
         group: true,
         children: [
-          { title: 'Before Sunset, Intimacy, and Proximity', sub: '04.08.2026', bodyType: 'prose', image: 'images/works/journal-before-sunset-intimacy-proximity.webp', body: `<p>Suggested listening: A Waltz for a Night \u2014 Julie Delpy</p>
+          { title: 'Before Sunset, Intimacy, and Proximity', sub: '04.08.2026', date: '2026-04-08', bodyType: 'prose', image: 'images/works/journal-before-sunset-intimacy-proximity.webp', body: `<p>Suggested listening: A Waltz for a Night \u2014 Julie Delpy</p>
 
 <p>As I\u2019ve come to write a lot more fiction and screenplays, I\u2019ve (re)explored the whole notion of writing plot and developing characters; creating scenarios that feel rooted in some experienced reality or some extrapolated one. I\u2019m revisiting Before Sunset after a long spell of experiences and tons of introspection.</p>
 
@@ -763,7 +769,7 @@ of your body and slink silently down your gizzard` },
 <p><em>I feel alive when I want something more than basic survival needs. Wanting, whether it\u2019s intimacy with another person or a pair of shoes, is beautiful.</em></p>
 
 <p>There is something beautiful about the act of wanting, of longing for something in one\u2019s past. I\u2019m left wrangling the question of whether it was a form of intimacy or an impression of it, whether the emotional connection feels more like a retroactive imposition, a way to cope with the uncertainty of something that didn\u2019t end conclusively. I think it\u2019s possible that the same things that made those moments feel intimate and real are what render them unreachable now, like my sketch that never quite resembled her.</p>` },
-          { title: 'Debussy\'s 1st Arabesque, Lily Chou Chou and hyperfixation', sub: '10.17.2025', bodyType: 'prose', image: 'images/works/journal-debussy-lily-chou-chou.jpg', body: `<p>Suggested listening: Claude Debussy - Arabesque No. 1</p>
+          { title: 'Debussy\'s 1st Arabesque, Lily Chou Chou and hyperfixation', sub: '10.17.2025', date: '2025-10-17', bodyType: 'prose', image: 'images/works/journal-debussy-lily-chou-chou.jpg', body: `<p>Suggested listening: Claude Debussy - Arabesque No. 1</p>
 
 <p>I recently rewatched All About Lily Chou Chou at the Metrograph. I must admit that before my first watch, I didn\u2019t even realize that Lily Chou Chou was not a real artist, and listened to Glide because someone I had a crush on told me to check out Lily Chou Chou. I entirely forgot to even do that until a month or two after seeing this person, when I discovered a notes app entry that was dated May 24th, 2023 and only had three entries:</p>
 
@@ -804,7 +810,7 @@ of your body and slink silently down your gizzard` },
 <p>Clearly, and to my bewilderment, my partial-playing of the Arabesque triggered a memory, an irresolution in both of these classmates\u2014one as it relates to loss and grief, the other to the struggle to complete.</p>
 
 <p>Debussy\u2019s Arabesque may be, for me, completely resolved, despite being incomplete. The two pages of the Arabesque that I have memorized can exist without the other three, and they do.</p>` },
-          { title: 'A dream I had', sub: '04.14.2025', bodyType: 'prose', body: `<p>Suggested listening: Leaving Dreaming - Ellen Akbro</p>
+          { title: 'A dream I had', sub: '04.14.2025', date: '2025-04-14', bodyType: 'prose', body: `<p>Suggested listening: Leaving Dreaming - Ellen Akbro</p>
 
 <p>I was standing on a rooftop\u2014in front of me was the empire state building. There had been vertical and horizontal expansion on the empire state building, so weird blocky apartments that looked structurally unsound were being built right off of it.</p>
 
@@ -815,7 +821,7 @@ of your body and slink silently down your gizzard` },
 <p>Max and I then started to walk forward and found ourselves on a never-ending escalator. We wanted to go to the classic building to get something to eat, but found that the escalator we stepped on didn\u2019t truly connect to that building.</p>
 
 <p>It was some strange escalator independent of the building. Incredibly wide. It clipped through floors, and Max and I didn\u2019t really know how or when to get off. We felt microscopic, that if we tried to get off, we\u2019d fall and get hurt.</p>` },
-          { title: 'Past Lives, Before Sunrise, and life decisions', sub: '02.17.2025', bodyType: 'prose', image: 'images/works/journal-past-lives-before-sunrise.jpeg', body: `<p>Suggested listening: Quiet Eyes - Sharon Van Etten, Kokomo IN - Japanese Breakfast</p>
+          { title: 'Past Lives, Before Sunrise, and life decisions', sub: '02.17.2025', date: '2025-02-17', bodyType: 'prose', image: 'images/works/journal-past-lives-before-sunrise.jpeg', body: `<p>Suggested listening: Quiet Eyes - Sharon Van Etten, Kokomo IN - Japanese Breakfast</p>
 
 <p>In July of 2024, I began listening to the Past Lives soundtrack a lot. I think I clocked around 2,000+ minutes in less than four months from what I can gather (which is more than 50ish listen-throughs, which on paper doesn\u2019t look like a lot, but comparitively it feels like a lot). It wasn\u2019t an album that particularly struck me during the film, instead it was music I discovered after rewatching the film with a desire to keep the emotion going.</p>
 
@@ -868,7 +874,7 @@ of your body and slink silently down your gizzard` },
 <p>I can\u2019t think about it too much without pushing myself to be a little teary-eyed. It doesn\u2019t make a whole lot of sense to me. And, despite all of that, it\u2019s impossible not to think of the past lives I could have lived or paths I could have taken, or paths that were closed because of bad timing. Ever since I was in middle school (back then, I was a devout Catholic boy), I remember pleading to God with the hope that he\u2019d benevolently tell me what the right decisions were. This was in some module about colleges and careers in the seventh grade. What job would I really enjoy and be really good at? What\u2019ll make me happy?</p>
 
 <p>I keep thinking about this stuff. Waves are transient, I can\u2019t dwell. In-yun and the thread are great forces, like God. Maybe I need to remind myself that where I am is where I\u2019m supposed to be, but it\u2019s hard to accept if you\u2019re uncertain and find the sentiment hard to believe. I get why Nora cried in Arthur\u2019s arms at the end.</p>` },
-          { title: 'Voyeurism and Gladiator 2', sub: '12.18.2024', bodyType: 'prose', image: 'images/works/journal-on-voyeurism-and-gladiator-2.png', body: `<p>About a month ago, I watched Gladiator 2. I have never seen the original Gladiator, nor did I attempt to pick up the lore prior to watching it. Really, I was incredibly excited to watch a new Ridley Scott film after the press tour of Napoleon. Scott, when badgered by French journalists for its wicked historical inaccuracy, retorted, \u201CWere you there? Oh you weren\u2019t there. Then how do you know?\u201D</p>
+          { title: 'Voyeurism and Gladiator 2', sub: '12.18.2024', date: '2024-12-18', bodyType: 'prose', image: 'images/works/journal-on-voyeurism-and-gladiator-2.png', body: `<p>About a month ago, I watched Gladiator 2. I have never seen the original Gladiator, nor did I attempt to pick up the lore prior to watching it. Really, I was incredibly excited to watch a new Ridley Scott film after the press tour of Napoleon. Scott, when badgered by French journalists for its wicked historical inaccuracy, retorted, \u201CWere you there? Oh you weren\u2019t there. Then how do you know?\u201D</p>
 
 <p>A valid question. A question that set the stage for Gladiator 2, which did not escape identical claims of historical inaccuracy (indeed I also thought it peculiar that the film depicts the seemingly impossible feat of bringing saltwater sharks into the colosseum). Sharks aside, the film was fun enough and, as expected, the action sequences were compelling, the rest of the film not so. An utterly clich\u00E9 plot with some violence that makes my monkey brain go woo-woo, similar enough to pornography (structurally\u2014where plot is secondary to the \u201Caction.\u201D I want to clarify per my being raised in a puritanical society that I am NOT a consumer nor am I a purveyor of pornography), nestled under Martin Scorsese\u2019s movies-as-spectacle-or-theme-park claim. Gladiator 2 was a spectacle, but in an almost more disappointing context given Scott\u2019s rather illustrious career (Thelma & Louise, Alien, Blade Runner, etc. He\u2019s got range!).</p>
 
@@ -895,7 +901,7 @@ of your body and slink silently down your gizzard` },
 <p>There\u2019s a blurry boundary between performance and authenticity across the board. Nothing we consume will ever be the real thing, like sports are, so we force some form of narrative or sympathy to give us stakes. Pornography is different because arousal can happen sans narrative when viewers have the \u201Creal deal\u201D in front of them. Gladiator 2 needs these voyeuristic moments that differentiate private Lucius and public Lucius because the viewers don\u2019t have real violence in front of them, and they don\u2019t have anyone to root for without it. Sex doesn\u2019t necessarily require a winner, so the tension you see in sport/war as spectacle isn\u2019t needed in pornography.</p>
 
 <p>As Scott asks\u2014were we there, and if not, how do we know? How do we know who the authentic and real Lucius is, if he so exists at all? What are the real boundaries between what we will entertain as spectacle and not, and what are the prerequisite elements that a spectacle needs? I wrote a few months back about our private/public selves. I think Scott makes me wonder which, if either, is the authentic self.</p>` },
-          { title: 'Gretchen Bender\'s Dumping Core', sub: '10.16.2024', bodyType: 'prose', image: 'images/works/journal-gretchen-bender-dumping-core.png', body: `<p>Gretchen Bender wrote,</p>
+          { title: 'Gretchen Bender\'s Dumping Core', sub: '10.16.2024', date: '2024-10-16', bodyType: 'prose', image: 'images/works/journal-gretchen-bender-dumping-core.png', body: `<p>Gretchen Bender wrote,</p>
 
 <p>\u201CI believe that an acceleration into, rather than a resistance to, our multilayered visual environment will reveal structures or open windows to the development of a critical consciousness we can\u2019t yet perceive as useful from within our immediate vantage point.\u201D</p>
 
@@ -920,7 +926,7 @@ of your body and slink silently down your gizzard` },
 <p>This leads to perhaps the most fundamental difference between Dumping Core and our contemporary technological lives. The installation inherently recognizes that there is ultimately a return to the real world\u2014the programming is finite, ending after a set duration and repeating, and it exists in the context of other works that don\u2019t necessarily evoke the same experience in a viewer. There is always an ultimate end to Bender\u2019s work. When we consider smartphones and today\u2019s internet landscape, our relationship with media seems to blur. There isn\u2019t a real escape from the technological hyperreality. Our phones exist as extensions of ourselves\u2014Donna Haraway astutely describes in her work A Cyborg Manifesto that living beings and technology ultimately merge to form a human nature and culture that relies on technology, and is inseparable from it. Cell phones are extensions of the self\u2014human social interaction and other innate natural instincts are now literally impossible to execute in today\u2019s social context without a phone. There\u2019s a sort of social ostracization that might occur if you were to walk up to someone and befriend them, then promptly whip out a flip phone to store their contact information instead of an iPhone. Such behavior is social deviance.</p>
 
 <p>To be honest, Bender\u2019s piece feels like a warning sign from the 80s, despite her claim that an \u201Cacceleration\u201D can \u201Creveal structures or open windows to the development of a critical consciousness we can\u2019t yet perceive.\u201D Maybe it is the case that we can\u2019t quite perceive the consciousness since we\u2019re currently living in it. Yet, her piece now appears to embody that period and gives viewers a retroactive sense of what that critical consciousness may have been like in the 80s. Today, however, Dumping Core is exaggerated, brash, and at times impossibly incoherent. The television as a symbol of media overstimulation is classic, but dated. They\u2019re not as mobile as cell phones, far less interactive than computers, and relatively uninteractive. What is particularly distressing, however, is that despite the knowledge of the horrid and negative impacts of technology proliferating across the postmodern era, we have continued to develop these technologies. They are even more invasive and integrated than ever before. It is as if, collectively, we decided that we would stay on Bender\u2019s bench and watch the programming in hopes of reaching some critical consciousness, and chose to ignore the light beam that promised a world of relative tangibility and natural instinct free of false realities.</p>` },
-          { title: 'Dinner and a movie', sub: '07.16.2024', bodyType: 'prose', image: 'images/works/journal-dinner-and-a-movie.jpg', body: `<p>I recently went to see the film The Cook, the Thief, His Wife, & Her Lover, directed by Peter Greenaway, masterfully scored by Michael Nyman, and gorgeously costumed by Jean Paul Gaultier. Before going to watch the movie at the IFC Center, I took myself out to dinner.</p>
+          { title: 'Dinner and a movie', sub: '07.16.2024', date: '2024-07-16', bodyType: 'prose', image: 'images/works/journal-dinner-and-a-movie.jpg', body: `<p>I recently went to see the film The Cook, the Thief, His Wife, & Her Lover, directed by Peter Greenaway, masterfully scored by Michael Nyman, and gorgeously costumed by Jean Paul Gaultier. Before going to watch the movie at the IFC Center, I took myself out to dinner.</p>
 
 <p>There\u2019s this restaurant on Sullivan right before you get onto Houston called Three of Cups. It\u2019s a bizarre restaurant, a mix of American and French cuisine, to a degree, but to me, it reads more as a restaurant where the chef had a few good ideas and no way to piece them all together under a cohesive culinary culture. This is totally fine. In fact, I think there might be a world of dining experience to be explored, a world where nothing really makes sense in context and where the menu logic baffles critics and diners alike.</p>
 
@@ -947,7 +953,7 @@ of your body and slink silently down your gizzard` },
 <p>On a more obvious note, Michael is killed because his affair with Georgina is made public, again, a real messy consequence of private and public merging. In this case, it\u2019s the inverse\u2014the private is made public, and in this context is rejected by those who see it. Michael undergoes a radical transformation where public attempts to become private and private attempts to become public\u2014no person can handle such a dramatic shift of entirely different worlds.</p>
 
 <p>When it comes to dining, it\u2019s almost impossible to envision solo diners as anything but their public facing selves. The tension between public and private makes it impossible for a solo diner to bring their private lives to dinner. Using TikTok while enjoying a succulent meal is essentially screaming to the world, \u201CI am addicted to my phone! I love TikTok!\u201D while being aware of that messaging.</p>` },
-          { title: 'COVID Singularity', sub: '07.11.2024', bodyType: 'prose', body: `<p>Today, I\u2019m finally able to re\u00EBnter society after contracting COVID for the second time. This strain in particular is endearingly called \u201CFLiRT,\u201D an apt name for a disease spread through face-to-face contact, the exchanging of droplets, etc. etc.</p>
+          { title: 'COVID Singularity', sub: '07.11.2024', date: '2024-07-11', bodyType: 'prose', body: `<p>Today, I\u2019m finally able to re\u00EBnter society after contracting COVID for the second time. This strain in particular is endearingly called \u201CFLiRT,\u201D an apt name for a disease spread through face-to-face contact, the exchanging of droplets, etc. etc.</p>
 
 <p>Both times I\u2019ve contracted COVID, I was the sole person in my party to get infected. The scenarios are eerily similar\u2014I, and a few friends (average: 5.5 people), hit the proverbial town, spending approximately two hours at a single bar after pregaming well beyond necessity. Once there, we neatly assume a circle formation, all facing inward, until one of us is brave enough to make a new friend, or decides that the hour to grab another drink has struck (this is often my reason).</p>
 
@@ -972,7 +978,7 @@ of your body and slink silently down your gizzard` },
 <p>The entire experience frightened me to my core. Even in a moment of panicked illness and sickness, I found myself alone. After the whole ordeal, I returned to my work as if nothing of interest had just traversed. I don\u2019t feel that there aren\u2019t people in my life\u2014on the contrary. There are plenty, many of whom I adore deeply. But it is this momentary isolation that can, at time, feel amplified. Alone, there are substantially fewer things to distract one from their condition. Boredom, in my eyes, only occurs when one is alone, and lacks sufficient distraction.</p>
 
 <p>I think stuff like this is what convinces me more and more that man is inherently social, why we desire romance so strongly, and so on. There\u2019s a particular frigidity that loneliness carries.</p>` },
-          { title: 'Hungover Sartre', sub: '07.05.2024', bodyType: 'prose', body: `<p>I had put off reading Sartre\u2019s Existentialism is a Humanism for quite some time. Perhaps I owe that to the following Google Books review posted by a Timothy Proffitt, which reads, in its entirety:</p>
+          { title: 'Hungover Sartre', sub: '07.05.2024', date: '2024-07-05', bodyType: 'prose', body: `<p>I had put off reading Sartre\u2019s Existentialism is a Humanism for quite some time. Perhaps I owe that to the following Google Books review posted by a Timothy Proffitt, which reads, in its entirety:</p>
 
 <p>\u201CSartre stays in the realm of obscurity, his credence of \u2018Existence before Essence\u2019 is just the flip of Camus\u2019 metaphysical works. He is blind to the truth of Being.\u201D</p>
 
@@ -999,8 +1005,8 @@ of your body and slink silently down your gizzard` },
 <p>Where does this take me? I think it lowers the stakes a little bit. I think I can just will myself to be whatever I think I wish to be in the short term because essence is fluid. Handwriting changes, who I am and what I do changes. Fluidity means no decision is forever, and that makes deciding easier to do.</p>
 
 <p>*This brings to mind an instance where, as a child, I demanded that my preschool teacher tell me how to spell the letter B. She told me that it was just spelled B. I happened to be a highly dubious and skeptical kid, so I rebuked my teacher after her bold assertion. In my head, she didn\u2019t understand the essence of my question. She told me once again that it was just B. I figured this interaction would be a losing game and instead decided to ask my mother after school. She, in fact, corroborated my teacher\u2019s claim, and so I went on believing that nobody would ever understand the question I was asking and so desperately trying to get to the bottom of, rather than admit defeat and believe that B was, quite simply, spelled B.</p>` },
-          { title: 'A quick thought concerning a yoga class', sub: '06.30.2024', bodyType: 'prose', body: `<p>The instructor instructed my class to pretend we were giving the earth a hug. I imagined myself in a forest with dense shrubbery. It reminded me of what I think the land in the Hobbit looks like, though I\u2019ve never read the book or watched the film. There I was, laying atop the moist and squishy soil, giving it the warmest embrace I could as beads rolled out of every sweat-producing orifice I had. I then thought about cavemen participating in this exercise, and how they might, after a few minutes, stand back up and continue to sharpen their sticks because they\u2019re always touching dirt to some degree. They\u2019re not lying on a centimeter-thin yoga mat in a 95 degree room staring at a ceiling ridden with green lights that make one feel as though they were a reptile writhing under the heat lamp of some enclosure. There\u2019s no corporate for cavemen to escape. Would yoga like this prove effective in their state of nature, loins covered by a single leaf? At any rate, it certainly wasn\u2019t proving effective in the present, non-wild surroundings of the West Village. Indeed, I may have felt more connected with the world had I laid down on Canal Street and hugged the pavement while cars skirted left and right and pigeons timidly attempted to cross the road. At least I wouldn\u2019t need to envision that environment\u2014I\u2019d really be feeling something, not some cheap emulation.</p>` },
-          { title: 'So many roads', sub: '06.29.2024', bodyType: 'prose', body: `<p>I often think to myself how lucky I am to live in a neighborhood where I can take so many different roads to get home. When I lived in Michigan, in a car-centric town, variety on the way home wasn\u2019t ever an option\u2014I may be able to attribute that to a constant reliance on Google Maps to get where I was going. When you\u2019re on foot, things are different. The sprawl that extends outside of Thompson and Spring is slowly becoming more familiar, I myself becoming more of a local.</p>
+          { title: 'A quick thought concerning a yoga class', sub: '06.30.2024', date: '2024-06-30', bodyType: 'prose', body: `<p>The instructor instructed my class to pretend we were giving the earth a hug. I imagined myself in a forest with dense shrubbery. It reminded me of what I think the land in the Hobbit looks like, though I\u2019ve never read the book or watched the film. There I was, laying atop the moist and squishy soil, giving it the warmest embrace I could as beads rolled out of every sweat-producing orifice I had. I then thought about cavemen participating in this exercise, and how they might, after a few minutes, stand back up and continue to sharpen their sticks because they\u2019re always touching dirt to some degree. They\u2019re not lying on a centimeter-thin yoga mat in a 95 degree room staring at a ceiling ridden with green lights that make one feel as though they were a reptile writhing under the heat lamp of some enclosure. There\u2019s no corporate for cavemen to escape. Would yoga like this prove effective in their state of nature, loins covered by a single leaf? At any rate, it certainly wasn\u2019t proving effective in the present, non-wild surroundings of the West Village. Indeed, I may have felt more connected with the world had I laid down on Canal Street and hugged the pavement while cars skirted left and right and pigeons timidly attempted to cross the road. At least I wouldn\u2019t need to envision that environment\u2014I\u2019d really be feeling something, not some cheap emulation.</p>` },
+          { title: 'So many roads', sub: '06.29.2024', date: '2024-06-29', bodyType: 'prose', body: `<p>I often think to myself how lucky I am to live in a neighborhood where I can take so many different roads to get home. When I lived in Michigan, in a car-centric town, variety on the way home wasn\u2019t ever an option\u2014I may be able to attribute that to a constant reliance on Google Maps to get where I was going. When you\u2019re on foot, things are different. The sprawl that extends outside of Thompson and Spring is slowly becoming more familiar, I myself becoming more of a local.</p>
 
 <p>I find myself mentally raving about these options often. These roads offer me a break in what might be an otherwise mundane act of returning home. If I find myself in the West Village, I can choose between contemplative and quaint old Bedford or a cortisol-peaking walk down 7th Ave where the fear of getting run over by some Hyundai SUV occupies the mind at length.</p>
 
@@ -1052,6 +1058,24 @@ of your body and slink silently down your gizzard` },
     resume: 'PaulHanna_Resume.pdf',
   }
 };
+
+// ─── DERIVED SUB ───
+// Items with structured fields get their display line derived; explicit sub wins.
+function deriveSub(item) {
+  const parts = [];
+  if (item.client) parts.push(item.client);
+  if (item.roles && item.roles.length) parts.push(item.roles.join(', '));
+  if (item.year) parts.push(String(item.year));
+  return parts.join(' · ');
+}
+Object.values(sections).forEach(sec => {
+  (sec.items || []).forEach(item => {
+    if (!item.sub) item.sub = deriveSub(item);
+    (item.children || []).forEach(child => {
+      if (!child.sub) child.sub = deriveSub(child);
+    });
+  });
+});
 
 // ─── SLUG GENERATION & ROUTING ───
 function toSlug(str) {
