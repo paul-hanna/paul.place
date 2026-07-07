@@ -100,6 +100,15 @@ function getImage(item) {
   return item.image || (item.images && item.images[0]) || OG_IMAGE;
 }
 
+function titleForSlug(slug) {
+  const e = slugMap[slug];
+  if (!e) return slug;
+  const it = e.childIdx !== undefined
+    ? sections[e.sectionKey].items[e.groupIdx].children[e.childIdx]
+    : sections[e.sectionKey].items[e.itemIdx];
+  return it.title;
+}
+
 // ── 3. Shared schema ─────────────────────────────────────────────────────────
 
 const PERSON_LD = JSON.stringify({
@@ -347,7 +356,7 @@ for (const [slug, entry] of Object.entries(slugMap)) {
   if (item.related && item.related.length) {
     const rels = item.related.filter(r => slugMap[r]);
     if (rels.length) {
-      nsc += '<p>See also: ' + rels.map(r => `<a href="/${r}">${esc(r)}</a>`).join(', ') + '</p>\n';
+      nsc += '<p>See also: ' + rels.map(r => `<a href="/${r}">${esc(titleForSlug(r))}</a>`).join(', ') + '</p>\n';
     }
   }
 

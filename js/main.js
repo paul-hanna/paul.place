@@ -1457,7 +1457,8 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   html += relatedHtml(item);
   const sibs = detailSiblings(sectionKey);
   const pos = sibs.indexOf(item);
-  html += detailNavHtml(sibs[pos - 1], sibs[pos + 1]);
+  // link-only items aren't in the sibling list (pos === -1) — no prev/next for them
+  if (pos >= 0) html += detailNavHtml(sibs[pos - 1], sibs[pos + 1]);
 
   panelContent.innerHTML = html;
   if (item.images && item.images.length) {
