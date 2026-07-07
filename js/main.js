@@ -1157,8 +1157,8 @@ function openPanel(key, skipPush) {
 function getThumb(item) {
   const src = item.image || (item.images && item.images.length && item.images[0]) || null;
   if (!src) return null;
-  // gif thumbnails stay animated; everything else has a generated webp
-  if (/\.gif$/i.test(src)) return src;
+  // gifs stay animated and webp sources have no generated thumb — pass through
+  if (/\.(gif|webp)$/i.test(src)) return src;
   return src.replace(/^images\/works\//, 'images/thumbs/').replace(/\.(png|jpe?g)$/i, '.webp');
 }
 
