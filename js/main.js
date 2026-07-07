@@ -1262,7 +1262,10 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
     html += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} \u2192\uFE0E</a>`;
   }
 
+  html += detailNavHtml(group.children[childIdx - 1], group.children[childIdx + 1]);
+
   panelContent.innerHTML = html;
+  bindDetailNav();
   panel.scrollTop = 0;
 
   track('detail_open', { section: sectionKey, item: item.title });
@@ -1310,6 +1313,29 @@ function renderAbout() {
     </div>
     ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume \u2192\uFE0E</a></div>` : ''}
   `;
+}
+
+function detailSiblings(sectionKey) {
+  return sections[sectionKey].items.filter(it => !it.group && !isLinkOnly(it));
+}
+
+function detailNavHtml(prev, next) {
+  if (!prev && !next) return '';
+  return `<div class="detail-nav">
+    ${prev ? `<a class="detail-nav-link" data-slug="${prev._slug}">←︎ ${prev.title}</a>` : '<span></span>'}
+    ${next ? `<a class="detail-nav-link detail-nav-next" data-slug="${next._slug}">${next.title} →︎</a>` : '<span></span>'}
+  </div>`;
+}
+
+function bindDetailNav() {
+  panelContent.querySelectorAll('.detail-nav-link').forEach(a => {
+    a.addEventListener('click', () => {
+      const entry = slugMap[a.dataset.slug];
+      if (!entry) return;
+      if (entry.childIdx !== undefined) openChildDetail(entry.sectionKey, entry.groupIdx, entry.childIdx);
+      else openDetail(entry.sectionKey, entry.itemIdx);
+    });
+  });
 }
 
 function openDetail(sectionKey, itemIdx, skipPush) {
@@ -1373,12 +1399,17 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     html += `<a class="detail-link-btn" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View project'} \u2197\uFE0E</a>`;
   }
 
+  const sibs = detailSiblings(sectionKey);
+  const pos = sibs.indexOf(item);
+  html += detailNavHtml(sibs[pos - 1], sibs[pos + 1]);
+
   panelContent.innerHTML = html;
   if (item.images && item.images.length) {
     panelContent.querySelectorAll('.detail-gallery img').forEach((img, i) => {
       img.addEventListener('click', () => openLightbox(item.images, i));
     });
   }
+  bindDetailNav();
   panel.scrollTop = 0;
 
   track('detail_open', { section: sectionKey, item: item.title });
