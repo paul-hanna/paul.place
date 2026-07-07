@@ -1573,6 +1573,9 @@ let frogModel = null;
 let frogBaseScale = 1;
 
 const loader = new THREE.GLTFLoader();
+const dracoLoader = new THREE.DRACOLoader();
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/');
+loader.setDRACOLoader(dracoLoader);
 loader.load('frog.glb', (gltf) => {
   frogModel = gltf.scene;
 

@@ -249,6 +249,7 @@ const SPA_BODY = `
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
 <script src="js/main.js"></script>`;
 
 function pageHtml({ title, description, canonical, ogImage, ogType, extraLds, noscriptContent }) {
