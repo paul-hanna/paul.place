@@ -1155,9 +1155,11 @@ function openPanel(key, skipPush) {
 }
 
 function getThumb(item) {
-  if (item.image) return item.image;
-  if (item.images && item.images.length) return item.images[0];
-  return null;
+  const src = item.image || (item.images && item.images.length && item.images[0]) || null;
+  if (!src) return null;
+  // gif thumbnails stay animated; everything else has a generated webp
+  if (/\.gif$/i.test(src)) return src;
+  return src.replace(/^images\/works\//, 'images/thumbs/').replace(/\.(png|jpe?g)$/i, '.webp');
 }
 
 function isLinkOnly(item) {

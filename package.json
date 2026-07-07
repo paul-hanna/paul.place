@@ -1,0 +1,10 @@
+{
+  "name": "paulplace",
+  "private": true,
+  "scripts": {
+    "build": "node build-seo.js && node build-thumbs.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.0"
+  }
+}
