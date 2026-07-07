@@ -136,7 +136,6 @@ canvas { display: block; }
   margin-bottom: 2.5rem;
   transition: opacity 0.3s;
 }
-.panel-close:hover { opacity: 1; }
 .panel h2 {
   font-weight: 500;
   font-size: clamp(2rem, 5vw, 3.2rem);
@@ -248,7 +247,6 @@ canvas { display: block; }
   align-items: center;
   transition: opacity 0.3s;
 }
-.detail-back:hover { opacity: 1; }
 
 .detail-hero {
   width: 100%;
@@ -351,6 +349,13 @@ canvas { display: block; }
   letter-spacing: 0.01em;
   font-weight: 400;
 }
+
+.body-contact {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+.body-contact a { color: var(--accent, #c43d14); }
 
 .detail-link {
   display: inline-block;
