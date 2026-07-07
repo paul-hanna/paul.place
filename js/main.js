@@ -1818,6 +1818,13 @@ loader.load('frog.glb', (gltf) => {
   });
 
   frogBaseScale = scale;
+
+  // anchor the tongue at the mouth: front of the model, head height.
+  // measured before add so the box is in frogGroup-local space
+  const fitted = new THREE.Box3().setFromObject(frogModel);
+  const fittedSize = fitted.getSize(new THREE.Vector3());
+  tongue.position.set(0, fitted.max.y - fittedSize.y * 0.23, fitted.max.z * 0.85);
+
   frogGroup.add(frogModel);
 }, undefined, (error) => {
   console.error('Error loading frog.glb:', error);
@@ -1826,14 +1833,13 @@ loader.load('frog.glb', (gltf) => {
 // ─── TONGUE FLICK ───
 const tongueGeo = new THREE.CylinderGeometry(0.045, 0.07, 1, 12);
 tongueGeo.translate(0, 0.5, 0); // pivot at base so scaling extends outward
+tongueGeo.scale(1.15, 1, 0.6);  // flatten: wide and thin like a real tongue
 const tongue = new THREE.Mesh(
   tongueGeo,
   new THREE.MeshStandardMaterial({ color: 0xff5577, roughness: 0.45 })
 );
 tongue.rotation.x = Math.PI / 2; // local +Y now points at camera (+Z)
-// mouth anchor: front-center of the ~2.8-unit model, slightly low —
-// starting guess, tune visually
-tongue.position.set(0, -0.25, 1.1);
+// position is set from the model's bounding box once the GLB loads
 tongue.visible = false;
 frogGroup.add(tongue);
 
