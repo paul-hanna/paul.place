@@ -738,3 +738,12 @@ canvas { display: block; }
   color: var(--accent);
   border-color: var(--accent);
 }
+
+/* ─── RELATED WORKS ─── */
+.related-works {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}

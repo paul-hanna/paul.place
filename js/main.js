@@ -57,6 +57,7 @@ const sections = {
         tags: ['Commercial', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/1176290293?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-find-time-for-you.png',
+        related: ['vellum-product-launch'],
       },
       {
         title: 'Vellum Product Launch',
@@ -64,6 +65,7 @@ const sections = {
         tags: ['Commercial', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/1154409548?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-product-launch.png',
+        related: ['vellum-find-time-for-you'],
       },
       {
         title: 'FALLOUT',
@@ -218,6 +220,7 @@ const sections = {
         tags: ['Data Translation', 'Experimental'],
         embed: 'https://www.youtube.com/embed/dgcPde-KUTI?autoplay=1',
         image: 'images/works/translated.png',
+        related: ['spectrograms-of-my-mother-at-her-wedding'],
       },
       {
         title: 'News Tomorrow',
@@ -249,6 +252,7 @@ const sections = {
         video: 'spectrograms.mp4',
         galleryCols: 3,
         images: ['images/works/spectrograms-of-my-mother-gallery-1.png','images/works/spectrograms-of-my-mother-gallery-2.png','images/works/spectrograms-of-my-mother-gallery-3.png'],
+        related: ['translated'],
       },
       {
         title: 'Locating',
@@ -768,7 +772,7 @@ of your body and slink silently down your gizzard` },
 
 <p><em>I feel alive when I want something more than basic survival needs. Wanting, whether it\u2019s intimacy with another person or a pair of shoes, is beautiful.</em></p>
 
-<p>There is something beautiful about the act of wanting, of longing for something in one\u2019s past. I\u2019m left wrangling the question of whether it was a form of intimacy or an impression of it, whether the emotional connection feels more like a retroactive imposition, a way to cope with the uncertainty of something that didn\u2019t end conclusively. I think it\u2019s possible that the same things that made those moments feel intimate and real are what render them unreachable now, like my sketch that never quite resembled her.</p>` },
+<p>There is something beautiful about the act of wanting, of longing for something in one\u2019s past. I\u2019m left wrangling the question of whether it was a form of intimacy or an impression of it, whether the emotional connection feels more like a retroactive imposition, a way to cope with the uncertainty of something that didn\u2019t end conclusively. I think it\u2019s possible that the same things that made those moments feel intimate and real are what render them unreachable now, like my sketch that never quite resembled her.</p>`, related: ['past-lives-before-sunrise-and-life-decisions'] },
           { title: 'Debussy\'s 1st Arabesque, Lily Chou Chou and hyperfixation', sub: '10.17.2025', date: '2025-10-17', bodyType: 'prose', image: 'images/works/journal-debussy-lily-chou-chou.jpg', body: `<p>Suggested listening: Claude Debussy - Arabesque No. 1</p>
 
 <p>I recently rewatched All About Lily Chou Chou at the Metrograph. I must admit that before my first watch, I didn\u2019t even realize that Lily Chou Chou was not a real artist, and listened to Glide because someone I had a crush on told me to check out Lily Chou Chou. I entirely forgot to even do that until a month or two after seeing this person, when I discovered a notes app entry that was dated May 24th, 2023 and only had three entries:</p>
@@ -873,7 +877,7 @@ of your body and slink silently down your gizzard` },
 
 <p>I can\u2019t think about it too much without pushing myself to be a little teary-eyed. It doesn\u2019t make a whole lot of sense to me. And, despite all of that, it\u2019s impossible not to think of the past lives I could have lived or paths I could have taken, or paths that were closed because of bad timing. Ever since I was in middle school (back then, I was a devout Catholic boy), I remember pleading to God with the hope that he\u2019d benevolently tell me what the right decisions were. This was in some module about colleges and careers in the seventh grade. What job would I really enjoy and be really good at? What\u2019ll make me happy?</p>
 
-<p>I keep thinking about this stuff. Waves are transient, I can\u2019t dwell. In-yun and the thread are great forces, like God. Maybe I need to remind myself that where I am is where I\u2019m supposed to be, but it\u2019s hard to accept if you\u2019re uncertain and find the sentiment hard to believe. I get why Nora cried in Arthur\u2019s arms at the end.</p>` },
+<p>I keep thinking about this stuff. Waves are transient, I can\u2019t dwell. In-yun and the thread are great forces, like God. Maybe I need to remind myself that where I am is where I\u2019m supposed to be, but it\u2019s hard to accept if you\u2019re uncertain and find the sentiment hard to believe. I get why Nora cried in Arthur\u2019s arms at the end.</p>`, related: ['before-sunset-intimacy-and-proximity'] },
           { title: 'Voyeurism and Gladiator 2', sub: '12.18.2024', date: '2024-12-18', bodyType: 'prose', image: 'images/works/journal-on-voyeurism-and-gladiator-2.png', body: `<p>About a month ago, I watched Gladiator 2. I have never seen the original Gladiator, nor did I attempt to pick up the lore prior to watching it. Really, I was incredibly excited to watch a new Ridley Scott film after the press tour of Napoleon. Scott, when badgered by French journalists for its wicked historical inaccuracy, retorted, \u201CWere you there? Oh you weren\u2019t there. Then how do you know?\u201D</p>
 
 <p>A valid question. A question that set the stage for Gladiator 2, which did not escape identical claims of historical inaccuracy (indeed I also thought it peculiar that the film depicts the seemingly impossible feat of bringing saltwater sharks into the colosseum). Sharks aside, the film was fun enough and, as expected, the action sequences were compelling, the rest of the film not so. An utterly clich\u00E9 plot with some violence that makes my monkey brain go woo-woo, similar enough to pornography (structurally\u2014where plot is secondary to the \u201Caction.\u201D I want to clarify per my being raised in a puritanical society that I am NOT a consumer nor am I a purveyor of pornography), nestled under Martin Scorsese\u2019s movies-as-spectacle-or-theme-park claim. Gladiator 2 was a spectacle, but in an almost more disappointing context given Scott\u2019s rather illustrious career (Thelma & Louise, Alien, Blade Runner, etc. He\u2019s got range!).</p>
@@ -1287,6 +1291,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
     html += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} \u2192\uFE0E</a>`;
   }
 
+  html += relatedHtml(item);
   html += detailNavHtml(group.children[childIdx - 1], group.children[childIdx + 1]);
 
   panelContent.innerHTML = html;
@@ -1342,6 +1347,28 @@ function renderAbout() {
 
 function detailSiblings(sectionKey) {
   return sections[sectionKey].items.filter(it => !it.group && !isLinkOnly(it));
+}
+
+function titleForSlug(slug) {
+  const e = slugMap[slug];
+  if (!e) return null;
+  const it = e.childIdx !== undefined
+    ? sections[e.sectionKey].items[e.groupIdx].children[e.childIdx]
+    : sections[e.sectionKey].items[e.itemIdx];
+  return it.title;
+}
+
+function relatedHtml(item) {
+  if (!item.related || !item.related.length) return '';
+  const links = item.related
+    .map(slug => {
+      const t = titleForSlug(slug);
+      return t ? `<a class="detail-nav-link" data-slug="${slug}">${t}</a>` : '';
+    })
+    .filter(Boolean)
+    .join('');
+  if (!links) return '';
+  return `<div class="related-works"><div class="about-label">See also</div>${links}</div>`;
 }
 
 function detailNavHtml(prev, next) {
@@ -1424,6 +1451,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     html += `<a class="detail-link-btn" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View project'} \u2197\uFE0E</a>`;
   }
 
+  html += relatedHtml(item);
   const sibs = detailSiblings(sectionKey);
   const pos = sibs.indexOf(item);
   html += detailNavHtml(sibs[pos - 1], sibs[pos + 1]);

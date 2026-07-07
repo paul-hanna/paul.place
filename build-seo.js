@@ -344,6 +344,12 @@ for (const [slug, entry] of Object.entries(slugMap)) {
   if (item.link) {
     nsc += `<p><a href="${item.link}">${item.linkLabel || 'View project'} →</a></p>\n`;
   }
+  if (item.related && item.related.length) {
+    const rels = item.related.filter(r => slugMap[r]);
+    if (rels.length) {
+      nsc += '<p>See also: ' + rels.map(r => `<a href="/${r}">${esc(r)}</a>`).join(', ') + '</p>\n';
+    }
+  }
 
   const sectionKey = entry.sectionKey;
   const dir = path.join(ROOT, slug);
@@ -364,6 +370,13 @@ for (const [slug, entry] of Object.entries(slugMap)) {
   // Warn about VideoObject items missing a prose description
   if (getSchemaType(entry.sectionKey, item) === 'VideoObject' && !item.description) {
     console.warn(`  ⚠  Missing description on VideoObject: /${slug}`);
+  }
+
+  // Warn about related links that don't resolve
+  if (item.related) {
+    for (const r of item.related) {
+      if (!slugMap[r]) console.warn(`  ⚠  Unknown related slug "${r}" on /${slug}`);
+    }
   }
 
   allUrls.push({ loc: DOMAIN + '/' + slug, priority: '0.7', changefreq: 'monthly' });
