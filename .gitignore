@@ -3,3 +3,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+node_modules/
+frog-original.glb
+reel-original.mp4
