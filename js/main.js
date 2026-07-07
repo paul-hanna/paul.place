@@ -1374,6 +1374,11 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   }
 
   panelContent.innerHTML = html;
+  if (item.images && item.images.length) {
+    panelContent.querySelectorAll('.detail-gallery img').forEach((img, i) => {
+      img.addEventListener('click', () => openLightbox(item.images, i));
+    });
+  }
   panel.scrollTop = 0;
 
   track('detail_open', { section: sectionKey, item: item.title });
@@ -1404,6 +1409,90 @@ function closePanel(skipPush) {
   startViewTimer('home');
   currentSection = null;
 }
+
+// ─── LIGHTBOX ───
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+lightbox.innerHTML = `
+  <button class="lightbox-close">esc / close ✕</button>
+  <button class="lightbox-prev">←</button>
+  <div class="lightbox-stage"></div>
+  <button class="lightbox-next">→</button>
+  <div class="lightbox-counter"></div>
+`;
+document.body.appendChild(lightbox);
+const lbStage = lightbox.querySelector('.lightbox-stage');
+const lbCounter = lightbox.querySelector('.lightbox-counter');
+let lbImages = [], lbIndex = 0;
+
+function lightboxIsOpen() { return lightbox.classList.contains('open'); }
+
+function renderLightbox() {
+  lbStage.innerHTML = `<img src="${lbImages[lbIndex]}" alt="">`;
+  lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
+  lightbox.querySelector('.lightbox-prev').style.visibility = lbImages.length > 1 ? 'visible' : 'hidden';
+  lightbox.querySelector('.lightbox-next').style.visibility = lbImages.length > 1 ? 'visible' : 'hidden';
+}
+
+function openLightbox(images, index) {
+  lbImages = images; lbIndex = index;
+  renderLightbox();
+  lightbox.classList.add('open');
+  track('lightbox_open', { image: images[index] });
+}
+
+// Embed mode (used by the reel — a later task)
+function openLightboxEmbed(src) {
+  lbImages = []; lbIndex = 0;
+  lbStage.innerHTML = `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  lbCounter.textContent = '';
+  lightbox.querySelector('.lightbox-prev').style.visibility = 'hidden';
+  lightbox.querySelector('.lightbox-next').style.visibility = 'hidden';
+  lightbox.classList.add('open');
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lbStage.innerHTML = '';           // stops any playing iframe
+  if (lightbox.dataset.route) {     // reel deep-link cleanup (later task)
+    delete lightbox.dataset.route;
+    history.pushState(null, '', '/');
+  }
+}
+
+function lbStep(dir) {
+  if (!lbImages.length) return;
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  renderLightbox();
+}
+
+lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+lightbox.querySelector('.lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); lbStep(-1); });
+lightbox.querySelector('.lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); lbStep(1); });
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox || e.target === lbStage) closeLightbox();
+});
+
+// touch swipe
+let lbTouchX = null;
+lightbox.addEventListener('touchstart', (e) => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+lightbox.addEventListener('touchend', (e) => {
+  if (lbTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - lbTouchX;
+  if (Math.abs(dx) > 40) lbStep(dx < 0 ? 1 : -1);
+  lbTouchX = null;
+}, { passive: true });
+
+// keyboard: Esc closes lightbox first, then panel; arrows navigate
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (lightboxIsOpen()) closeLightbox();
+    else if (panel.classList.contains('open')) closePanel();
+  } else if (lightboxIsOpen()) {
+    if (e.key === 'ArrowLeft') lbStep(-1);
+    if (e.key === 'ArrowRight') lbStep(1);
+  }
+});
 
 document.querySelectorAll('.nav-label').forEach(el => {
   el.addEventListener('click', () => openPanel(el.dataset.section));
