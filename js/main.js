@@ -17,28 +17,24 @@ function trackPageView(path, title) {
 let viewStart = null;
 let currentView = null;
 
-function startViewTimer(viewName) {
-  // flush previous view's time
+function flushViewTimer() {
   if (currentView && viewStart) {
-    const seconds = Math.round((Date.now() - viewStart) / 1000);
     track('view_duration', {
       view_name: currentView,
-      duration_seconds: seconds,
+      duration_seconds: Math.round((Date.now() - viewStart) / 1000),
     });
   }
+}
+
+function startViewTimer(viewName) {
+  flushViewTimer();
   currentView = viewName;
   viewStart = Date.now();
 }
 
 // track time on page when user leaves
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden' && currentView && viewStart) {
-    const seconds = Math.round((Date.now() - viewStart) / 1000);
-    track('view_duration', {
-      view_name: currentView,
-      duration_seconds: seconds,
-    });
-  }
+  if (document.visibilityState === 'hidden') flushViewTimer();
 });
 
 startViewTimer('home');
@@ -1093,19 +1089,23 @@ const panelContent = document.getElementById('panel-content');
 const panelClose = document.getElementById('panel-close');
 let currentSection = null;
 
-function openPanel(key) {
+function ensurePanelOpen(key) {
   currentSection = key;
+  panel.classList.add('open');
+  overlay.classList.add('open');
+  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-section="${key}"]`).classList.add('active');
+}
+
+function openPanel(key) {
   const s = sections[key];
   if (s.custom && key === 'about') {
     renderAbout();
   } else {
     renderSectionList(key);
   }
-  panel.classList.add('open');
-  overlay.classList.add('open');
+  ensurePanelOpen(key);
   panel.scrollTop = 0;
-  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-  document.querySelector(`[data-section="${key}"]`).classList.add('active');
 
   track('section_open', { section: key });
   trackPageView(key, s.title + ' — Paul Hanna');
@@ -1203,13 +1203,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
     history.pushState({ slug: slug }, '', '/' + slug);
   }
 
-  if (!panel.classList.contains('open')) {
-    currentSection = sectionKey;
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-    document.querySelector(`[data-section="${sectionKey}"]`).classList.add('active');
-  }
+  if (!panel.classList.contains('open')) ensurePanelOpen(sectionKey);
 
   let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${group.title}</button>`;
   html += `<h2>${item.title}</h2>`;
@@ -1291,13 +1285,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   }
 
   // Ensure panel is open
-  if (!panel.classList.contains('open')) {
-    currentSection = sectionKey;
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-    document.querySelector(`[data-section="${sectionKey}"]`).classList.add('active');
-  }
+  if (!panel.classList.contains('open')) ensurePanelOpen(sectionKey);
 
   let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${s.title}</button>`;
   html += `<h2>${item.title}</h2>`;
@@ -1408,19 +1396,7 @@ function routeFromPath() {
 
 // Handle browser back/forward
 window.addEventListener('popstate', () => {
-  const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-  if (path && slugMap[path]) {
-    const entry = slugMap[path];
-    if (entry.childIdx !== undefined) {
-      openChildDetail(entry.sectionKey, entry.groupIdx, entry.childIdx, true);
-    } else {
-      openDetail(entry.sectionKey, entry.itemIdx, true);
-    }
-  } else if (path && sections[path]) {
-    openPanel(path);
-  } else {
-    closePanel(true);
-  }
+  if (!routeFromPath()) closePanel(true);
 });
 
 // Open deep link on initial load
@@ -1555,11 +1531,13 @@ const bgMaterial = new THREE.ShaderMaterial({
 // Camera: FOV=40, at z=6 → distance to plane = 16
 const bgDist = 16;
 const bgHalfH = Math.tan(THREE.MathUtils.degToRad(20)) * bgDist;
-const bgAspect = window.innerWidth / window.innerHeight;
-const bgPlane = new THREE.Mesh(
-  new THREE.PlaneGeometry(bgHalfH * 2 * bgAspect, bgHalfH * 2),
-  bgMaterial
-);
+const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), bgMaterial);
+function sizeBgPlane() {
+  const aspect = window.innerWidth / window.innerHeight;
+  bgPlane.scale.set(bgHalfH * 2 * aspect, bgHalfH * 2, 1);
+  bgMaterial.uniforms.uScreenAspect.value = aspect;
+}
+sizeBgPlane();
 bgPlane.position.z = -10;
 bgPlane.renderOrder = -1;
 scene.add(bgPlane);
@@ -1807,11 +1785,7 @@ function handleResize() {
   crtMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
 
   // resize background plane to fill view
-  const newAspect = window.innerWidth / window.innerHeight;
-  const newHalfH = Math.tan(THREE.MathUtils.degToRad(20)) * bgDist;
-  bgPlane.geometry.dispose();
-  bgPlane.geometry = new THREE.PlaneGeometry(newHalfH * 2 * newAspect, newHalfH * 2);
-  bgMaterial.uniforms.uScreenAspect.value = newAspect;
+  sizeBgPlane();
 }
 window.addEventListener('resize', handleResize);
 window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));
