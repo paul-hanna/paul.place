@@ -1159,13 +1159,28 @@ function isLinkOnly(item) {
   return item.link && !item.embed && !item.description && !item.body && !item.images;
 }
 
+const activeTagFilters = {}; // sectionKey -> Set of tags (ephemeral)
+
 function renderSectionList(key) {
   const s = sections[key];
+  const active = activeTagFilters[key] || (activeTagFilters[key] = new Set());
+  const allTags = [...new Set(s.items.flatMap(it => it.tags || []))];
+  const visible = active.size
+    ? s.items.filter(it => (it.tags || []).some(t => active.has(t)))
+    : s.items;
+
+  const chipsHtml = allTags.length < 2 ? '' : `
+    <div class="tag-filter">
+      ${allTags.map(t => `<button class="tag-chip${active.has(t) ? ' on' : ''}" data-tag="${t}">${t}</button>`).join('')}
+    </div>`;
+
   panelContent.innerHTML = `
     <h2>${s.title}</h2>
     <p>${s.description}</p>
+    ${chipsHtml}
     <div class="panel-items">
-      ${s.items.map((item, idx) => {
+      ${visible.map(item => {
+        const idx = s.items.indexOf(item);
         const thumb = getThumb(item);
         const bgStyle = thumb ? ` style="background-image:url('${thumb}')"` : '';
         const groupClass = item.group ? ' is-group' : '';
@@ -1181,6 +1196,16 @@ function renderSectionList(key) {
       }).join('')}
     </div>
   `;
+
+  panelContent.querySelectorAll('.tag-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const t = chip.dataset.tag;
+      active.has(t) ? active.delete(t) : active.add(t);
+      renderSectionList(key);
+      track('tag_filter', { section: key, tag: t });
+    });
+  });
+
   panelContent.querySelectorAll('.panel-item').forEach(el => {
     el.addEventListener('click', () => {
       const section = el.dataset.section;

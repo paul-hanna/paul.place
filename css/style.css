@@ -710,3 +710,31 @@ canvas { display: block; }
 }
 .detail-nav-link:hover { opacity: 1; }
 .detail-nav-next { text-align: right; }
+
+/* ─── TAG FILTER CHIPS ─── */
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+.tag-chip {
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  background: none;
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+.tag-chip:hover { opacity: 1; }
+.tag-chip.on {
+  opacity: 1;
+  color: var(--accent);
+  border-color: var(--accent);
+}
