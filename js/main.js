@@ -1138,7 +1138,8 @@ function ensurePanelOpen(key) {
   document.querySelector(`[data-section="${key}"]`).classList.add('active');
 }
 
-function openPanel(key) {
+function openPanel(key, skipPush) {
+  if (!skipPush) history.pushState({ section: key }, '', '/' + key);
   const s = sections[key];
   if (s.custom && key === 'about') {
     renderAbout();
@@ -1303,7 +1304,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
   startViewTimer('detail/' + sectionKey + '/' + item.title);
 
   document.getElementById('detail-back').addEventListener('click', () => {
-    history.pushState({ section: sectionKey }, '', '/');
+    history.pushState({ section: sectionKey }, '', '/' + sectionKey);
     trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
     renderGroup(sectionKey, groupIdx);
   });
@@ -1471,7 +1472,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 
   // back button
   document.getElementById('detail-back').addEventListener('click', () => {
-    history.pushState({ section: sectionKey }, '', '/');
+    history.pushState({ section: sectionKey }, '', '/' + sectionKey);
     renderSectionList(sectionKey);
     panel.scrollTop = 0;
     trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
@@ -1590,7 +1591,10 @@ function openReel(skipPush) {
 }
 
 document.querySelectorAll('.nav-label').forEach(el => {
-  el.addEventListener('click', () => openPanel(el.dataset.section));
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    openPanel(el.dataset.section);
+  });
 });
 document.getElementById('reel-link').addEventListener('click', (e) => {
   e.preventDefault();
@@ -1614,7 +1618,7 @@ function routeFromPath() {
   }
   // Section-level routing (e.g. /film, /about)
   if (path && sections[path]) {
-    openPanel(path);
+    openPanel(path, true);
     return true;
   }
   return false;
@@ -1634,6 +1638,7 @@ routeFromPath();
 
 // ─── MOBILE DETECTION ───
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ─── THREE.JS SCENE ───
 const scene = new THREE.Scene();
@@ -1694,6 +1699,7 @@ const bgFrag = `
   uniform float uTime;
   uniform float uVideoAspect;
   uniform float uScreenAspect;
+  uniform float uReduced;
   varying vec2 vUv;
 
   void main() {
@@ -1725,7 +1731,7 @@ const bgFrag = `
     col -= sin((uv.y + uTime * 0.05) * 400.0) * 0.04;
 
     // glitch lines
-    col += step(0.994, sin(uTime * 30.0 + uv.y * 50.0)) * 0.15;
+    col += step(0.994, sin(uTime * 30.0 + uv.y * 50.0)) * 0.15 * (1.0 - uReduced);
 
     // green tint
     col.g *= 1.08;
@@ -1739,7 +1745,7 @@ const bgFrag = `
     col *= vig;
 
     // VHS flicker
-    col *= 1.0 + sin(uTime * 12.0) * 0.015 + sin(uTime * 60.0) * 0.005;
+    col *= 1.0 + (sin(uTime * 12.0) * 0.015 + sin(uTime * 60.0) * 0.005) * (1.0 - uReduced);
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -1753,6 +1759,7 @@ const bgMaterial = new THREE.ShaderMaterial({
     uTime: { value: 0 },
     uVideoAspect: { value: 16 / 9 },
     uScreenAspect: { value: window.innerWidth / window.innerHeight },
+    uReduced: { value: reducedMotion ? 1.0 : 0.0 },
   },
   depthWrite: false,
 });
@@ -1813,6 +1820,37 @@ loader.load('frog.glb', (gltf) => {
   console.error('Error loading frog.glb:', error);
 });
 
+// ─── TONGUE FLICK ───
+const tongueGeo = new THREE.CylinderGeometry(0.045, 0.07, 1, 12);
+tongueGeo.translate(0, 0.5, 0); // pivot at base so scaling extends outward
+const tongue = new THREE.Mesh(
+  tongueGeo,
+  new THREE.MeshStandardMaterial({ color: 0xff5577, roughness: 0.45 })
+);
+tongue.rotation.x = Math.PI / 2; // local +Y now points at camera (+Z)
+// mouth anchor: front-center of the ~2.8-unit model, slightly low —
+// starting guess, tune visually
+tongue.position.set(0, -0.25, 1.1);
+tongue.visible = false;
+frogGroup.add(tongue);
+
+let tongueStart = -1;
+const TONGUE_DURATION = 0.35;
+
+const raycaster = new THREE.Raycaster();
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  if (!frogModel || tongueStart >= 0) return;
+  raycaster.setFromCamera({
+    x: (e.clientX / window.innerWidth) * 2 - 1,
+    y: -(e.clientY / window.innerHeight) * 2 + 1,
+  }, camera);
+  if (raycaster.intersectObject(frogGroup, true).length) {
+    tongueStart = clock.getElapsedTime();
+    tongue.visible = true;
+    track('frog_click', {});
+  }
+});
+
 // ─── LIGHTING (PBR) ───
 const ambient = new THREE.AmbientLight(0x333333, 1.0);
 scene.add(ambient);
@@ -1867,6 +1905,7 @@ const crtFrag = `
   uniform sampler2D tDiffuse;
   uniform float uTime;
   uniform vec2 uResolution;
+  uniform float uReduced;
   varying vec2 vUv;
 
   void main() {
@@ -1899,10 +1938,10 @@ const crtFrag = `
     col.g *= 1.04;
 
     // flicker
-    col *= 1.0 + sin(uTime * 8.0) * 0.008;
+    col *= 1.0 + sin(uTime * 8.0) * 0.008 * (1.0 - uReduced);
 
     // horizontal interference lines (rare)
-    float interference = step(0.998, sin(uTime * 5.0 + uv.y * 100.0)) * 0.08;
+    float interference = step(0.998, sin(uTime * 5.0 + uv.y * 100.0)) * 0.08 * (1.0 - uReduced);
     col += vec3(interference * 0.5, interference, interference * 0.5);
 
     gl_FragColor = vec4(col, 1.0);
@@ -1917,6 +1956,7 @@ const crtMaterial = new THREE.ShaderMaterial({
     tDiffuse: { value: renderTarget.texture },
     uTime: { value: 0 },
     uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+    uReduced: { value: reducedMotion ? 1.0 : 0.0 },
   },
   depthTest: false,
   depthWrite: false,
@@ -1962,11 +2002,12 @@ function animate() {
   currentRotY += (targetRotY - currentRotY) * 0.04;
   currentRotX += (targetRotX - currentRotX) * 0.04;
 
-  // idle float
-  frogGroup.position.y = -0.3 + Math.sin(t * 0.5) * 0.15;
-  frogGroup.rotation.y = currentRotY + Math.sin(t * 0.2) * 0.05;
-  frogGroup.rotation.x = currentRotX + Math.cos(t * 0.25) * 0.03;
-  frogGroup.rotation.z = Math.sin(t * 0.3) * 0.02;
+  // idle float (gentler under prefers-reduced-motion)
+  const motion = reducedMotion ? 0.3 : 1;
+  frogGroup.position.y = -0.3 + Math.sin(t * 0.5) * 0.15 * motion;
+  frogGroup.rotation.y = currentRotY + Math.sin(t * 0.2) * 0.05 * motion;
+  frogGroup.rotation.x = currentRotX + Math.cos(t * 0.25) * 0.03 * motion;
+  frogGroup.rotation.z = Math.sin(t * 0.3) * 0.02 * motion;
 
   // subtle breathing on the whole model
   if (frogModel) {
@@ -1976,6 +2017,21 @@ function animate() {
       frogBaseScale / breathe,
       frogBaseScale * breathe
     );
+  }
+
+  // tongue flick
+  if (tongueStart >= 0) {
+    const p = (t - tongueStart) / TONGUE_DURATION;
+    if (p >= 1) {
+      tongueStart = -1;
+      tongue.visible = false;
+    } else if (reducedMotion) {
+      tongue.scale.set(1, 1.4, 1); // static extend, no animation
+    } else {
+      const ext = Math.sin(p * Math.PI); // out and back
+      tongue.scale.set(1, Math.max(ext * 1.6, 0.001), 1);
+      frogGroup.rotation.x += ext * 0.06; // little head bob
+    }
   }
 
   // dust drift
