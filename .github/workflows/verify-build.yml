@@ -1,0 +1,25 @@
+name: Verify generated pages
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - name: Fail if generated files are stale
+        run: |
+          # git status --porcelain also catches NEW untracked files (e.g. missing thumbs),
+          # which git diff --exit-code would not
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            echo '::error::Generated pages/thumbnails are stale. Run "npm run build" locally and commit the result.'
+            exit 1
+          fi
