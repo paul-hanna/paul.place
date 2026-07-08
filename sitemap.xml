@@ -51,6 +51,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://paul.place/our-hero-balthazar</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://paul.place/free-money</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

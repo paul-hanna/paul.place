@@ -119,6 +119,13 @@ const sections = {
         image: 'images/works/proud-of-me.png',
       },
       {
+        title: 'Our Hero, Balthazar',
+        roles: ['Associate Producer'], year: 2026,
+        link: 'https://ourherobalthazar.com/',
+        linkLabel: 'View',
+        image: 'images/works/our-hero-balthazar.jpg',
+      },
+      {
         title: 'Free Money',
         sub: 'Film',
         link: 'https://insigniafilms.com/Free-Money',
