@@ -105,6 +105,13 @@ const sections = {
         image: 'images/works/o-superman.png',
       },
       {
+        title: 'Our Hero, Balthazar',
+        roles: ['Associate Producer'], year: 2026,
+        link: 'https://ourherobalthazar.com/',
+        linkLabel: 'View',
+        image: 'images/works/our-hero-balthazar.jpg',
+      },
+      {
         title: 'Jersey in July',
         client: 'Dom Innarella', roles: ['Production Coordinator'], year: 2025,
         tags: ['Music Video', 'Production'],
@@ -117,13 +124,6 @@ const sections = {
         tags: ['Music Video', 'Producer'],
         embed: 'https://www.youtube.com/embed/2zCubXGT2gY?autoplay=1',
         image: 'images/works/proud-of-me.png',
-      },
-      {
-        title: 'Our Hero, Balthazar',
-        roles: ['Associate Producer'], year: 2026,
-        link: 'https://ourherobalthazar.com/',
-        linkLabel: 'View',
-        image: 'images/works/our-hero-balthazar.jpg',
       },
       {
         title: 'Free Money',
