@@ -21,7 +21,8 @@ fs.mkdirSync(OUT, { recursive: true });
     const src = path.join(SRC, file);
     const out = path.join(OUT, file.replace(/\.(png|jpe?g)$/i, '.webp'));
     if (fs.existsSync(out) && fs.statSync(out).mtimeMs >= fs.statSync(src).mtimeMs) { skipped++; continue; }
-    await sharp(src).resize({ width: WIDTH, withoutEnlargement: true }).webp({ quality: QUALITY }).toFile(out);
+    // .rotate() with no args applies EXIF orientation before the flag is stripped
+    await sharp(src).rotate().resize({ width: WIDTH, withoutEnlargement: true }).webp({ quality: QUALITY }).toFile(out);
     made++;
   }
   console.log(`Thumbnails: ${made} generated, ${skipped} skipped`);
