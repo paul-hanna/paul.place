@@ -50,11 +50,12 @@ const sections = {
   film: {
     title: 'Film',
     description: 'Narrative, experimental, and commercial directing work.',
+    filterTags: ['Narrative', 'Commercial', 'Music Video'],
     items: [
       {
         title: 'Vellum - Find time for you',
-        roles: ['Director', 'Writer'], year: 2026,
-        tags: ['Commercial', 'Director', 'Writer'],
+        roles: ['Director', 'Writer', 'Producer'], year: 2026,
+        tags: ['Commercial', 'Director', 'Writer', 'Producer'],
         embed: 'https://player.vimeo.com/video/1176290293?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-find-time-for-you.png',
         related: ['vellum-product-launch'],
@@ -100,13 +101,14 @@ const sections = {
       {
         title: 'O Superman',
         roles: ['Writer', 'Director', 'Producer', 'Editor'], year: 2023,
-        tags: ['Short Film', 'Director', 'Writer'],
+        tags: ['Narrative', 'Short Film', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/876499156?h=f2739fc14d',
         image: 'images/works/o-superman.png',
       },
       {
         title: 'Our Hero, Balthazar',
         roles: ['Associate Producer'], year: 2026,
+        tags: ['Narrative'],
         link: 'https://ourherobalthazar.com/',
         linkLabel: 'View',
         image: 'images/works/our-hero-balthazar.jpg',
@@ -142,14 +144,14 @@ const sections = {
       {
         title: 'Hallway',
         roles: ['Writer', 'Director', 'Editor'], year: 2023,
-        tags: ['Experimental', 'Short Film', 'Director'],
+        tags: ['Narrative', 'Experimental', 'Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/TpkrhPAQSlM?autoplay=1',
         image: 'images/works/hallway.png',
       },
       {
         title: 'The Unavailable Memory of',
         roles: ['Writer', 'Director', 'Editor', 'Producer'], year: 2022,
-        tags: ['Short Film', 'Director', 'Writer'],
+        tags: ['Narrative', 'Short Film', 'Director', 'Writer'],
         embed: 'https://www.youtube.com/embed/sNvlb8ZQYLA?autoplay=1',
         image: 'images/works/unavailable-memory.png',
       },
@@ -164,21 +166,21 @@ const sections = {
       {
         title: 'Absence',
         roles: ['Writer', 'Director', 'Editor'], year: 2024,
-        tags: ['Short Film', 'Director'],
+        tags: ['Narrative', 'Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/d-2IfeDv95o?autoplay=1',
         image: 'images/works/absence.png',
       },
       {
         title: 'Circonstances',
         roles: ['Director', 'Cinematographer', 'Editor'], year: 2022,
-        tags: ['Short Film', 'Director', 'DP'],
+        tags: ['Narrative', 'Short Film', 'Director', 'DP'],
         embed: 'https://www.youtube.com/embed/kKkkDe9-Q2s?autoplay=1',
         image: 'images/works/circonstances.png',
       },
       {
         title: 'Monday',
         roles: ['Writer', 'Director', 'Editor', 'Producer'], year: 2021,
-        tags: ['Short Film', 'Director'],
+        tags: ['Narrative', 'Short Film', 'Director'],
         embed: 'https://www.youtube.com/embed/xoj-ExKy6hg?autoplay=1',
         image: 'images/works/monday.png',
       },
@@ -1178,7 +1180,8 @@ const activeTagFilters = {}; // sectionKey -> Set of tags (ephemeral)
 function renderSectionList(key) {
   const s = sections[key];
   const active = activeTagFilters[key] || (activeTagFilters[key] = new Set());
-  const allTags = [...new Set(s.items.flatMap(it => it.tags || []))];
+  // section can pin its filter chips (e.g. film: format-based); default is the tag union
+  const allTags = s.filterTags || [...new Set(s.items.flatMap(it => it.tags || []))];
   const visible = active.size
     ? s.items.filter(it => (it.tags || []).some(t => active.has(t)))
     : s.items;
