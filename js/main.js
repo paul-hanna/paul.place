@@ -1107,6 +1107,19 @@ Object.values(sections).forEach(sec => {
   });
 });
 
+// ─── FILM ORDER ───
+// Directed work first, other credits after; strict reverse-chronological
+// within each group (stable, so same-year items keep their data order).
+(() => {
+  const items = sections.film.items;
+  const directed = it => (it.roles || []).includes('Director');
+  const byYear = (a, b) => (b.year || 0) - (a.year || 0);
+  sections.film.items = [
+    ...items.filter(directed).sort(byYear),
+    ...items.filter(it => !directed(it)).sort(byYear),
+  ];
+})();
+
 // ─── SLUG GENERATION & ROUTING ───
 function toSlug(str) {
   return str
@@ -1158,6 +1171,7 @@ function setAccent(key) {
 function ensurePanelOpen(key) {
   setAccent(key);
   currentSection = key;
+  if (key !== 'film') closeFilmViewEl();
   panel.classList.add('open');
   overlay.classList.add('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1165,6 +1179,7 @@ function ensurePanelOpen(key) {
 }
 
 function openPanel(key, skipPush) {
+  if (key === 'film') { openFilmView(skipPush); return; }
   if (!skipPush) history.pushState({ section: key }, '', '/' + key);
   const s = sections[key];
   if (s.custom && key === 'about') {
@@ -1424,6 +1439,13 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   const s = sections[sectionKey];
   const item = s.items[itemIdx];
 
+  // film on desktop plays in the film view's pane, not the slide-out panel
+  if (sectionKey === 'film' && !filmMQ.matches) {
+    if (filmView.classList.contains('open')) filmShowDetail(itemIdx, skipPush);
+    else openFilmView(skipPush, itemIdx);
+    return;
+  }
+
   // Update URL
   if (!skipPush) {
     history.pushState({ slug: item._slug }, '', '/' + item._slug);
@@ -1502,6 +1524,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 
   // back button
   document.getElementById('detail-back').addEventListener('click', () => {
+    if (sectionKey === 'film') { openFilmView(false); return; }
     history.pushState({ section: sectionKey }, '', '/' + sectionKey);
     renderSectionList(sectionKey);
     panel.scrollTop = 0;
@@ -1511,6 +1534,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 }
 
 function closePanel(skipPush) {
+  closeFilmViewEl();
   panel.classList.remove('open');
   overlay.classList.remove('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1523,6 +1547,215 @@ function closePanel(skipPush) {
   trackPageView('', 'Paul Hanna — Director, writer, and artist | paul.place');
   startViewTimer('home');
   currentSection = null;
+}
+
+// ─── FILM VIEW (two-column index + preview) ───
+const filmMQ = window.matchMedia('(max-width: 900px)');
+
+const filmView = document.createElement('div');
+filmView.className = 'film-view';
+filmView.innerHTML = `
+  <div class="film-side">
+    <button class="film-home">←︎ back to frog</button>
+    <nav class="film-nav" aria-label="Sections"></nav>
+    <div class="film-list"></div>
+    <div class="film-extra-label">Additional credits</div>
+    <div class="film-extra"></div>
+  </div>
+  <div class="film-stage">
+    <div class="film-pane">
+      <img class="film-fade" alt="" aria-hidden="true">
+      <img class="film-fade" alt="" aria-hidden="true">
+      <div class="film-player"></div>
+    </div>
+    <div class="film-caption"></div>
+  </div>
+`;
+document.body.appendChild(filmView);
+
+const filmListEl = filmView.querySelector('.film-list');
+const filmExtraEl = filmView.querySelector('.film-extra');
+const filmNavEl = filmView.querySelector('.film-nav');
+const filmPaneImgs = filmView.querySelectorAll('.film-fade');
+const filmPlayerEl = filmView.querySelector('.film-player');
+const filmCaptionEl = filmView.querySelector('.film-caption');
+
+let filmFront = 0;        // which .film-fade layer is showing
+let filmPreviewToken = 0; // guards decode races on fast hover
+let filmDetailIdx = null; // item playing in the pane, or null
+let filmBuilt = false;
+
+function filmItems() { return sections.film.items; }
+
+function buildFilmView() {
+  if (filmBuilt) return;
+  filmBuilt = true;
+
+  filmNavEl.innerHTML = Object.keys(sections).map(k =>
+    `<a href="/${k}" data-nav="${k}" class="${k === 'film' ? 'on' : ''}">${sections[k].title}</a>`
+  ).join('');
+  filmNavEl.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const k = a.dataset.nav;
+      if (k === 'film') filmShowIndex();
+      else openPanel(k);
+    });
+  });
+
+  const rows = [];
+  const extras = [];
+  filmItems().forEach((item, idx) => {
+    if ((item.roles || []).includes('Director')) {
+      rows.push(`
+      <button class="film-row" data-idx="${idx}">
+        <img class="film-row-img" src="${getThumb(item) || ''}" alt="" loading="lazy" width="1600" height="900">
+        <span class="film-row-title">${item.title}</span>
+        <span class="film-row-year">${item.year || ''}</span>
+      </button>`);
+    } else {
+      const sub = [(item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
+      extras.push(`
+      <button class="film-extra-row" data-idx="${idx}">
+        <span class="film-extra-title">${item.title}${item.link ? ' <span class="item-ext">↗︎</span>' : ''}</span>
+        <span class="film-extra-sub">${sub}</span>
+      </button>`);
+    }
+  });
+  filmListEl.innerHTML = rows.join('');
+  filmExtraEl.innerHTML = extras.join('');
+
+  // hover and keyboard focus both drive the preview; adjacent rows preload on intent
+  const rowEls = [...filmListEl.querySelectorAll('.film-row')];
+  rowEls.forEach((el, r) => {
+    const idx = parseInt(el.dataset.idx);
+    const intent = () => {
+      filmShowPreview(idx);
+      if (rowEls[r - 1]) filmPreload(parseInt(rowEls[r - 1].dataset.idx));
+      if (rowEls[r + 1]) filmPreload(parseInt(rowEls[r + 1].dataset.idx));
+    };
+    el.addEventListener('mouseenter', intent);
+    el.addEventListener('focus', intent);
+    el.addEventListener('click', () => filmShowDetail(idx));
+  });
+
+  filmExtraEl.querySelectorAll('.film-extra-row').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.idx);
+      const item = filmItems()[idx];
+      if (isLinkOnly(item)) {
+        window.open(item.link, '_blank', 'noopener');
+        track('external_link', { section: 'film', item: item.title, url: item.link });
+      } else {
+        filmShowDetail(idx);
+      }
+    });
+  });
+
+  filmView.querySelector('.film-home').addEventListener('click', () => closePanel());
+}
+
+const filmPreloadCache = new Map();
+function filmPreload(idx) {
+  const item = filmItems()[idx];
+  if (!item || !item.image) return null;
+  if (!filmPreloadCache.has(item.image)) {
+    const img = new Image();
+    img.src = item.image;
+    filmPreloadCache.set(item.image, img);
+  }
+  return filmPreloadCache.get(item.image);
+}
+
+async function filmShowPreview(idx) {
+  const item = filmItems()[idx];
+  if (!item || !item.image) return;
+  filmListEl.querySelectorAll('.film-row').forEach(el =>
+    el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
+  if (filmDetailIdx !== null) return; // player is up — don't swap beneath it
+  const token = ++filmPreviewToken;
+  const img = filmPreload(idx);
+  try { if (img.decode) await img.decode(); } catch (e) { /* paint whenever ready */ }
+  if (token !== filmPreviewToken || filmDetailIdx !== null) return;
+  const front = filmPaneImgs[filmFront];
+  if (front.src && front.src === img.src) return;
+  const back = filmPaneImgs[1 - filmFront];
+  back.src = img.src;
+  back.classList.add('show');
+  front.classList.remove('show');
+  filmFront = 1 - filmFront;
+}
+
+function filmShowDetail(idx, skipPush) {
+  const item = filmItems()[idx];
+  if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
+
+  if (filmMQ.matches) { // mobile: full-screen panel detail slides over the grid
+    filmDetailIdx = null;
+    openDetail('film', idx, true);
+    return;
+  }
+
+  filmDetailIdx = idx;
+  filmListEl.querySelectorAll('.film-row').forEach(el =>
+    el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
+
+  let media = '';
+  if (item.video) media = `<video src="${item.video}" controls playsinline preload="metadata"></video>`;
+  else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  else if (item.image) media = `<img src="${item.image}" alt="${item.title}">`;
+  filmPlayerEl.innerHTML = media;
+  filmView.classList.add('detail');
+
+  const meta = [item.client, (item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
+  let cap = `<div class="film-caption-title">${item.title}</div>`;
+  if (meta) cap += `<div class="film-caption-meta">${meta}</div>`;
+  if (item.description) cap += `<div class="film-caption-desc">${item.description}</div>`;
+  if (item.link) cap += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} ↗︎</a>`;
+  if (item.images && item.images.length) {
+    cap += `<div class="film-caption-gallery">${item.images.map((s, i) =>
+      `<img src="${s}" data-i="${i}" loading="lazy" alt="${item.title} — still ${i + 1}">`).join('')}</div>`;
+  }
+  filmCaptionEl.innerHTML = cap;
+  filmCaptionEl.querySelectorAll('.film-caption-gallery img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(item.images, parseInt(img.dataset.i)));
+  });
+
+  track('detail_open', { section: 'film', item: item.title });
+  trackPageView(item._slug, item.title + ' — Paul Hanna');
+  startViewTimer('detail/film/' + item.title);
+}
+
+function filmShowIndex(skipPush) {
+  if (!skipPush) history.pushState({ section: 'film' }, '', '/film');
+  filmDetailIdx = null;
+  filmView.classList.remove('detail');
+  filmPlayerEl.innerHTML = '';
+  filmCaptionEl.innerHTML = '';
+  const current = filmListEl.querySelector('.film-row.current') || filmListEl.querySelector('.film-row');
+  if (current) filmShowPreview(parseInt(current.dataset.idx));
+  trackPageView('film', 'Film — Paul Hanna');
+  startViewTimer('section/film');
+}
+
+function openFilmView(skipPush, detailIdx = null) {
+  buildFilmView();
+  panel.classList.remove('open');
+  overlay.classList.remove('open');
+  filmView.classList.add('open');
+  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
+  const lbl = document.querySelector('[data-section="film"]');
+  if (lbl) lbl.classList.add('active');
+  currentSection = 'film';
+  track('section_open', { section: 'film' });
+  if (detailIdx !== null) filmShowDetail(detailIdx, skipPush);
+  else filmShowIndex(skipPush);
+}
+
+function closeFilmViewEl() {
+  filmView.classList.remove('open', 'detail');
+  filmPlayerEl.innerHTML = '';
+  filmDetailIdx = null;
 }
 
 // ─── LIGHTBOX ───
@@ -1603,6 +1836,10 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     if (lightboxIsOpen()) closeLightbox();
     else if (panel.classList.contains('open')) closePanel();
+    else if (filmView.classList.contains('open')) {
+      if (filmDetailIdx !== null) filmShowIndex();
+      else closePanel();
+    }
   } else if (lightboxIsOpen()) {
     if (e.key === 'ArrowLeft') lbStep(-1);
     if (e.key === 'ArrowRight') lbStep(1);

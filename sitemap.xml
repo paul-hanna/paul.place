@@ -21,12 +21,17 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://paul.place/alchemical</loc>
+    <loc>https://paul.place/rightwhereyouwantme</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://paul.place/rightwhereyouwantme</loc>
+    <loc>https://paul.place/movies-in-the-daytime</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paul.place/alchemical</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -36,7 +41,32 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://paul.place/absence</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://paul.place/o-superman</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paul.place/hallway</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paul.place/the-unavailable-memory-of</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paul.place/circonstances</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paul.place/monday</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -56,42 +86,12 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://paul.place/free-money</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://paul.place/you-me-and-her</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://paul.place/hallway</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://paul.place/the-unavailable-memory-of</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://paul.place/movies-in-the-daytime</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://paul.place/absence</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://paul.place/circonstances</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://paul.place/monday</loc>
+    <loc>https://paul.place/free-money</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
