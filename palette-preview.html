@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>paul.place — palette C, accent candidates</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #F8F7F4; color: #111113; }
+  .swatch { padding: 4.5rem 8vw 5rem; min-height: 44vh; border-bottom: 1px solid #E8E7E2; }
+  .label { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.55; margin-bottom: 2.5rem; }
+  .label b { opacity: 1; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+  .identity { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2.75rem; }
+  .muted { color: #74736E; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; max-width: 34rem; padding: 0.55rem 0; cursor: default; border-bottom: 1px solid #E8E7E2; }
+  .row .yr { font-variant-numeric: tabular-nums; font-size: 0.8125rem; }
+  .body-sample { max-width: 34rem; margin-top: 2.5rem; font-size: 0.9375rem; line-height: 1.65; }
+  .body-sample a { text-underline-offset: 3px; }
+  .hex { font-family: ui-monospace, monospace; font-size: 0.6875rem; opacity: 0.5; margin-top: 2.25rem; }
+
+  /* C1 — Browser blue (the 1994 default link color) */
+  .c1 .row:hover, .c1 .row.active, .c1 a { color: #0000EE; }
+  /* C2 — Wikipedia blue */
+  .c2 .row:hover, .c2 .row.active, .c2 a { color: #0645AD; }
+  /* C3 — Electric / Klein blue */
+  .c3 .row:hover, .c3 .row.active, .c3 a { color: #1F1FFF; }
+</style>
+</head>
+<body>
+
+<div class="swatch c1">
+  <div class="label"><b>C1 — Browser blue #0000EE</b> · the literal 1994 unvisited-link default; strongest internet reference</div>
+  <h1>Paul Hanna</h1>
+  <div class="identity muted">Director, writer, and artist</div>
+  <div class="row active"><span>Vellum — Find time for you</span><span class="yr muted">2026</span></div>
+  <div class="row"><span>FALLOUT</span><span class="yr muted">2025</span></div>
+  <div class="row"><span>O Superman</span><span class="yr muted">2023</span></div>
+  <p class="body-sample muted">His work spans narrative film, experimental video, and installation — “considered, not decorated.” Represented by <a href="#">Lit Entertainment Group</a>.</p>
+  <div class="hex">paper #F8F7F4 · ink #111113 · muted #74736E · hairline #E8E7E2 · accent #0000EE</div>
+</div>
+
+<div class="swatch c2">
+  <div class="label"><b>C2 — Wikipedia blue #0645AD</b> · still unmistakably a link, but calmer and easier to read at small sizes</div>
+  <h1>Paul Hanna</h1>
+  <div class="identity muted">Director, writer, and artist</div>
+  <div class="row active"><span>Vellum — Find time for you</span><span class="yr muted">2026</span></div>
+  <div class="row"><span>FALLOUT</span><span class="yr muted">2025</span></div>
+  <div class="row"><span>O Superman</span><span class="yr muted">2023</span></div>
+  <p class="body-sample muted">His work spans narrative film, experimental video, and installation — “considered, not decorated.” Represented by <a href="#">Lit Entertainment Group</a>.</p>
+  <div class="hex">paper #F8F7F4 · ink #111113 · muted #74736E · hairline #E8E7E2 · accent #0645AD</div>
+</div>
+
+<div class="swatch c3">
+  <div class="label"><b>C3 — Electric blue #1F1FFF</b> · Klein-blue adjacent; internet reference read through an art-world lens</div>
+  <h1>Paul Hanna</h1>
+  <div class="identity muted">Director, writer, and artist</div>
+  <div class="row active"><span>Vellum — Find time for you</span><span class="yr muted">2026</span></div>
+  <div class="row"><span>FALLOUT</span><span class="yr muted">2025</span></div>
+  <div class="row"><span>O Superman</span><span class="yr muted">2023</span></div>
+  <p class="body-sample muted">His work spans narrative film, experimental video, and installation — “considered, not decorated.” Represented by <a href="#">Lit Entertainment Group</a>.</p>
+  <div class="hex">paper #F8F7F4 · ink #111113 · muted #74736E · hairline #E8E7E2 · accent #1F1FFF</div>
+</div>
+
+</body>
+</html>
