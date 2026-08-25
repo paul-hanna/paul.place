@@ -16,11 +16,11 @@
   src: url('../fonts/instrument-serif-italic.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Darker Grotesque';
+  font-family: 'Gasoek One';
   font-style: normal;
-  font-weight: 900;
+  font-weight: 400;
   font-display: swap;
-  src: url('../fonts/darker-grotesque-900.woff2') format('woff2');
+  src: url('../fonts/gasoek-one.woff2') format('woff2');
 }
 
 :root {
@@ -37,7 +37,7 @@
   /* ─── type — swap these two vars for licensed webfonts later ─── */
   --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-serif: 'Instrument Serif', Georgia, serif;
-  --font-display: 'Darker Grotesque', var(--font-sans);
+  --font-display: 'Gasoek One', var(--font-sans);
 
   /* ─── scale: two UI sizes + one reading size, two weights ─── */
   --text-small: 0.6875rem;
@@ -85,10 +85,11 @@ canvas { display: block; }
 .home-name {
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 3.6vw, 3.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  line-height: 0.9;
+  line-height: 1;
 }
 .home-tag {
   font-size: var(--text-small);
@@ -492,11 +493,12 @@ canvas { display: block; }
 .brand-name {
   display: block;
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 400;
+  font-synthesis: none;
   font-size: 1.5rem;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  line-height: 0.95;
+  line-height: 1;
 }
 .brand-tag {
   display: block;
