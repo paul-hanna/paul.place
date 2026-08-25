@@ -129,6 +129,7 @@ canvas { display: block; }
   inset: 0;
 }
 .home-foot {
+  margin-top: auto; /* pin representation/contact to the bottom of the viewport */
   font-size: var(--text-small);
   line-height: 1.7;
   color: var(--muted);
