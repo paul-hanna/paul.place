@@ -839,23 +839,50 @@ body { font-variant-numeric: tabular-nums; }
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
+}
+.side-scroll {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
-.film-home {
-  align-self: flex-start;
-  font-size: var(--text-small);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.view-frog {
+  position: relative;
+  height: 150px;
+  flex-shrink: 0;
+  margin-top: 1rem;
+}
+.home-frog canvas, .view-frog canvas {
+  position: absolute;
+  inset: 0;
+}
+.brand {
+  display: block;
+  text-decoration: none;
   color: var(--ink);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.2rem 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+}
+.brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+.brand-tag {
+  display: block;
+  font-size: var(--text-small);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.3rem;
   transition: color var(--dur);
 }
-.film-home:hover { color: var(--accent); }
+.brand:hover .brand-tag, .brand:focus-visible .brand-tag { color: var(--accent); }
 .film-nav {
   display: flex;
   gap: 1.4rem;
@@ -1012,7 +1039,9 @@ body { font-variant-numeric: tabular-nums; }
     padding: 1.5rem 1.2rem 3rem;
   }
   .film-stage { display: none; }
-  .film-side { overflow: visible; padding-right: 0; }
+  .film-side { overflow: visible; }
+  .side-scroll { overflow: visible; flex: none; min-height: auto; padding-right: 0; }
+  .view-frog { display: none; }
   .film-nav { flex-wrap: wrap; gap: 1rem 1.2rem; }
   .film-list { gap: 2.25rem; }
   .film-row { display: block; border: none; padding: 0; }
@@ -1027,7 +1056,6 @@ body { font-variant-numeric: tabular-nums; }
   .film-row-title { display: block; margin-top: 0.6rem; }
   .film-row-year { display: block; margin-top: 0.15rem; }
   .film-extra-row { min-height: 44px; }
-  .film-home { min-height: 44px; }
 }
 
 /* ─── WRITING VIEW (two-tier tabs + reading pane) ─── */
@@ -1107,24 +1135,35 @@ body { font-variant-numeric: tabular-nums; }
   color: var(--muted);
   margin-bottom: 2rem;
 }
-
-/* ─── MULTIMEDIA VIEW (image grid) ─── */
-.mm-desc {
-  font-size: var(--text-body);
-  line-height: 1.65;
+.wr-contact {
+  margin-top: 2.25rem;
+  font-size: var(--text-small);
+  line-height: 1.7;
   color: var(--muted);
-  max-width: 24rem;
 }
-.mm-stage {
-  justify-content: flex-start;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+.wr-contact-label {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.1rem;
+  opacity: 0.7;
 }
+.wr-contact a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  transition: color var(--dur), border-color var(--dur);
+}
+.wr-contact a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ─── MULTIMEDIA VIEW (grid index in the left column) ─── */
 .mm-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2rem 1.5rem;
-  padding-bottom: 3rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem 1rem;
+  padding-bottom: 1rem;
 }
 .mm-tile {
   background: none;
@@ -1149,19 +1188,15 @@ body { font-variant-numeric: tabular-nums; }
   transition: opacity var(--dur) ease;
 }
 .mm-tile:hover .mm-tile-img img { opacity: 0.85; }
-.mm-tile:hover, .mm-tile:focus-visible { color: var(--accent); }
+.mm-tile:hover, .mm-tile:focus-visible, .mm-tile.current { color: var(--accent); }
+.mm-tile.current .mm-tile-img { outline: 1px solid var(--accent); outline-offset: 2px; }
 .mm-tile-title {
   display: block;
-  margin-top: 0.6rem;
-  font-size: var(--text-body);
-  font-weight: var(--w-medium);
-  letter-spacing: 0.01em;
-}
-.mm-tile-sub {
-  display: block;
-  margin-top: 0.15rem;
+  margin-top: 0.5rem;
   font-size: var(--text-small);
-  color: var(--muted);
+  font-weight: var(--w-medium);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
 
 @media (max-width: 900px) {
@@ -1171,9 +1206,6 @@ body { font-variant-numeric: tabular-nums; }
     -webkit-overflow-scrolling: touch;
     padding: 1.5rem 1.2rem 3rem;
   }
-  .wr-stage, .mm-stage { display: none; }
-  .mm-view .mm-stage { display: block; overflow: visible; margin-top: 1.5rem; }
-  .mm-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
+  .wr-stage { display: none; }
   .wr-row, .wr-tab { min-height: 44px; }
-  .mm-desc { display: none; }
 }

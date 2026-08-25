@@ -331,28 +331,28 @@ const sections = {
             sub: 'TV Pilot',
             tags: ['Screenplay', 'Pilot'],
             bodyType: 'prose',
-            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p><p class="body-contact">For all professional inquiries, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700">+1 310 988 7700</a></p>`,
+            body: `<p>A failing Arab-American poet discovers his late grandfather's unfinished play and becomes haunted by his ghost, who pushes him toward artistic success that may cost him his integrity.</p>`,
           },
           {
             title: 'Ivory',
             sub: 'Feature',
             tags: ['Screenplay', 'Feature'],
             bodyType: 'prose',
-            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p><p class="body-contact">For all professional inquiries, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700">+1 310 988 7700</a></p>`,
+            body: `<p>A museum curator lets a professor die to steal proof of a forged artifact, then must navigate Iraqi repatriation demands while caught between institutional loyalty and a violent collector\u2014ultimately becoming the sole keeper of a truth no one wants.</p>`,
           },
           {
             title: 'Unlocked',
             sub: 'TV Pilot',
             tags: ['Screenplay', 'Pilot'],
             bodyType: 'prose',
-            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p><p class="body-contact">For all professional inquiries, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700">+1 310 988 7700</a></p>`,
+            body: `<p>A failed artist-turned-tech-founder builds an AI that promises creative breakthroughs but publicly exposes a user's darkest secrets, forcing him to choose between spinning disaster into success or confronting what his technology actually does.</p>`,
           },
           {
             title: 'Ashburn',
             sub: 'Feature',
             tags: ['Screenplay', 'Feature'],
             bodyType: 'prose',
-            body: `<p>When a lonely PR agent becomes convinced his only loyal website visitor is a person and not a bot, he follows the IP address to a data center in Ashburn, Virginia in search of true love.</p><p class="body-contact">For all professional inquiries, contact Shelby Eggers at Lit Entertainment Group &middot; <a href="tel:+13109887700">+1 310 988 7700</a></p>`,
+            body: `<p>When a lonely PR agent becomes convinced his only loyal website visitor is a person and not a bot, he follows the IP address to a data center in Ashburn, Virginia in search of true love.</p>`,
           },
           {
             title: 'Probably Just as Much, Maybe More',
@@ -1156,22 +1156,11 @@ const panelContent = document.getElementById('panel-content');
 const panelClose = document.getElementById('panel-close');
 let currentSection = null;
 
-const SECTION_ACCENTS = {
-  film:       { accent: '#0000EE', bright: '#6B6BFF' },
-  multimedia: { accent: '#1F7A4D', bright: '#3DFF7A' },
-  writing:    { accent: '#8F5C08', bright: '#E8A33D' },
-  about:      { accent: '#0000EE', bright: '#6B6BFF' },
-};
-function setAccent(key) {
-  const a = SECTION_ACCENTS[key] || SECTION_ACCENTS.about;
-  document.documentElement.style.setProperty('--accent', a.accent);
-  document.documentElement.style.setProperty('--accent-bright', a.bright);
-}
-
 function ensurePanelOpen(key) {
-  setAccent(key);
   currentSection = key;
   closeSectionViews(key);
+  const anyViewOpen = [filmView, writingView, mmView].some(v => v.classList.contains('open'));
+  if (!anyViewOpen) placeFrog(document.getElementById('frog-slot'));
   panel.classList.add('open');
   overlay.classList.add('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1320,7 +1309,6 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
   // on mobile, make sure the stacked writing view sits beneath the panel
   if (sectionKey === 'writing' && filmMQ.matches && !writingView.classList.contains('open')) {
     buildWritingView();
-    setAccent('writing');
     writingView.classList.add('open');
     wrSelectGroup(groupIdx, false);
   }
@@ -1465,9 +1453,16 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     else openFilmView(skipPush, itemIdx);
     return;
   }
-  // multimedia deep links open the grid beneath the detail panel
+  // multimedia on desktop shows in the multimedia view's pane
+  if (sectionKey === 'multimedia' && !filmMQ.matches) {
+    if (mmView.classList.contains('open')) mmShowDetail(itemIdx, skipPush);
+    else openMmView(skipPush, itemIdx);
+    return;
+  }
+  // mobile multimedia deep links keep the stacked grid beneath the panel
   if (sectionKey === 'multimedia' && !mmView.classList.contains('open')) {
-    openMmView(true);
+    buildMmView();
+    mmView.classList.add('open');
   }
 
   // Update URL
@@ -1561,8 +1556,7 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 
 function closePanel(skipPush) {
   closeSectionViews(null);
-  document.documentElement.style.removeProperty('--accent');
-  document.documentElement.style.removeProperty('--accent-bright');
+  placeFrog(document.getElementById('frog-slot'));
   panel.classList.remove('open');
   overlay.classList.remove('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1577,18 +1571,82 @@ function closePanel(skipPush) {
   currentSection = null;
 }
 
-// ─── FILM VIEW (two-column index + preview) ───
+// ─── SECTION VIEWS (film / writing / multimedia) ───
 const filmMQ = window.matchMedia('(max-width: 900px)');
 
+// The frog canvas mounts into whichever view is open. The scene code at the
+// bottom of this file installs window.__frogMount once the renderer exists.
+var pendingFrogSlot = null;
+function placeFrog(slot) {
+  pendingFrogSlot = slot;
+  if (window.__frogMount) window.__frogMount(slot);
+}
+
+const BRAND_HTML = `
+  <a class="brand" href="/">
+    <span class="brand-name">Paul Hanna</span>
+    <span class="brand-tag">Director, writer, and artist</span>
+  </a>`;
+
+function navHtml(activeKey) {
+  return Object.keys(sections).map(k =>
+    `<a href="/${k}" data-nav="${k}" class="${k === activeKey ? 'on' : ''}">${sections[k].title}</a>`
+  ).join('');
+}
+
+// brand goes home; nav links switch sections; clicking the active one resets it
+function bindSide(view, activeKey, onSame) {
+  view.querySelector('.brand').addEventListener('click', (e) => {
+    e.preventDefault();
+    closePanel();
+  });
+  view.querySelectorAll('.film-nav a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const k = a.dataset.nav;
+      if (k === activeKey) { if (onSame) onSame(); return; }
+      openPanel(k);
+    });
+  });
+}
+
+const preloadCache = new Map();
+function preloadImage(src) {
+  if (!src) return null;
+  if (!preloadCache.has(src)) {
+    const img = new Image();
+    img.src = src;
+    preloadCache.set(src, img);
+  }
+  return preloadCache.get(src);
+}
+
+function openSectionShell(view, key) {
+  closeSectionViews(key);
+  panel.classList.remove('open');
+  overlay.classList.remove('open');
+  view.classList.add('open');
+  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
+  const lbl = document.querySelector(`.nav-label[data-section="${key}"]`);
+  if (lbl) lbl.classList.add('active');
+  currentSection = key;
+  placeFrog(view.querySelector('.view-frog'));
+  track('section_open', { section: key });
+}
+
+// ── film ──
 const filmView = document.createElement('div');
 filmView.className = 'film-view';
 filmView.innerHTML = `
   <div class="film-side">
-    <button class="film-home">←︎ back to frog</button>
-    <nav class="film-nav" aria-label="Sections"></nav>
-    <div class="film-list"></div>
-    <div class="film-extra-label">Additional credits</div>
-    <div class="film-extra"></div>
+    ${BRAND_HTML}
+    <nav class="film-nav" aria-label="Sections">${navHtml('film')}</nav>
+    <div class="side-scroll">
+      <div class="film-list"></div>
+      <div class="film-extra-label">Additional credits</div>
+      <div class="film-extra"></div>
+    </div>
+    <div class="view-frog" aria-hidden="true"></div>
   </div>
   <div class="film-stage">
     <div class="film-pane">
@@ -1603,14 +1661,13 @@ document.body.appendChild(filmView);
 
 const filmListEl = filmView.querySelector('.film-list');
 const filmExtraEl = filmView.querySelector('.film-extra');
-const filmNavEl = filmView.querySelector('.film-nav');
 const filmPaneImgs = filmView.querySelectorAll('.film-fade');
 const filmPlayerEl = filmView.querySelector('.film-player');
 const filmCaptionEl = filmView.querySelector('.film-caption');
 
-let filmFront = 0;        // which .film-fade layer is showing
-let filmPreviewToken = 0; // guards decode races on fast hover
-let filmDetailIdx = null; // item playing in the pane, or null
+let filmFront = 0;
+let filmPreviewToken = 0;
+let filmDetailIdx = null;
 let filmBuilt = false;
 
 function filmItems() { return sections.film.items; }
@@ -1618,18 +1675,7 @@ function filmItems() { return sections.film.items; }
 function buildFilmView() {
   if (filmBuilt) return;
   filmBuilt = true;
-
-  filmNavEl.innerHTML = Object.keys(sections).map(k =>
-    `<a href="/${k}" data-nav="${k}" class="${k === 'film' ? 'on' : ''}">${sections[k].title}</a>`
-  ).join('');
-  filmNavEl.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const k = a.dataset.nav;
-      if (k === 'film') filmShowIndex();
-      else openPanel(k);
-    });
-  });
+  bindSide(filmView, 'film', () => filmShowIndex());
 
   const rows = [];
   const extras = [];
@@ -1653,14 +1699,13 @@ function buildFilmView() {
   filmListEl.innerHTML = rows.join('');
   filmExtraEl.innerHTML = extras.join('');
 
-  // hover and keyboard focus both drive the preview; adjacent rows preload on intent
   const rowEls = [...filmListEl.querySelectorAll('.film-row')];
   rowEls.forEach((el, r) => {
     const idx = parseInt(el.dataset.idx);
     const intent = () => {
       filmShowPreview(idx);
-      if (rowEls[r - 1]) filmPreload(parseInt(rowEls[r - 1].dataset.idx));
-      if (rowEls[r + 1]) filmPreload(parseInt(rowEls[r + 1].dataset.idx));
+      if (rowEls[r - 1]) preloadImage(filmItems()[parseInt(rowEls[r - 1].dataset.idx)].image);
+      if (rowEls[r + 1]) preloadImage(filmItems()[parseInt(rowEls[r + 1].dataset.idx)].image);
     };
     el.addEventListener('mouseenter', intent);
     el.addEventListener('focus', intent);
@@ -1679,20 +1724,6 @@ function buildFilmView() {
       }
     });
   });
-
-  filmView.querySelector('.film-home').addEventListener('click', () => closePanel());
-}
-
-const filmPreloadCache = new Map();
-function filmPreload(idx) {
-  const item = filmItems()[idx];
-  if (!item || !item.image) return null;
-  if (!filmPreloadCache.has(item.image)) {
-    const img = new Image();
-    img.src = item.image;
-    filmPreloadCache.set(item.image, img);
-  }
-  return filmPreloadCache.get(item.image);
 }
 
 async function filmShowPreview(idx) {
@@ -1700,9 +1731,9 @@ async function filmShowPreview(idx) {
   if (!item || !item.image) return;
   filmListEl.querySelectorAll('.film-row').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
-  if (filmDetailIdx !== null) return; // player is up — don't swap beneath it
+  if (filmDetailIdx !== null) return;
   const token = ++filmPreviewToken;
-  const img = filmPreload(idx);
+  const img = preloadImage(item.image);
   try { if (img.decode) await img.decode(); } catch (e) { /* paint whenever ready */ }
   if (token !== filmPreviewToken || filmDetailIdx !== null) return;
   const front = filmPaneImgs[filmFront];
@@ -1718,7 +1749,7 @@ function filmShowDetail(idx, skipPush) {
   const item = filmItems()[idx];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
 
-  if (filmMQ.matches) { // mobile: full-screen panel detail slides over the grid
+  if (filmMQ.matches) {
     filmDetailIdx = null;
     openDetail('film', idx, true);
     return;
@@ -1768,29 +1799,28 @@ function filmShowIndex(skipPush) {
 
 function openFilmView(skipPush, detailIdx = null) {
   buildFilmView();
-  setAccent('film');
-  closeSectionViews('film');
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
-  filmView.classList.add('open');
-  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-  const lbl = document.querySelector('[data-section="film"]');
-  if (lbl) lbl.classList.add('active');
-  currentSection = 'film';
-  track('section_open', { section: 'film' });
+  openSectionShell(filmView, 'film');
   if (detailIdx !== null) filmShowDetail(detailIdx, skipPush);
   else filmShowIndex(skipPush);
 }
 
-// ─── WRITING VIEW (two-tier tabs + reading pane) ───
+// ── writing ──
 const writingView = document.createElement('div');
 writingView.className = 'film-view writing-view';
 writingView.innerHTML = `
   <div class="film-side">
-    <button class="film-home">←︎ back to frog</button>
-    <nav class="film-nav" aria-label="Sections"></nav>
-    <div class="wr-tabs" role="tablist"></div>
-    <div class="wr-list"></div>
+    ${BRAND_HTML}
+    <nav class="film-nav" aria-label="Sections">${navHtml('writing')}</nav>
+    <div class="side-scroll">
+      <div class="wr-tabs" role="tablist"></div>
+      <div class="wr-list"></div>
+      <div class="wr-contact">
+        <div class="wr-contact-label">All professional inquiries</div>
+        Shelby Eggers · Lit Entertainment Group<br>
+        <a href="tel:+13109887700">+1 310 988 7700</a>
+      </div>
+    </div>
+    <div class="view-frog" aria-hidden="true"></div>
   </div>
   <div class="film-stage wr-stage">
     <article class="wr-read"></article>
@@ -1807,25 +1837,13 @@ let wrBuilt = false;
 function buildWritingView() {
   if (wrBuilt) return;
   wrBuilt = true;
-  const nav = writingView.querySelector('.film-nav');
-  nav.innerHTML = Object.keys(sections).map(k =>
-    `<a href="/${k}" data-nav="${k}" class="${k === 'writing' ? 'on' : ''}">${sections[k].title}</a>`
-  ).join('');
-  nav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const k = a.dataset.nav;
-      if (k === 'writing') return;
-      openPanel(k);
-    });
-  });
+  bindSide(writingView, 'writing');
   wrTabsEl.innerHTML = sections.writing.items.map((g, gi) =>
     `<button class="wr-tab" role="tab" data-gi="${gi}">${g.title}</button>`
   ).join('');
   wrTabsEl.querySelectorAll('.wr-tab').forEach(tab => {
     tab.addEventListener('click', () => wrSelectGroup(parseInt(tab.dataset.gi), true));
   });
-  writingView.querySelector('.film-home').addEventListener('click', () => closePanel());
 }
 
 function wrSelectGroup(gi, andShowFirst) {
@@ -1849,7 +1867,7 @@ function wrShowChild(gi, ci, skipPush) {
   const item = group.children[ci];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
 
-  if (filmMQ.matches) { // mobile: read in the full-screen panel
+  if (filmMQ.matches) {
     openChildDetail('writing', gi, ci, true);
     return;
   }
@@ -1863,7 +1881,6 @@ function wrShowChild(gi, ci, skipPush) {
   if (item.image) html += `<img class="detail-hero" src="${item.image}" alt="${item.title}" loading="lazy">`;
   if (item.body) html += `<div class="${typeClass}">${item.body}</div>`;
   wrReadEl.innerHTML = html;
-  wrReadEl.scrollTop = 0;
   writingView.querySelector('.wr-stage').scrollTop = 0;
 
   track('detail_open', { section: 'writing', item: item.title });
@@ -1873,16 +1890,7 @@ function wrShowChild(gi, ci, skipPush) {
 
 function openWritingView(skipPush, groupIdx = null, childIdx = null) {
   buildWritingView();
-  setAccent('writing');
-  closeSectionViews('writing');
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
-  writingView.classList.add('open');
-  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-  const lbl = document.querySelector('[data-section="writing"]');
-  if (lbl) lbl.classList.add('active');
-  currentSection = 'writing';
-  track('section_open', { section: 'writing' });
+  openSectionShell(writingView, 'writing');
   if (groupIdx !== null && childIdx !== null) {
     wrSelectGroup(groupIdx, false);
     wrShowChild(groupIdx, childIdx, skipPush);
@@ -1894,79 +1902,153 @@ function openWritingView(skipPush, groupIdx = null, childIdx = null) {
   }
 }
 
-// ─── MULTIMEDIA VIEW (image grid) ───
+// ── multimedia ──
 const mmView = document.createElement('div');
 mmView.className = 'film-view mm-view';
 mmView.innerHTML = `
   <div class="film-side">
-    <button class="film-home">←︎ back to frog</button>
-    <nav class="film-nav" aria-label="Sections"></nav>
-    <p class="mm-desc"></p>
+    ${BRAND_HTML}
+    <nav class="film-nav" aria-label="Sections">${navHtml('multimedia')}</nav>
+    <div class="side-scroll">
+      <div class="mm-grid"></div>
+    </div>
+    <div class="view-frog" aria-hidden="true"></div>
   </div>
-  <div class="film-stage mm-stage">
-    <div class="mm-grid"></div>
+  <div class="film-stage">
+    <div class="film-pane">
+      <img class="film-fade" alt="" aria-hidden="true">
+      <img class="film-fade" alt="" aria-hidden="true">
+      <div class="film-player"></div>
+    </div>
+    <div class="film-caption"></div>
   </div>
 `;
 document.body.appendChild(mmView);
+
 const mmGridEl = mmView.querySelector('.mm-grid');
+const mmPaneImgs = mmView.querySelectorAll('.film-fade');
+const mmPlayerEl = mmView.querySelector('.film-player');
+const mmCaptionEl = mmView.querySelector('.film-caption');
+
+let mmFront = 0;
+let mmPreviewToken = 0;
+let mmDetailIdx = null;
 let mmBuilt = false;
+
+function mmItems() { return sections.multimedia.items; }
+function mmPreviewSrc(item) {
+  return item.image || (item.images && item.images[0]) || null;
+}
 
 function buildMmView() {
   if (mmBuilt) return;
   mmBuilt = true;
-  const nav = mmView.querySelector('.film-nav');
-  nav.innerHTML = Object.keys(sections).map(k =>
-    `<a href="/${k}" data-nav="${k}" class="${k === 'multimedia' ? 'on' : ''}">${sections[k].title}</a>`
-  ).join('');
-  nav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const k = a.dataset.nav;
-      if (k === 'multimedia') return;
-      openPanel(k);
-    });
-  });
-  mmView.querySelector('.mm-desc').textContent = sections.multimedia.description;
+  bindSide(mmView, 'multimedia', () => mmShowIndex());
 
-  mmGridEl.innerHTML = sections.multimedia.items.map((item, idx) => {
+  mmGridEl.innerHTML = mmItems().map((item, idx) => {
     const thumb = getThumb(item);
+    const ext = isLinkOnly(item);
     return `
-    <button class="mm-tile" data-idx="${idx}">
+    <button class="mm-tile${ext ? ' is-external' : ''}" data-idx="${idx}">
       <span class="mm-tile-img">${thumb ? `<img src="${thumb}" alt="" loading="lazy">` : ''}</span>
-      <span class="mm-tile-title">${item.title}${item.link ? ' <span class="item-ext">↗︎</span>' : ''}</span>
-      <span class="mm-tile-sub">${item.sub || ''}</span>
+      <span class="mm-tile-title">${item.title}${ext ? ' <span class="item-ext">↗︎</span>' : ''}</span>
     </button>`;
   }).join('');
-  mmGridEl.querySelectorAll('.mm-tile').forEach(el => {
+
+  const tiles = [...mmGridEl.querySelectorAll('.mm-tile')];
+  tiles.forEach((el) => {
+    const idx = parseInt(el.dataset.idx);
+    const intent = () => mmShowPreview(idx);
+    el.addEventListener('mouseenter', intent);
+    el.addEventListener('focus', intent);
     el.addEventListener('click', () => {
-      const idx = parseInt(el.dataset.idx);
-      const item = sections.multimedia.items[idx];
+      const item = mmItems()[idx];
       if (isLinkOnly(item)) {
         window.open(item.link, '_blank', 'noopener');
         track('external_link', { section: 'multimedia', item: item.title, url: item.link });
       } else {
-        openDetail('multimedia', idx);
+        mmShowDetail(idx);
       }
     });
   });
-  mmView.querySelector('.film-home').addEventListener('click', () => closePanel());
 }
 
-function openMmView(skipPush) {
-  buildMmView();
-  setAccent('multimedia');
-  closeSectionViews('multimedia');
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
-  mmView.classList.add('open');
-  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-  const lbl = document.querySelector('[data-section="multimedia"]');
-  if (lbl) lbl.classList.add('active');
-  currentSection = 'multimedia';
+async function mmShowPreview(idx) {
+  const item = mmItems()[idx];
+  const src = item && mmPreviewSrc(item);
+  if (!src) return;
+  mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
+    el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
+  if (mmDetailIdx !== null) return;
+  const token = ++mmPreviewToken;
+  const img = preloadImage(src);
+  try { if (img.decode) await img.decode(); } catch (e) { /* paint whenever ready */ }
+  if (token !== mmPreviewToken || mmDetailIdx !== null) return;
+  const front = mmPaneImgs[mmFront];
+  if (front.src && front.src === img.src) return;
+  const back = mmPaneImgs[1 - mmFront];
+  back.src = img.src;
+  back.classList.add('show');
+  front.classList.remove('show');
+  mmFront = 1 - mmFront;
+}
+
+function mmShowDetail(idx, skipPush) {
+  const item = mmItems()[idx];
+  if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
+
+  if (filmMQ.matches) {
+    mmDetailIdx = null;
+    openDetail('multimedia', idx, true);
+    return;
+  }
+
+  mmDetailIdx = idx;
+  mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
+    el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
+
+  let media = '';
+  if (item.video) media = `<video src="${item.video}" controls playsinline preload="metadata"></video>`;
+  else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  else if (mmPreviewSrc(item)) media = `<img src="${mmPreviewSrc(item)}" alt="${item.title}">`;
+  mmPlayerEl.innerHTML = media;
+  mmView.classList.add('detail');
+
+  let cap = `<div class="film-caption-title">${item.title}</div>`;
+  if (item.sub) cap += `<div class="film-caption-meta">${item.sub}</div>`;
+  if (item.description) cap += `<div class="film-caption-desc">${item.description}</div>`;
+  if (item.link && !item.description) cap += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} ↗︎</a>`;
+  if (item.images && item.images.length) {
+    cap += `<div class="film-caption-gallery">${item.images.map((s, i) =>
+      `<img src="${s}" data-i="${i}" loading="lazy" alt="${item.title} — ${i + 1}">`).join('')}</div>`;
+  }
+  mmCaptionEl.innerHTML = cap;
+  mmCaptionEl.querySelectorAll('.film-caption-gallery img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(item.images, parseInt(img.dataset.i)));
+  });
+
+  track('detail_open', { section: 'multimedia', item: item.title });
+  trackPageView(item._slug, item.title + ' — Paul Hanna');
+  startViewTimer('detail/multimedia/' + item.title);
+}
+
+function mmShowIndex(skipPush) {
   if (!skipPush) history.pushState({ section: 'multimedia' }, '', '/multimedia');
-  track('section_open', { section: 'multimedia' });
+  mmDetailIdx = null;
+  mmView.classList.remove('detail');
+  mmPlayerEl.innerHTML = '';
+  mmCaptionEl.innerHTML = '';
+  const current = mmGridEl.querySelector('.mm-tile.current') || mmGridEl.querySelector('.mm-tile');
+  if (current) mmShowPreview(parseInt(current.dataset.idx));
   trackPageView('multimedia', 'Multimedia — Paul Hanna');
   startViewTimer('section/multimedia');
+}
+
+function openMmView(skipPush, detailIdx = null) {
+  buildMmView();
+  openSectionShell(mmView, 'multimedia');
+  if (detailIdx !== null) mmShowDetail(detailIdx, skipPush);
+  else mmShowIndex(skipPush);
 }
 
 // ─── SECTION VIEW TEARDOWN ───
@@ -1977,7 +2059,11 @@ function closeSectionViews(except) {
     filmDetailIdx = null;
   }
   if (except !== 'writing') writingView.classList.remove('open');
-  if (except !== 'multimedia') mmView.classList.remove('open');
+  if (except !== 'multimedia') {
+    mmView.classList.remove('open', 'detail');
+    mmPlayerEl.innerHTML = '';
+    mmDetailIdx = null;
+  }
 }
 
 // ─── LIGHTBOX ───
@@ -2062,7 +2148,11 @@ document.addEventListener('keydown', (e) => {
       if (filmDetailIdx !== null) filmShowIndex();
       else closePanel();
     }
-    else if (writingView.classList.contains('open') || mmView.classList.contains('open')) closePanel();
+    else if (mmView.classList.contains('open')) {
+      if (mmDetailIdx !== null) mmShowIndex();
+      else closePanel();
+    }
+    else if (writingView.classList.contains('open')) closePanel();
   } else if (lightboxIsOpen()) {
     if (e.key === 'ArrowLeft') lbStep(-1);
     if (e.key === 'ArrowRight') lbStep(1);
@@ -2130,8 +2220,7 @@ routeFromPath();
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ─── THREE.JS SCENE (frog lives in the home column, transparent canvas) ───
-const frogSlot = document.getElementById('frog-slot');
+// ─── THREE.JS SCENE (frog on a transparent canvas, mounts into any view) ───
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
 camera.position.set(0, 0.35, 5.6);
@@ -2140,10 +2229,11 @@ const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000, 0);
 renderer.outputEncoding = THREE.sRGBEncoding;
-frogSlot.appendChild(renderer.domElement);
 
 function sizeFrogCanvas() {
-  const rect = frogSlot.getBoundingClientRect();
+  const slot = renderer.domElement.parentElement;
+  if (!slot) return;
+  const rect = slot.getBoundingClientRect();
   const w = Math.max(rect.width, 1);
   const h = Math.max(rect.height, 1);
   renderer.setSize(w, h, false);
@@ -2152,8 +2242,15 @@ function sizeFrogCanvas() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
-sizeFrogCanvas();
-if (window.ResizeObserver) new ResizeObserver(sizeFrogCanvas).observe(frogSlot);
+
+// placeFrog() (section views) records the desired slot; we mount for real here
+window.__frogMount = (slot) => {
+  if (slot && renderer.domElement.parentElement !== slot) slot.appendChild(renderer.domElement);
+  sizeFrogCanvas();
+};
+window.__frogMount(pendingFrogSlot || document.getElementById('frog-slot'));
+
+if (window.ResizeObserver) new ResizeObserver(sizeFrogCanvas).observe(renderer.domElement);
 window.addEventListener('resize', sizeFrogCanvas);
 window.addEventListener('orientationchange', () => setTimeout(sizeFrogCanvas, 150));
 
@@ -2260,25 +2357,41 @@ scene.add(rimLight);
 const hemi = new THREE.HemisphereLight(0xf8f7f4, 0x444844, 0.7);
 scene.add(hemi);
 
-// ─── MOUSE TRACKING (frog watches the cursor anywhere on the page) ───
-let mouseNDC = { x: 0, y: 0 };
+// ─── MOUSE TRACKING (head aims at the cursor's actual screen position) ───
+let cursorX = window.innerWidth / 2;
+let cursorY = window.innerHeight * 0.4;
 let targetRotX = 0, targetRotY = 0;
 let currentRotX = 0, currentRotY = 0;
 
 document.addEventListener('mousemove', (e) => {
-  mouseNDC.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouseNDC.y = -(e.clientY / window.innerHeight) * 2 + 1;
-  targetRotY = mouseNDC.x * 0.4;
-  targetRotX = -mouseNDC.y * 0.25;
+  cursorX = e.clientX;
+  cursorY = e.clientY;
 });
 document.addEventListener('touchmove', (e) => {
   const t = e.touches[0];
   if (!t) return;
-  mouseNDC.x = (t.clientX / window.innerWidth) * 2 - 1;
-  mouseNDC.y = -(t.clientY / window.innerHeight) * 2 + 1;
-  targetRotY = mouseNDC.x * 0.4;
-  targetRotX = -mouseNDC.y * 0.25;
+  cursorX = t.clientX;
+  cursorY = t.clientY;
 }, { passive: true });
+
+// Unproject the cursor through the frog's own camera so the head genuinely
+// points at where the cursor sits on screen, even far outside the canvas.
+const lookTarget = new THREE.Vector3();
+function clampAngle(a, lim) { return Math.max(-lim, Math.min(lim, a)); }
+function aimAtCursor() {
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const ndcX = ((cursorX - rect.left) / rect.width) * 2 - 1;
+  const ndcY = -((cursorY - rect.top) / rect.height) * 2 + 1;
+  lookTarget.set(ndcX, ndcY, 0.5).unproject(camera);
+  lookTarget.sub(camera.position).normalize().multiplyScalar(3.5).add(camera.position);
+  const headY = frogGroup.position.y + 1.0; // approximate head height
+  const dx = lookTarget.x - frogGroup.position.x;
+  const dy = lookTarget.y - headY;
+  const dz = Math.max(lookTarget.z - frogGroup.position.z, 0.001);
+  targetRotY = clampAngle(Math.atan2(dx, dz), 0.9);
+  targetRotX = clampAngle(-Math.atan2(dy, dz), 0.55);
+}
 
 // ─── ANIMATE ───
 const clock = new THREE.Clock();
@@ -2287,8 +2400,9 @@ function animate() {
   const t = clock.getElapsedTime();
 
   // smooth rotation follow mouse — no idle float
-  currentRotY += (targetRotY - currentRotY) * 0.04;
-  currentRotX += (targetRotX - currentRotX) * 0.04;
+  aimAtCursor();
+  currentRotY += (targetRotY - currentRotY) * 0.08;
+  currentRotX += (targetRotX - currentRotX) * 0.08;
   frogGroup.position.y = -0.3;
   frogGroup.rotation.y = currentRotY;
   frogGroup.rotation.x = currentRotX;
