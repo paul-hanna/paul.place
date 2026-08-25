@@ -1157,10 +1157,10 @@ const panelClose = document.getElementById('panel-close');
 let currentSection = null;
 
 const SECTION_ACCENTS = {
-  film:       { accent: '#c43d14', bright: '#ff4f1a' },
-  multimedia: { accent: '#1f7a4d', bright: '#3dff7a' },
-  writing:    { accent: '#a3690b', bright: '#e8a33d' },
-  about:      { accent: '#c43d14', bright: '#ff4f1a' },
+  film:       { accent: '#0000EE', bright: '#6B6BFF' },
+  multimedia: { accent: '#1F7A4D', bright: '#3DFF7A' },
+  writing:    { accent: '#8F5C08', bright: '#E8A33D' },
+  about:      { accent: '#0000EE', bright: '#6B6BFF' },
 };
 function setAccent(key) {
   const a = SECTION_ACCENTS[key] || SECTION_ACCENTS.about;
@@ -1171,7 +1171,7 @@ function setAccent(key) {
 function ensurePanelOpen(key) {
   setAccent(key);
   currentSection = key;
-  if (key !== 'film') closeFilmViewEl();
+  closeSectionViews(key);
   panel.classList.add('open');
   overlay.classList.add('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1180,6 +1180,8 @@ function ensurePanelOpen(key) {
 
 function openPanel(key, skipPush) {
   if (key === 'film') { openFilmView(skipPush); return; }
+  if (key === 'writing') { openWritingView(skipPush); return; }
+  if (key === 'multimedia') { openMmView(skipPush); return; }
   if (!skipPush) history.pushState({ section: key }, '', '/' + key);
   const s = sections[key];
   if (s.custom && key === 'about') {
@@ -1305,6 +1307,23 @@ function renderGroup(sectionKey, groupIdx) {
 }
 
 function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
+  // writing on desktop reads in the writing view's pane, not the panel
+  if (sectionKey === 'writing' && !filmMQ.matches) {
+    if (writingView.classList.contains('open')) {
+      if (wrGroupIdx !== groupIdx) wrSelectGroup(groupIdx, false);
+      wrShowChild(groupIdx, childIdx, skipPush);
+    } else {
+      openWritingView(skipPush, groupIdx, childIdx);
+    }
+    return;
+  }
+  // on mobile, make sure the stacked writing view sits beneath the panel
+  if (sectionKey === 'writing' && filmMQ.matches && !writingView.classList.contains('open')) {
+    buildWritingView();
+    setAccent('writing');
+    writingView.classList.add('open');
+    wrSelectGroup(groupIdx, false);
+  }
   const s = sections[sectionKey];
   const group = s.items[groupIdx];
   const item = group.children[childIdx];
@@ -1348,6 +1367,7 @@ function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
   startViewTimer('detail/' + sectionKey + '/' + item.title);
 
   document.getElementById('detail-back').addEventListener('click', () => {
+    if (sectionKey === 'writing') { openWritingView(false); return; }
     history.pushState({ section: sectionKey }, '', '/' + sectionKey);
     trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
     renderGroup(sectionKey, groupIdx);
@@ -1445,6 +1465,10 @@ function openDetail(sectionKey, itemIdx, skipPush) {
     else openFilmView(skipPush, itemIdx);
     return;
   }
+  // multimedia deep links open the grid beneath the detail panel
+  if (sectionKey === 'multimedia' && !mmView.classList.contains('open')) {
+    openMmView(true);
+  }
 
   // Update URL
   if (!skipPush) {
@@ -1525,6 +1549,8 @@ function openDetail(sectionKey, itemIdx, skipPush) {
   // back button
   document.getElementById('detail-back').addEventListener('click', () => {
     if (sectionKey === 'film') { openFilmView(false); return; }
+    if (sectionKey === 'multimedia') { openMmView(false); return; }
+    if (sectionKey === 'writing') { openWritingView(false); return; }
     history.pushState({ section: sectionKey }, '', '/' + sectionKey);
     renderSectionList(sectionKey);
     panel.scrollTop = 0;
@@ -1534,7 +1560,9 @@ function openDetail(sectionKey, itemIdx, skipPush) {
 }
 
 function closePanel(skipPush) {
-  closeFilmViewEl();
+  closeSectionViews(null);
+  document.documentElement.style.removeProperty('--accent');
+  document.documentElement.style.removeProperty('--accent-bright');
   panel.classList.remove('open');
   overlay.classList.remove('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
@@ -1740,6 +1768,8 @@ function filmShowIndex(skipPush) {
 
 function openFilmView(skipPush, detailIdx = null) {
   buildFilmView();
+  setAccent('film');
+  closeSectionViews('film');
   panel.classList.remove('open');
   overlay.classList.remove('open');
   filmView.classList.add('open');
@@ -1752,10 +1782,202 @@ function openFilmView(skipPush, detailIdx = null) {
   else filmShowIndex(skipPush);
 }
 
-function closeFilmViewEl() {
-  filmView.classList.remove('open', 'detail');
-  filmPlayerEl.innerHTML = '';
-  filmDetailIdx = null;
+// ─── WRITING VIEW (two-tier tabs + reading pane) ───
+const writingView = document.createElement('div');
+writingView.className = 'film-view writing-view';
+writingView.innerHTML = `
+  <div class="film-side">
+    <button class="film-home">←︎ back to frog</button>
+    <nav class="film-nav" aria-label="Sections"></nav>
+    <div class="wr-tabs" role="tablist"></div>
+    <div class="wr-list"></div>
+  </div>
+  <div class="film-stage wr-stage">
+    <article class="wr-read"></article>
+  </div>
+`;
+document.body.appendChild(writingView);
+
+const wrTabsEl = writingView.querySelector('.wr-tabs');
+const wrListEl = writingView.querySelector('.wr-list');
+const wrReadEl = writingView.querySelector('.wr-read');
+let wrGroupIdx = 0;
+let wrBuilt = false;
+
+function buildWritingView() {
+  if (wrBuilt) return;
+  wrBuilt = true;
+  const nav = writingView.querySelector('.film-nav');
+  nav.innerHTML = Object.keys(sections).map(k =>
+    `<a href="/${k}" data-nav="${k}" class="${k === 'writing' ? 'on' : ''}">${sections[k].title}</a>`
+  ).join('');
+  nav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const k = a.dataset.nav;
+      if (k === 'writing') return;
+      openPanel(k);
+    });
+  });
+  wrTabsEl.innerHTML = sections.writing.items.map((g, gi) =>
+    `<button class="wr-tab" role="tab" data-gi="${gi}">${g.title}</button>`
+  ).join('');
+  wrTabsEl.querySelectorAll('.wr-tab').forEach(tab => {
+    tab.addEventListener('click', () => wrSelectGroup(parseInt(tab.dataset.gi), true));
+  });
+  writingView.querySelector('.film-home').addEventListener('click', () => closePanel());
+}
+
+function wrSelectGroup(gi, andShowFirst) {
+  wrGroupIdx = gi;
+  wrTabsEl.querySelectorAll('.wr-tab').forEach(t =>
+    t.classList.toggle('on', parseInt(t.dataset.gi) === gi));
+  const group = sections.writing.items[gi];
+  wrListEl.innerHTML = group.children.map((c, ci) => `
+    <button class="wr-row" data-ci="${ci}">
+      <span class="wr-row-title">${c.title}</span>
+      <span class="wr-row-sub">${c.sub || ''}</span>
+    </button>`).join('');
+  wrListEl.querySelectorAll('.wr-row').forEach(el => {
+    el.addEventListener('click', () => wrShowChild(gi, parseInt(el.dataset.ci)));
+  });
+  if (andShowFirst && !filmMQ.matches && group.children.length) wrShowChild(gi, 0, true);
+}
+
+function wrShowChild(gi, ci, skipPush) {
+  const group = sections.writing.items[gi];
+  const item = group.children[ci];
+  if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
+
+  if (filmMQ.matches) { // mobile: read in the full-screen panel
+    openChildDetail('writing', gi, ci, true);
+    return;
+  }
+
+  wrListEl.querySelectorAll('.wr-row').forEach(el =>
+    el.classList.toggle('current', parseInt(el.dataset.ci) === ci));
+
+  const typeClass = item.bodyType === 'poetry' ? 'body-poetry' : 'body-prose';
+  let html = `<h2 class="wr-title">${item.title}</h2>`;
+  if (item.sub) html += `<div class="wr-sub">${item.sub}</div>`;
+  if (item.image) html += `<img class="detail-hero" src="${item.image}" alt="${item.title}" loading="lazy">`;
+  if (item.body) html += `<div class="${typeClass}">${item.body}</div>`;
+  wrReadEl.innerHTML = html;
+  wrReadEl.scrollTop = 0;
+  writingView.querySelector('.wr-stage').scrollTop = 0;
+
+  track('detail_open', { section: 'writing', item: item.title });
+  trackPageView(item._slug, item.title + ' — Paul Hanna');
+  startViewTimer('detail/writing/' + item.title);
+}
+
+function openWritingView(skipPush, groupIdx = null, childIdx = null) {
+  buildWritingView();
+  setAccent('writing');
+  closeSectionViews('writing');
+  panel.classList.remove('open');
+  overlay.classList.remove('open');
+  writingView.classList.add('open');
+  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
+  const lbl = document.querySelector('[data-section="writing"]');
+  if (lbl) lbl.classList.add('active');
+  currentSection = 'writing';
+  track('section_open', { section: 'writing' });
+  if (groupIdx !== null && childIdx !== null) {
+    wrSelectGroup(groupIdx, false);
+    wrShowChild(groupIdx, childIdx, skipPush);
+  } else {
+    if (!skipPush) history.pushState({ section: 'writing' }, '', '/writing');
+    wrSelectGroup(wrGroupIdx, true);
+    trackPageView('writing', 'Writing — Paul Hanna');
+    startViewTimer('section/writing');
+  }
+}
+
+// ─── MULTIMEDIA VIEW (image grid) ───
+const mmView = document.createElement('div');
+mmView.className = 'film-view mm-view';
+mmView.innerHTML = `
+  <div class="film-side">
+    <button class="film-home">←︎ back to frog</button>
+    <nav class="film-nav" aria-label="Sections"></nav>
+    <p class="mm-desc"></p>
+  </div>
+  <div class="film-stage mm-stage">
+    <div class="mm-grid"></div>
+  </div>
+`;
+document.body.appendChild(mmView);
+const mmGridEl = mmView.querySelector('.mm-grid');
+let mmBuilt = false;
+
+function buildMmView() {
+  if (mmBuilt) return;
+  mmBuilt = true;
+  const nav = mmView.querySelector('.film-nav');
+  nav.innerHTML = Object.keys(sections).map(k =>
+    `<a href="/${k}" data-nav="${k}" class="${k === 'multimedia' ? 'on' : ''}">${sections[k].title}</a>`
+  ).join('');
+  nav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const k = a.dataset.nav;
+      if (k === 'multimedia') return;
+      openPanel(k);
+    });
+  });
+  mmView.querySelector('.mm-desc').textContent = sections.multimedia.description;
+
+  mmGridEl.innerHTML = sections.multimedia.items.map((item, idx) => {
+    const thumb = getThumb(item);
+    return `
+    <button class="mm-tile" data-idx="${idx}">
+      <span class="mm-tile-img">${thumb ? `<img src="${thumb}" alt="" loading="lazy">` : ''}</span>
+      <span class="mm-tile-title">${item.title}${item.link ? ' <span class="item-ext">↗︎</span>' : ''}</span>
+      <span class="mm-tile-sub">${item.sub || ''}</span>
+    </button>`;
+  }).join('');
+  mmGridEl.querySelectorAll('.mm-tile').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.idx);
+      const item = sections.multimedia.items[idx];
+      if (isLinkOnly(item)) {
+        window.open(item.link, '_blank', 'noopener');
+        track('external_link', { section: 'multimedia', item: item.title, url: item.link });
+      } else {
+        openDetail('multimedia', idx);
+      }
+    });
+  });
+  mmView.querySelector('.film-home').addEventListener('click', () => closePanel());
+}
+
+function openMmView(skipPush) {
+  buildMmView();
+  setAccent('multimedia');
+  closeSectionViews('multimedia');
+  panel.classList.remove('open');
+  overlay.classList.remove('open');
+  mmView.classList.add('open');
+  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
+  const lbl = document.querySelector('[data-section="multimedia"]');
+  if (lbl) lbl.classList.add('active');
+  currentSection = 'multimedia';
+  if (!skipPush) history.pushState({ section: 'multimedia' }, '', '/multimedia');
+  track('section_open', { section: 'multimedia' });
+  trackPageView('multimedia', 'Multimedia — Paul Hanna');
+  startViewTimer('section/multimedia');
+}
+
+// ─── SECTION VIEW TEARDOWN ───
+function closeSectionViews(except) {
+  if (except !== 'film') {
+    filmView.classList.remove('open', 'detail');
+    filmPlayerEl.innerHTML = '';
+    filmDetailIdx = null;
+  }
+  if (except !== 'writing') writingView.classList.remove('open');
+  if (except !== 'multimedia') mmView.classList.remove('open');
 }
 
 // ─── LIGHTBOX ───
@@ -1840,6 +2062,7 @@ document.addEventListener('keydown', (e) => {
       if (filmDetailIdx !== null) filmShowIndex();
       else closePanel();
     }
+    else if (writingView.classList.contains('open') || mmView.classList.contains('open')) closePanel();
   } else if (lightboxIsOpen()) {
     if (e.key === 'ArrowLeft') lbStep(-1);
     if (e.key === 'ArrowRight') lbStep(1);
@@ -1907,144 +2130,41 @@ routeFromPath();
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ─── THREE.JS SCENE ───
+// ─── THREE.JS SCENE (frog lives in the home column, transparent canvas) ───
+const frogSlot = document.getElementById('frog-slot');
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(0, 0.5, 6);
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
+camera.position.set(0, 0.35, 5.6);
 
-const renderer = new THREE.WebGLRenderer({ antialias: !isMobile });
-renderer.setSize(window.innerWidth, window.innerHeight);
+const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x000000);
+renderer.setClearColor(0x000000, 0);
 renderer.outputEncoding = THREE.sRGBEncoding;
-document.body.appendChild(renderer.domElement);
+frogSlot.appendChild(renderer.domElement);
 
-// ─── VIDEO TEXTURE ───
+function sizeFrogCanvas() {
+  const rect = frogSlot.getBoundingClientRect();
+  const w = Math.max(rect.width, 1);
+  const h = Math.max(rect.height, 1);
+  renderer.setSize(w, h, false);
+  renderer.domElement.style.width = '100%';
+  renderer.domElement.style.height = '100%';
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+sizeFrogCanvas();
+if (window.ResizeObserver) new ResizeObserver(sizeFrogCanvas).observe(frogSlot);
+window.addEventListener('resize', sizeFrogCanvas);
+window.addEventListener('orientationchange', () => setTimeout(sizeFrogCanvas, 150));
+
+// ─── FRAMED REEL (muted loop; click opens the full reel with sound) ───
 const video = document.getElementById('reel-video');
 video.play().catch(() => {
-  // iOS/mobile requires user gesture to start video
+  // some mobile browsers require a user gesture to start video
   const startVideo = () => video.play();
   document.addEventListener('click', startVideo, { once: true });
   document.addEventListener('touchstart', startVideo, { once: true });
 });
-const videoTexture = new THREE.VideoTexture(video);
-videoTexture.minFilter = THREE.LinearFilter;
-videoTexture.magFilter = THREE.LinearFilter;
-
-// ─── STARS ───
-const starCount = isMobile ? 300 : 800;
-const starGeo = new THREE.BufferGeometry();
-const starPos = new Float32Array(starCount * 3);
-const starSizes = new Float32Array(starCount);
-for (let i = 0; i < starCount; i++) {
-  starPos[i * 3] = (Math.random() - 0.5) * 100;
-  starPos[i * 3 + 1] = (Math.random() - 0.5) * 100;
-  starPos[i * 3 + 2] = (Math.random() - 0.5) * 100;
-  starSizes[i] = Math.random() * 1.5 + 0.3;
-}
-starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
-const starMat = new THREE.PointsMaterial({
-  color: 0xffffff,
-  size: 0.15,
-  transparent: true,
-  opacity: 0.6,
-  sizeAttenuation: true,
-});
-scene.add(new THREE.Points(starGeo, starMat));
-
-// ─── VIDEO BACKGROUND PLANE (with VHS shader) ───
-const bgVert = `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-const bgFrag = `
-  uniform sampler2D uVideo;
-  uniform float uTime;
-  uniform float uVideoAspect;
-  uniform float uScreenAspect;
-  uniform float uReduced;
-  varying vec2 vUv;
-
-  void main() {
-    // Cover-crop: keep video aspect ratio, crop excess
-    vec2 uv = vUv;
-    if (uScreenAspect > uVideoAspect) {
-      // screen wider than video — crop top/bottom
-      float scale = uVideoAspect / uScreenAspect;
-      uv.y = uv.y * scale + (1.0 - scale) * 0.5;
-    } else {
-      // screen taller than video — crop left/right
-      float scale = uScreenAspect / uVideoAspect;
-      uv.x = uv.x * scale + (1.0 - scale) * 0.5;
-    }
-
-    // very subtle barrel distortion
-    vec2 centered = uv - 0.5;
-    float dist = length(centered);
-    uv = uv + centered * dist * 0.06;
-
-    // minimal chromatic aberration
-    float offset = 0.002 + sin(uTime * 2.0) * 0.0005;
-    float r = texture2D(uVideo, uv + vec2(offset, 0.0)).r;
-    float g = texture2D(uVideo, uv).g;
-    float b = texture2D(uVideo, uv - vec2(offset, 0.0)).b;
-    vec3 col = vec3(r, g, b);
-
-    // scanlines
-    col -= sin((uv.y + uTime * 0.05) * 400.0) * 0.04;
-
-    // glitch lines
-    col += step(0.994, sin(uTime * 30.0 + uv.y * 50.0)) * 0.15 * (1.0 - uReduced);
-
-    // green tint
-    col.g *= 1.08;
-    col.r *= 0.94;
-
-    // darken to sit behind the frog
-    col *= 0.55;
-
-    // vignette
-    float vig = clamp(1.0 - dist * 1.4, 0.0, 1.0);
-    col *= vig;
-
-    // VHS flicker
-    col *= 1.0 + (sin(uTime * 12.0) * 0.015 + sin(uTime * 60.0) * 0.005) * (1.0 - uReduced);
-
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-const bgMaterial = new THREE.ShaderMaterial({
-  vertexShader: bgVert,
-  fragmentShader: bgFrag,
-  uniforms: {
-    uVideo: { value: videoTexture },
-    uTime: { value: 0 },
-    uVideoAspect: { value: 16 / 9 },
-    uScreenAspect: { value: window.innerWidth / window.innerHeight },
-    uReduced: { value: reducedMotion ? 1.0 : 0.0 },
-  },
-  depthWrite: false,
-});
-
-// Size the plane to fill the camera view at z = -10
-// Camera: FOV=40, at z=6 → distance to plane = 16
-const bgDist = 16;
-const bgHalfH = Math.tan(THREE.MathUtils.degToRad(20)) * bgDist;
-const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), bgMaterial);
-function sizeBgPlane() {
-  const aspect = window.innerWidth / window.innerHeight;
-  bgPlane.scale.set(bgHalfH * 2 * aspect, bgHalfH * 2, 1);
-  bgMaterial.uniforms.uScreenAspect.value = aspect;
-}
-sizeBgPlane();
-bgPlane.position.z = -10;
-bgPlane.renderOrder = -1;
-scene.add(bgPlane);
 
 // ─── LOAD THE FROG (GLB) ───
 const frogGroup = new THREE.Group();
@@ -2103,7 +2223,6 @@ const tongue = new THREE.Mesh(
   new THREE.MeshStandardMaterial({ color: 0xff5577, roughness: 0.45 })
 );
 tongue.rotation.x = Math.PI / 2; // local +Y now points at camera (+Z)
-// position is set from the model's bounding box once the GLB loads
 tongue.visible = false;
 frogGroup.add(tongue);
 
@@ -2113,9 +2232,11 @@ const TONGUE_DURATION = 0.35;
 const raycaster = new THREE.Raycaster();
 renderer.domElement.addEventListener('pointerdown', (e) => {
   if (!frogModel || tongueStart >= 0) return;
+  // NDC relative to the frog canvas, not the window
+  const rect = renderer.domElement.getBoundingClientRect();
   raycaster.setFromCamera({
-    x: (e.clientX / window.innerWidth) * 2 - 1,
-    y: -(e.clientY / window.innerHeight) * 2 + 1,
+    x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+    y: -((e.clientY - rect.top) / rect.height) * 2 + 1,
   }, camera);
   if (raycaster.intersectObject(frogGroup, true).length) {
     tongueStart = clock.getElapsedTime();
@@ -2124,122 +2245,22 @@ renderer.domElement.addEventListener('pointerdown', (e) => {
   }
 });
 
-// ─── LIGHTING (PBR) ───
-const ambient = new THREE.AmbientLight(0x333333, 1.0);
+// ─── LIGHTING (PBR, tuned for the light page) ───
+const ambient = new THREE.AmbientLight(0x777777, 1.0);
 scene.add(ambient);
 const keyLight = new THREE.DirectionalLight(0xffeedd, 1.2);
 keyLight.position.set(2, 3, 4);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0x44ff88, 0.4);
+const fillLight = new THREE.DirectionalLight(0x44ff88, 0.3);
 fillLight.position.set(-3, -1, 2);
 scene.add(fillLight);
-const rimLight = new THREE.DirectionalLight(0x6688ff, 0.5);
+const rimLight = new THREE.DirectionalLight(0x6688ff, 0.4);
 rimLight.position.set(0, 2, -4);
 scene.add(rimLight);
-const hemi = new THREE.HemisphereLight(0x445544, 0x111111, 0.6);
+const hemi = new THREE.HemisphereLight(0xf8f7f4, 0x444844, 0.7);
 scene.add(hemi);
 
-// ─── FLOATING DUST PARTICLES ───
-const dustCount = isMobile ? 25 : 60;
-const dustGeo = new THREE.BufferGeometry();
-const dustPos = new Float32Array(dustCount * 3);
-const dustDrifts = [];
-for (let i = 0; i < dustCount; i++) {
-  dustPos[i * 3] = (Math.random() - 0.5) * 12;
-  dustPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
-  dustPos[i * 3 + 2] = (Math.random() - 0.5) * 8;
-  dustDrifts.push({
-    speed: 0.002 + Math.random() * 0.005,
-    phase: Math.random() * Math.PI * 2,
-  });
-}
-dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-const dustMat = new THREE.PointsMaterial({
-  color: 0x66ffaa,
-  size: 0.04,
-  transparent: true,
-  opacity: 0.35,
-  sizeAttenuation: true,
-});
-const dust = new THREE.Points(dustGeo, dustMat);
-scene.add(dust);
-
-// ─── POST-PROCESSING: CRT OVERLAY ───
-const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
-
-const crtVert = `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = vec4(position, 1.0);
-  }
-`;
-const crtFrag = `
-  uniform sampler2D tDiffuse;
-  uniform float uTime;
-  uniform vec2 uResolution;
-  uniform float uReduced;
-  varying vec2 vUv;
-
-  void main() {
-    vec2 uv = vUv;
-    // subtle barrel distortion
-    vec2 c = uv - 0.5;
-    float d = dot(c, c);
-    uv = uv + c * d * 0.06;
-
-    // chromatic aberration
-    float aberr = 0.0015 + sin(uTime * 1.5) * 0.0005;
-    float r = texture2D(tDiffuse, uv + vec2(aberr, 0.0)).r;
-    float g = texture2D(tDiffuse, uv).g;
-    float b = texture2D(tDiffuse, uv - vec2(aberr, 0.0)).b;
-    vec3 col = vec3(r, g, b);
-
-    // scanlines
-    float scanline = sin(uv.y * uResolution.y * 1.0) * 0.03;
-    col -= scanline;
-
-    // subtle static noise
-    float noise = fract(sin(dot(uv * uTime, vec2(12.9898, 78.233))) * 43758.5453);
-    col += (noise - 0.5) * 0.025;
-
-    // vignette
-    float vig = 1.0 - d * 1.5;
-    col *= clamp(vig, 0.0, 1.0) * 0.9 + 0.1;
-
-    // slight green shift
-    col.g *= 1.04;
-
-    // flicker
-    col *= 1.0 + sin(uTime * 8.0) * 0.008 * (1.0 - uReduced);
-
-    // horizontal interference lines (rare)
-    float interference = step(0.998, sin(uTime * 5.0 + uv.y * 100.0)) * 0.08 * (1.0 - uReduced);
-    col += vec3(interference * 0.5, interference, interference * 0.5);
-
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-const crtQuadGeo = new THREE.PlaneGeometry(2, 2);
-const crtMaterial = new THREE.ShaderMaterial({
-  vertexShader: crtVert,
-  fragmentShader: crtFrag,
-  uniforms: {
-    tDiffuse: { value: renderTarget.texture },
-    uTime: { value: 0 },
-    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-    uReduced: { value: reducedMotion ? 1.0 : 0.0 },
-  },
-  depthTest: false,
-  depthWrite: false,
-});
-const crtScene = new THREE.Scene();
-const crtCamera = new THREE.Camera();
-const crtQuad = new THREE.Mesh(crtQuadGeo, crtMaterial);
-crtScene.add(crtQuad);
-
-// ─── INTERACTION ───
+// ─── MOUSE TRACKING (frog watches the cursor anywhere on the page) ───
 let mouseNDC = { x: 0, y: 0 };
 let targetRotX = 0, targetRotY = 0;
 let currentRotX = 0, currentRotY = 0;
@@ -2250,40 +2271,30 @@ document.addEventListener('mousemove', (e) => {
   targetRotY = mouseNDC.x * 0.4;
   targetRotX = -mouseNDC.y * 0.25;
 });
-
 document.addEventListener('touchmove', (e) => {
-  // prevent pull-to-refresh / overscroll (except inside panel)
-  if (!panel.classList.contains('open')) e.preventDefault();
   const t = e.touches[0];
+  if (!t) return;
   mouseNDC.x = (t.clientX / window.innerWidth) * 2 - 1;
   mouseNDC.y = -(t.clientY / window.innerHeight) * 2 + 1;
   targetRotY = mouseNDC.x * 0.4;
   targetRotX = -mouseNDC.y * 0.25;
-}, { passive: false });
+}, { passive: true });
 
 // ─── ANIMATE ───
 const clock = new THREE.Clock();
-
 function animate() {
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
 
-  // update video background shader
-  bgMaterial.uniforms.uTime.value = t;
-
-  // smooth rotation follow mouse
+  // smooth rotation follow mouse — no idle float
   currentRotY += (targetRotY - currentRotY) * 0.04;
   currentRotX += (targetRotX - currentRotX) * 0.04;
-
-  // idle float (gentler under prefers-reduced-motion)
-  const motion = reducedMotion ? 0.3 : 1;
-  frogGroup.position.y = -0.3 + Math.sin(t * 0.5) * 0.15 * motion;
-  frogGroup.rotation.y = currentRotY + Math.sin(t * 0.2) * 0.05 * motion;
-  frogGroup.rotation.x = currentRotX + Math.cos(t * 0.25) * 0.03 * motion;
-  frogGroup.rotation.z = Math.sin(t * 0.3) * 0.02 * motion;
+  frogGroup.position.y = -0.3;
+  frogGroup.rotation.y = currentRotY;
+  frogGroup.rotation.x = currentRotX;
 
   // subtle breathing on the whole model
-  if (frogModel) {
+  if (frogModel && !reducedMotion) {
     const breathe = 1 + Math.sin(t * 0.8) * 0.015;
     frogModel.scale.set(
       frogBaseScale * breathe,
@@ -2307,44 +2318,6 @@ function animate() {
     }
   }
 
-  // dust drift
-  const dPos = dust.geometry.attributes.position;
-  for (let i = 0; i < dustCount; i++) {
-    dPos.array[i * 3 + 1] += Math.sin(t * dustDrifts[i].speed * 10 + dustDrifts[i].phase) * 0.002;
-    dPos.array[i * 3] += dustDrifts[i].speed * 0.3;
-    if (dPos.array[i * 3] > 6) dPos.array[i * 3] = -6;
-  }
-  dPos.needsUpdate = true;
-
-  // slow star rotation
-  scene.children.forEach(c => {
-    if (c.isPoints && c !== dust) {
-      c.rotation.y = t * 0.003;
-      c.rotation.x = t * 0.001;
-    }
-  });
-
-  // post-process uniforms
-  crtMaterial.uniforms.uTime.value = t;
-
-  // Render to target, then post-process pass
-  renderer.setRenderTarget(renderTarget);
   renderer.render(scene, camera);
-  renderer.setRenderTarget(null);
-  renderer.render(crtScene, crtCamera);
 }
 animate();
-
-// ─── RESIZE ───
-function handleResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderTarget.setSize(window.innerWidth, window.innerHeight);
-  crtMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
-
-  // resize background plane to fill view
-  sizeBgPlane();
-}
-window.addEventListener('resize', handleResize);
-window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));

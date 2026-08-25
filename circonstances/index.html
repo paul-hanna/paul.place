@@ -95,7 +95,7 @@
 </script>
 <meta name="description" content="Director, Cinematographer, Editor · 2022">
 <meta name="author" content="Paul Hanna">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#F8F7F4">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://paul.place/circonstances">
 <link rel="alternate" type="application/rss+xml" title="Paul Hanna — Journal" href="https://paul.place/feed.xml">
@@ -130,20 +130,38 @@
 </div>
 </noscript>
 
-<video id="reel-video" src="reel.mp4" loop muted playsinline crossorigin="anonymous"></video>
-<div class="corner-tl">paul.place</div>
-<div class="center-name" id="center-name">
-  Paul Hanna
-  <div class="center-sub">Director, writer, and artist</div>
-</div>
-<a class="nav-label" id="nav-film" href="/film" data-idx="01" data-section="film">Film</a>
-<a class="nav-label" id="nav-multimedia" href="/multimedia" data-idx="02" data-section="multimedia">Multimedia</a>
-<a class="nav-label" id="nav-writing" href="/writing" data-idx="03" data-section="writing">Writing</a>
-<a class="nav-label" id="nav-about" href="/about" data-idx="04" data-section="about">About</a>
-<div class="bottom-info">
-  <span>NYC &mdash; 2026</span>
-  <a href="/reel" id="reel-link">watch reel</a>
-  <a href="mailto:paul@paul.place">paul@paul.place</a>
+<div class="home" id="home-ui">
+  <aside class="home-side">
+    <div class="home-head">
+      <h1 class="home-name">Paul Hanna</h1>
+      <div class="home-tag">Director, writer, and artist</div>
+      <nav class="home-nav" aria-label="Sections">
+        <a class="nav-label" id="nav-film" href="/film" data-section="film">Film</a>
+        <a class="nav-label" id="nav-multimedia" href="/multimedia" data-section="multimedia">Multimedia</a>
+        <a class="nav-label" id="nav-writing" href="/writing" data-section="writing">Writing</a>
+        <a class="nav-label" id="nav-about" href="/about" data-section="about">About</a>
+      </nav>
+    </div>
+    <div class="home-frog" id="frog-slot" aria-hidden="true"></div>
+    <footer class="home-foot">
+      <div class="home-foot-block">
+        <div class="home-foot-label">Representation</div>
+        <div>Shelby Eggers &middot; Lit Entertainment Group</div>
+        <a href="tel:+13109887700">+1 310 988 7700</a>
+      </div>
+      <div class="home-foot-block">
+        <div class="home-foot-label">Contact</div>
+        <a href="mailto:paul@paul.place">paul@paul.place</a>
+      </div>
+      <div class="home-foot-loc">NYC &mdash; 2026</div>
+    </footer>
+  </aside>
+  <main class="home-stage">
+    <button class="home-reel" id="reel-link" aria-label="Watch the director reel with sound">
+      <video id="reel-video" src="reel.mp4" loop muted playsinline autoplay preload="metadata" crossorigin="anonymous"></video>
+    </button>
+    <div class="home-reel-cap">Director reel &mdash; click for sound</div>
+  </main>
 </div>
 <div class="panel-overlay" id="panel-overlay"></div>
 <div class="panel" id="panel">
