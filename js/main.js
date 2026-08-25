@@ -1071,7 +1071,7 @@ of your body and slink silently down your gizzard` },
     title: 'About',
     custom: true,
     portrait: 'images/works/paul-portrait.png',
-    bio: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, and artist based in New York City. His work spans narrative films and television, experimental video, music videos, web art, installation art, and interactive art. His films and installations have been featured in festivals, galleries, and public exhibitions.',
+    bio: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, artist based in New York City. His work spans narrative films and television, experimental video, music videos, web art, installation art, and interactive art. His films and installations have been featured in festivals, galleries, and public exhibitions.',
     education: [
       { school: 'Columbia University', degree: 'B.A. in Film and Philosophy' },
       { school: 'NYU Tisch School of the Arts', degree: 'M.P.S. in New Media Art' },
@@ -1149,42 +1149,8 @@ Object.keys(sections).forEach(key => {
   });
 });
 
-// ─── PANEL LOGIC ───
-const panel = document.getElementById('panel');
-const overlay = document.getElementById('panel-overlay');
-const panelContent = document.getElementById('panel-content');
-const panelClose = document.getElementById('panel-close');
+// ─── SITE CHROME (no slide-out panels — every section is a full view) ───
 let currentSection = null;
-
-function ensurePanelOpen(key) {
-  currentSection = key;
-  closeSectionViews(key);
-  const anyViewOpen = [filmView, writingView, mmView].some(v => v.classList.contains('open'));
-  if (!anyViewOpen) placeFrog(document.getElementById('frog-slot'));
-  panel.classList.add('open');
-  overlay.classList.add('open');
-  document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-  document.querySelector(`[data-section="${key}"]`).classList.add('active');
-}
-
-function openPanel(key, skipPush) {
-  if (key === 'film') { openFilmView(skipPush); return; }
-  if (key === 'writing') { openWritingView(skipPush); return; }
-  if (key === 'multimedia') { openMmView(skipPush); return; }
-  if (!skipPush) history.pushState({ section: key }, '', '/' + key);
-  const s = sections[key];
-  if (s.custom && key === 'about') {
-    renderAbout();
-  } else {
-    renderSectionList(key);
-  }
-  ensurePanelOpen(key);
-  panel.scrollTop = 0;
-
-  track('section_open', { section: key });
-  trackPageView(key, s.title + ' — Paul Hanna');
-  startViewTimer('section/' + key);
-}
 
 function getThumb(item) {
   const src = item.image || (item.images && item.images.length && item.images[0]) || null;
@@ -1198,375 +1164,43 @@ function isLinkOnly(item) {
   return item.link && !item.embed && !item.description && !item.body && !item.images;
 }
 
-const activeTagFilters = {}; // sectionKey -> Set of tags (ephemeral)
-
-function renderSectionList(key) {
-  const s = sections[key];
-  const active = activeTagFilters[key] || (activeTagFilters[key] = new Set());
-  // section can pin its filter chips (e.g. film: format-based); default is the tag union
-  const allTags = s.filterTags || [...new Set(s.items.flatMap(it => it.tags || []))];
-  const visible = active.size
-    ? s.items.filter(it => (it.tags || []).some(t => active.has(t)))
-    : s.items;
-
-  const chipsHtml = allTags.length < 2 ? '' : `
-    <div class="tag-filter">
-      ${allTags.map(t => `<button class="tag-chip${active.has(t) ? ' on' : ''}" data-tag="${t}">${t}</button>`).join('')}
-    </div>`;
-
-  panelContent.innerHTML = `
-    <h2>${s.title}</h2>
-    <p>${s.description}</p>
-    ${chipsHtml}
-    <div class="panel-items">
-      ${visible.map(item => {
-        const idx = s.items.indexOf(item);
-        const thumb = getThumb(item);
-        const bgStyle = thumb ? ` style="background-image:url('${thumb}')"` : '';
-        const groupClass = item.group ? ' is-group' : '';
-        const extClass = item.link ? ' is-external' : '';
-        const extBadge = item.link ? '<span class="item-ext">\u2197\uFE0E</span>' : '';
-        return `
-        <div class="panel-item${thumb ? ' has-thumb' : ''}${groupClass}${extClass}" data-section="${key}" data-idx="${idx}"${bgStyle}>
-          <div class="item-text">
-            <div class="item-title">${item.title}${item.group ? ' <span class="item-count">' + item.children.length + '</span>' : ''}${extBadge}</div>
-            <div class="item-sub">${item.sub}</div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-
-  panelContent.querySelectorAll('.tag-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const t = chip.dataset.tag;
-      active.has(t) ? active.delete(t) : active.add(t);
-      renderSectionList(key);
-      track('tag_filter', { section: key, tag: t });
-    });
-  });
-
-  panelContent.querySelectorAll('.panel-item').forEach(el => {
-    el.addEventListener('click', () => {
-      const section = el.dataset.section;
-      const idx = parseInt(el.dataset.idx);
-      const item = sections[section].items[idx];
-      if (item.group) {
-        renderGroup(section, idx);
-      } else if (isLinkOnly(item)) {
-        window.open(item.link, '_blank', 'noopener');
-        track('external_link', { section, item: item.title, url: item.link });
-      } else {
-        openDetail(section, idx);
-      }
-    });
-  });
+function openPanel(key, skipPush) {
+  if (key === 'film') openFilmView(skipPush);
+  else if (key === 'writing') openWritingView(skipPush);
+  else if (key === 'multimedia') openMmView(skipPush);
+  else if (key === 'about') openAboutView(skipPush);
 }
 
-function renderGroup(sectionKey, groupIdx) {
-  const s = sections[sectionKey];
-  const group = s.items[groupIdx];
-  panelContent.innerHTML = `
-    <button class="detail-back" id="group-back">\u2190\uFE0E ${s.title}</button>
-    <h2>${group.title}</h2>
-    ${group.sub ? `<p>${group.sub}</p>` : ''}
-    <div class="group-list">
-      ${group.children.map((child, idx) => `
-        <div class="group-item" data-group="${groupIdx}" data-child="${idx}">
-          <span class="group-item-title">${child.title}</span>
-          <span class="group-item-sub">${child.sub}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-  panel.scrollTop = 0;
-
-  document.getElementById('group-back').addEventListener('click', () => {
-    renderSectionList(sectionKey);
-    panel.scrollTop = 0;
-  });
-
-  panelContent.querySelectorAll('.group-item').forEach(el => {
-    el.addEventListener('click', () => {
-      const gi = parseInt(el.dataset.group);
-      const ci = parseInt(el.dataset.child);
-      openChildDetail(sectionKey, gi, ci);
-    });
-  });
+// slug routing lands here; dispatch into the owning view
+function openDetail(sectionKey, itemIdx, skipPush) {
+  if (sectionKey === 'film') {
+    if (filmView.classList.contains('open')) filmShowDetail(itemIdx, skipPush);
+    else openFilmView(skipPush, itemIdx);
+  } else if (sectionKey === 'multimedia') {
+    if (mmView.classList.contains('open')) mmShowDetail(itemIdx, skipPush);
+    else openMmView(skipPush, itemIdx);
+  } else {
+    openPanel(sectionKey, skipPush);
+  }
 }
 
 function openChildDetail(sectionKey, groupIdx, childIdx, skipPush) {
-  // writing on desktop reads in the writing view's pane, not the panel
-  if (sectionKey === 'writing' && !filmMQ.matches) {
-    if (writingView.classList.contains('open')) {
-      if (wrGroupIdx !== groupIdx) wrSelectGroup(groupIdx, false);
-      wrShowChild(groupIdx, childIdx, skipPush);
-    } else {
-      openWritingView(skipPush, groupIdx, childIdx);
-    }
-    return;
+  if (sectionKey !== 'writing') { openPanel(sectionKey, skipPush); return; }
+  if (writingView.classList.contains('open')) {
+    if (wrGroupIdx !== groupIdx) wrSelectGroup(groupIdx, false);
+    wrShowChild(groupIdx, childIdx, skipPush);
+  } else {
+    openWritingView(skipPush, groupIdx, childIdx);
   }
-  // on mobile, make sure the stacked writing view sits beneath the panel
-  if (sectionKey === 'writing' && filmMQ.matches && !writingView.classList.contains('open')) {
-    buildWritingView();
-    writingView.classList.add('open');
-    wrSelectGroup(groupIdx, false);
-  }
-  const s = sections[sectionKey];
-  const group = s.items[groupIdx];
-  const item = group.children[childIdx];
-
-  if (!skipPush) {
-    const slug = item._slug || toSlug(item.title);
-    history.pushState({ slug: slug }, '', '/' + slug);
-  }
-
-  if (!panel.classList.contains('open')) ensurePanelOpen(sectionKey);
-
-  let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${group.title}</button>`;
-  html += `<h2>${item.title}</h2>`;
-
-  if (item.sub) {
-    html += `<div class="detail-meta"><span class="detail-tag">${item.sub}</span></div>`;
-  }
-
-  if (item.image) {
-    html += `<img class="detail-hero" src="${item.image}" alt="${item.title}" loading="lazy">`;
-  }
-
-  if (item.body) {
-    const typeClass = item.bodyType === 'poetry' ? 'body-poetry' : 'body-prose';
-    html += `<div class="detail-body-full ${typeClass}">${item.body}</div>`;
-  }
-
-  if (item.link) {
-    html += `<a class="detail-link" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View'} \u2192\uFE0E</a>`;
-  }
-
-  html += relatedHtml(item);
-  html += detailNavHtml(group.children[childIdx - 1], group.children[childIdx + 1]);
-
-  panelContent.innerHTML = html;
-  bindDetailNav();
-  panel.scrollTop = 0;
-
-  track('detail_open', { section: sectionKey, item: item.title });
-  trackPageView(item._slug, item.title + ' — Paul Hanna');
-  startViewTimer('detail/' + sectionKey + '/' + item.title);
-
-  document.getElementById('detail-back').addEventListener('click', () => {
-    if (sectionKey === 'writing') { openWritingView(false); return; }
-    history.pushState({ section: sectionKey }, '', '/' + sectionKey);
-    trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
-    renderGroup(sectionKey, groupIdx);
-  });
-}
-
-function renderAbout() {
-  const s = sections.about;
-  panelContent.innerHTML = `
-    <h2>${s.title}</h2>
-    <div class="about-header">
-      ${s.portrait ? `<img class="about-portrait" src="${s.portrait}" alt="Paul Hanna">` : ''}
-      <div class="about-bio">${s.bio}</div>
-    </div>
-    <div class="about-section">
-      <div class="about-label">Education</div>
-      ${s.education.map(e => `
-        <div class="about-edu">
-          <div class="about-edu-school">${e.school}</div>
-          <div class="about-edu-degree">${e.degree}</div>
-        </div>
-      `).join('')}
-    </div>
-    <div class="about-section">
-      <div class="about-label">Links</div>
-      <div class="about-links">
-        ${s.links.map(l => `<a href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
-      </div>
-    </div>
-    <div class="about-section">
-      <div class="about-label">Contact</div>
-      <a class="about-contact" href="mailto:${s.contact}">${s.contact}</a>
-    </div>
-    <div class="about-section">
-      <div class="about-label">Management</div>
-      <div>${s.management.name} &middot; ${s.management.company}</div>
-      <a class="about-contact" href="tel:${s.management.phone}">${s.management.phone}</a>
-    </div>
-    ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume \u2192\uFE0E</a></div>` : ''}
-  `;
-}
-
-function detailSiblings(sectionKey) {
-  return sections[sectionKey].items.filter(it => !it.group && !isLinkOnly(it));
-}
-
-function titleForSlug(slug) {
-  const e = slugMap[slug];
-  if (!e) return null;
-  const it = e.childIdx !== undefined
-    ? sections[e.sectionKey].items[e.groupIdx].children[e.childIdx]
-    : sections[e.sectionKey].items[e.itemIdx];
-  return it.title;
-}
-
-function relatedHtml(item) {
-  if (!item.related || !item.related.length) return '';
-  const links = item.related
-    .map(slug => {
-      const t = titleForSlug(slug);
-      return t ? `<a class="detail-nav-link" data-slug="${slug}">${t}</a>` : '';
-    })
-    .filter(Boolean)
-    .join('');
-  if (!links) return '';
-  return `<div class="related-works"><div class="about-label">See also</div>${links}</div>`;
-}
-
-function detailNavHtml(prev, next) {
-  if (!prev && !next) return '';
-  return `<div class="detail-nav">
-    ${prev ? `<a class="detail-nav-link" data-slug="${prev._slug}">←︎ ${prev.title}</a>` : '<span></span>'}
-    ${next ? `<a class="detail-nav-link detail-nav-next" data-slug="${next._slug}">${next.title} →︎</a>` : '<span></span>'}
-  </div>`;
-}
-
-function bindDetailNav() {
-  panelContent.querySelectorAll('.detail-nav-link').forEach(a => {
-    a.addEventListener('click', () => {
-      const entry = slugMap[a.dataset.slug];
-      if (!entry) return;
-      if (entry.childIdx !== undefined) openChildDetail(entry.sectionKey, entry.groupIdx, entry.childIdx);
-      else openDetail(entry.sectionKey, entry.itemIdx);
-    });
-  });
-}
-
-function openDetail(sectionKey, itemIdx, skipPush) {
-  const s = sections[sectionKey];
-  const item = s.items[itemIdx];
-
-  // film on desktop plays in the film view's pane, not the slide-out panel
-  if (sectionKey === 'film' && !filmMQ.matches) {
-    if (filmView.classList.contains('open')) filmShowDetail(itemIdx, skipPush);
-    else openFilmView(skipPush, itemIdx);
-    return;
-  }
-  // multimedia on desktop shows in the multimedia view's pane
-  if (sectionKey === 'multimedia' && !filmMQ.matches) {
-    if (mmView.classList.contains('open')) mmShowDetail(itemIdx, skipPush);
-    else openMmView(skipPush, itemIdx);
-    return;
-  }
-  // mobile multimedia deep links keep the stacked grid beneath the panel
-  if (sectionKey === 'multimedia' && !mmView.classList.contains('open')) {
-    buildMmView();
-    mmView.classList.add('open');
-  }
-
-  // Update URL
-  if (!skipPush) {
-    history.pushState({ slug: item._slug }, '', '/' + item._slug);
-  }
-
-  // Ensure panel is open
-  if (!panel.classList.contains('open')) ensurePanelOpen(sectionKey);
-
-  let html = `<button class="detail-back" id="detail-back">\u2190\uFE0E ${s.title}</button>`;
-  html += `<h2>${item.title}</h2>`;
-
-  // self-hosted video — takes top priority
-  if (item.video) {
-    html += `<video class="detail-hero" src="${item.video}" controls playsinline preload="metadata" style="width:100%;border-radius:4px;margin-bottom:1.5rem;background:#000;"></video>`;
-  }
-  // embed (video) — takes priority over hero image
-  else if (item.embed) {
-    html += `<div class="detail-embed"><iframe src="${item.embed}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-  }
-  // hero image (only if no embed, and no gallery)
-  else if (item.image && (!item.images || !item.images.length)) {
-    html += `<img class="detail-hero" src="${item.image}" alt="${item.title}" loading="lazy">`;
-  }
-
-  // image gallery
-  if (item.images && item.images.length) {
-    const colStyle = item.galleryCols ? ` style="grid-template-columns:repeat(${item.galleryCols},1fr)"` : '';
-    html += `<div class="detail-gallery"${colStyle}>`;
-    item.images.forEach((src, i) => {
-      // first image spans full width if gallery has odd count (skip when custom cols)
-      const wide = (!item.galleryCols && i === 0 && item.images.length % 2 === 1) ? ' class="wide"' : '';
-      html += `<img${wide} src="${src}" alt="${item.title} — ${i + 1}" loading="lazy">`;
-    });
-    html += `</div>`;
-  }
-
-  // tags
-  if (item.tags && item.tags.length) {
-    html += `<div class="detail-meta">${item.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}</div>`;
-  }
-
-  // description
-  if (item.description) {
-    html += `<div class="detail-body">${item.description}</div>`;
-  }
-
-  // long-form body (essays, poetry)
-  if (item.body) {
-    const typeClass = item.bodyType === 'poetry' ? 'body-poetry' : 'body-prose';
-    html += `<div class="detail-body-full ${typeClass}">${item.body}</div>`;
-  }
-
-  // link
-  if (item.link) {
-    html += `<a class="detail-link-btn" href="${item.link}" target="_blank" rel="noopener">${item.linkLabel || 'View project'} \u2197\uFE0E</a>`;
-  }
-
-  html += relatedHtml(item);
-  const sibs = detailSiblings(sectionKey);
-  const pos = sibs.indexOf(item);
-  // link-only items aren't in the sibling list (pos === -1) — no prev/next for them
-  if (pos >= 0) html += detailNavHtml(sibs[pos - 1], sibs[pos + 1]);
-
-  panelContent.innerHTML = html;
-  if (item.images && item.images.length) {
-    panelContent.querySelectorAll('.detail-gallery img').forEach((img, i) => {
-      img.addEventListener('click', () => openLightbox(item.images, i));
-    });
-  }
-  bindDetailNav();
-  panel.scrollTop = 0;
-
-  track('detail_open', { section: sectionKey, item: item.title });
-  trackPageView(item._slug, item.title + ' — Paul Hanna');
-  startViewTimer('detail/' + sectionKey + '/' + item.title);
-
-  // back button
-  document.getElementById('detail-back').addEventListener('click', () => {
-    if (sectionKey === 'film') { openFilmView(false); return; }
-    if (sectionKey === 'multimedia') { openMmView(false); return; }
-    if (sectionKey === 'writing') { openWritingView(false); return; }
-    history.pushState({ section: sectionKey }, '', '/' + sectionKey);
-    renderSectionList(sectionKey);
-    panel.scrollTop = 0;
-    trackPageView(sectionKey, sections[sectionKey].title + ' — Paul Hanna');
-    startViewTimer('section/' + sectionKey);
-  });
 }
 
 function closePanel(skipPush) {
   closeSectionViews(null);
   placeFrog(document.getElementById('frog-slot'));
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
-
-  if (!skipPush) {
-    history.pushState(null, '', '/');
-  }
-
+  if (!skipPush) history.pushState(null, '', '/');
   track('panel_close', { section: currentSection });
-  trackPageView('', 'Paul Hanna — Director, writer, and artist | paul.place');
+  trackPageView('', 'Paul Hanna — Director, writer, artist | paul.place');
   startViewTimer('home');
   currentSection = null;
 }
@@ -1583,9 +1217,9 @@ function placeFrog(slot) {
 }
 
 const BRAND_HTML = `
-  <a class="brand" href="/">
+  <a class="brand" href="/" title="←︎ back to frog">
     <span class="brand-name">Paul Hanna</span>
-    <span class="brand-tag">Director, writer, and artist</span>
+    <span class="brand-tag">Director, writer, artist</span>
   </a>`;
 
 function navHtml(activeKey) {
@@ -1623,8 +1257,6 @@ function preloadImage(src) {
 
 function openSectionShell(view, key) {
   closeSectionViews(key);
-  panel.classList.remove('open');
-  overlay.classList.remove('open');
   view.classList.add('open');
   document.querySelectorAll('.nav-label').forEach(n => n.classList.remove('active'));
   const lbl = document.querySelector(`.nav-label[data-section="${key}"]`);
@@ -1649,6 +1281,7 @@ filmView.innerHTML = `
     <div class="view-frog" aria-hidden="true"></div>
   </div>
   <div class="film-stage">
+    <button class="pane-back">←︎ Film</button>
     <div class="film-pane">
       <img class="film-fade" alt="" aria-hidden="true">
       <img class="film-fade" alt="" aria-hidden="true">
@@ -1676,6 +1309,7 @@ function buildFilmView() {
   if (filmBuilt) return;
   filmBuilt = true;
   bindSide(filmView, 'film', () => filmShowIndex());
+  filmView.querySelector('.pane-back').addEventListener('click', () => filmShowIndex());
 
   const rows = [];
   const extras = [];
@@ -1749,12 +1383,6 @@ function filmShowDetail(idx, skipPush) {
   const item = filmItems()[idx];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
 
-  if (filmMQ.matches) {
-    filmDetailIdx = null;
-    openDetail('film', idx, true);
-    return;
-  }
-
   filmDetailIdx = idx;
   filmListEl.querySelectorAll('.film-row').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
@@ -1823,6 +1451,7 @@ writingView.innerHTML = `
     <div class="view-frog" aria-hidden="true"></div>
   </div>
   <div class="film-stage wr-stage">
+    <button class="pane-back">←︎ Writing</button>
     <article class="wr-read"></article>
   </div>
 `;
@@ -1838,6 +1467,7 @@ function buildWritingView() {
   if (wrBuilt) return;
   wrBuilt = true;
   bindSide(writingView, 'writing');
+  writingView.querySelector('.pane-back').addEventListener('click', () => wrShowIndex());
   wrTabsEl.innerHTML = sections.writing.items.map((g, gi) =>
     `<button class="wr-tab" role="tab" data-gi="${gi}">${g.title}</button>`
   ).join('');
@@ -1867,11 +1497,7 @@ function wrShowChild(gi, ci, skipPush) {
   const item = group.children[ci];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
 
-  if (filmMQ.matches) {
-    openChildDetail('writing', gi, ci, true);
-    return;
-  }
-
+  writingView.classList.add('detail');
   wrListEl.querySelectorAll('.wr-row').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.ci) === ci));
 
@@ -1888,6 +1514,13 @@ function wrShowChild(gi, ci, skipPush) {
   startViewTimer('detail/writing/' + item.title);
 }
 
+function wrShowIndex(skipPush) {
+  if (!skipPush) history.pushState({ section: 'writing' }, '', '/writing');
+  writingView.classList.remove('detail');
+  trackPageView('writing', 'Writing — Paul Hanna');
+  startViewTimer('section/writing');
+}
+
 function openWritingView(skipPush, groupIdx = null, childIdx = null) {
   buildWritingView();
   openSectionShell(writingView, 'writing');
@@ -1895,10 +1528,8 @@ function openWritingView(skipPush, groupIdx = null, childIdx = null) {
     wrSelectGroup(groupIdx, false);
     wrShowChild(groupIdx, childIdx, skipPush);
   } else {
-    if (!skipPush) history.pushState({ section: 'writing' }, '', '/writing');
-    wrSelectGroup(wrGroupIdx, true);
-    trackPageView('writing', 'Writing — Paul Hanna');
-    startViewTimer('section/writing');
+    wrShowIndex(skipPush);
+    wrSelectGroup(wrGroupIdx, !filmMQ.matches);
   }
 }
 
@@ -1915,6 +1546,7 @@ mmView.innerHTML = `
     <div class="view-frog" aria-hidden="true"></div>
   </div>
   <div class="film-stage">
+    <button class="pane-back">←︎ Multimedia</button>
     <div class="film-pane">
       <img class="film-fade" alt="" aria-hidden="true">
       <img class="film-fade" alt="" aria-hidden="true">
@@ -1944,6 +1576,7 @@ function buildMmView() {
   if (mmBuilt) return;
   mmBuilt = true;
   bindSide(mmView, 'multimedia', () => mmShowIndex());
+  mmView.querySelector('.pane-back').addEventListener('click', () => mmShowIndex());
 
   mmGridEl.innerHTML = mmItems().map((item, idx) => {
     const thumb = getThumb(item);
@@ -1997,12 +1630,6 @@ function mmShowDetail(idx, skipPush) {
   const item = mmItems()[idx];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
 
-  if (filmMQ.matches) {
-    mmDetailIdx = null;
-    openDetail('multimedia', idx, true);
-    return;
-  }
-
   mmDetailIdx = idx;
   mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
@@ -2051,6 +1678,69 @@ function openMmView(skipPush, detailIdx = null) {
   else mmShowIndex(skipPush);
 }
 
+// ── about ──
+const aboutView = document.createElement('div');
+aboutView.className = 'film-view about-view';
+aboutView.innerHTML = `
+  <div class="film-side">
+    ${BRAND_HTML}
+    <nav class="film-nav" aria-label="Sections">${navHtml('about')}</nav>
+    <div class="side-scroll"></div>
+    <div class="view-frog" aria-hidden="true"></div>
+  </div>
+  <div class="film-stage about-stage">
+    <article class="about-read"></article>
+  </div>
+`;
+document.body.appendChild(aboutView);
+let aboutBuilt = false;
+
+function buildAboutView() {
+  if (aboutBuilt) return;
+  aboutBuilt = true;
+  bindSide(aboutView, 'about');
+  const s = sections.about;
+  aboutView.querySelector('.about-read').innerHTML = `
+    <div class="about-header">
+      ${s.portrait ? `<img class="about-portrait" src="${s.portrait}" alt="Paul Hanna">` : ''}
+      <div class="about-bio">${s.bio}</div>
+    </div>
+    <div class="about-section">
+      <div class="about-label">Education</div>
+      ${s.education.map(e => `
+        <div class="about-edu">
+          <div class="about-edu-school">${e.school}</div>
+          <div class="about-edu-degree">${e.degree}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="about-section">
+      <div class="about-label">Links</div>
+      <div class="about-links">
+        ${s.links.map(l => `<a href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
+      </div>
+    </div>
+    <div class="about-section">
+      <div class="about-label">Contact</div>
+      <a class="about-contact" href="mailto:${s.contact}">${s.contact}</a>
+    </div>
+    <div class="about-section">
+      <div class="about-label">Representation</div>
+      <div>${s.management.name} &middot; ${s.management.company}</div>
+      <a class="about-contact" href="tel:${s.management.phone}">${s.management.phone}</a>
+    </div>
+    ${s.resume ? `<div class="about-section"><a class="detail-link" href="${s.resume}" target="_blank" rel="noopener">Resume →︎</a></div>` : ''}
+  `;
+}
+
+function openAboutView(skipPush) {
+  buildAboutView();
+  openSectionShell(aboutView, 'about');
+  if (!skipPush) history.pushState({ section: 'about' }, '', '/about');
+  trackPageView('about', 'About — Paul Hanna');
+  startViewTimer('section/about');
+}
+
 // ─── SECTION VIEW TEARDOWN ───
 function closeSectionViews(except) {
   if (except !== 'film') {
@@ -2058,12 +1748,13 @@ function closeSectionViews(except) {
     filmPlayerEl.innerHTML = '';
     filmDetailIdx = null;
   }
-  if (except !== 'writing') writingView.classList.remove('open');
+  if (except !== 'writing') writingView.classList.remove('open', 'detail');
   if (except !== 'multimedia') {
     mmView.classList.remove('open', 'detail');
     mmPlayerEl.innerHTML = '';
     mmDetailIdx = null;
   }
+  if (except !== 'about') aboutView.classList.remove('open');
 }
 
 // ─── LIGHTBOX ───
@@ -2139,11 +1830,10 @@ lightbox.addEventListener('touchend', (e) => {
   lbTouchX = null;
 }, { passive: true });
 
-// keyboard: Esc closes lightbox first, then panel; arrows navigate
+// keyboard: Esc steps out of a playing work, then back home; arrows navigate the lightbox
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     if (lightboxIsOpen()) closeLightbox();
-    else if (panel.classList.contains('open')) closePanel();
     else if (filmView.classList.contains('open')) {
       if (filmDetailIdx !== null) filmShowIndex();
       else closePanel();
@@ -2152,7 +1842,7 @@ document.addEventListener('keydown', (e) => {
       if (mmDetailIdx !== null) mmShowIndex();
       else closePanel();
     }
-    else if (writingView.classList.contains('open')) closePanel();
+    else if (writingView.classList.contains('open') || aboutView.classList.contains('open')) closePanel();
   } else if (lightboxIsOpen()) {
     if (e.key === 'ArrowLeft') lbStep(-1);
     if (e.key === 'ArrowRight') lbStep(1);
@@ -2180,8 +1870,6 @@ document.getElementById('reel-link').addEventListener('click', (e) => {
   e.preventDefault();
   openReel();
 });
-panelClose.addEventListener('click', () => closePanel());
-overlay.addEventListener('click', () => closePanel());
 
 // ─── URL ROUTING ───
 function routeFromPath() {
@@ -2223,7 +1911,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
 // ─── THREE.JS SCENE (frog on a transparent canvas, mounts into any view) ───
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
-camera.position.set(0, 0.35, 5.6);
+camera.position.set(0, 0.3, 6.4);
 
 const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -2390,7 +2078,9 @@ function aimAtCursor() {
   const dy = lookTarget.y - headY;
   const dz = Math.max(lookTarget.z - frogGroup.position.z, 0.001);
   targetRotY = clampAngle(Math.atan2(dx, dz), 0.9);
-  targetRotX = clampAngle(-Math.atan2(dy, dz), 0.55);
+  // asymmetric pitch: tipping forward pushes the hands below the frame fast,
+  // so allow less downward travel than upward
+  targetRotX = Math.max(-0.6, Math.min(0.26, -Math.atan2(dy, dz)));
 }
 
 // ─── ANIMATE ───

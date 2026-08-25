@@ -22,7 +22,7 @@ const OG_IMAGE = 'images/og-image.png';
 const mainJs = fs.readFileSync(path.join(ROOT, 'js/main.js'), 'utf8');
 
 const dataStart = mainJs.indexOf('const sections = {');
-const dataEnd = mainJs.indexOf('// ─── PANEL LOGIC ───');
+const dataEnd = mainJs.indexOf('// ─── SITE CHROME');
 
 if (dataStart === -1 || dataEnd === -1) {
   console.error('Could not find data boundaries in main.js');
@@ -93,7 +93,7 @@ function getDescription(item) {
   if (item.description) return truncate(stripHtml(stripContactParagraph(item.description)), 160);
   if (item.body) return truncate(stripHtml(stripContactParagraph(item.body)), 160);
   if (item.sub) return item.sub;
-  return 'By Paul Hanna — director, writer, and artist based in NYC.';
+  return 'By Paul Hanna — director, writer, artist based in NYC.';
 }
 
 function getImage(item) {
@@ -115,7 +115,7 @@ const PERSON_LD = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Paul Hanna",
-  "jobTitle": "Director, writer, and artist",
+  "jobTitle": "Director, writer, artist",
   "url": DOMAIN,
   "@id": DOMAIN + "#paulhanna",
   "image": DOMAIN + '/' + OG_IMAGE,
@@ -135,7 +135,7 @@ const PERSON_LD = JSON.stringify({
     "https://www.wikidata.org/wiki/Q139032793",
     "https://orcid.org/0009-0000-8347-679X"
   ],
-  "description": "NYC-based director, writer, and artist.",
+  "description": "NYC-based director, writer, artist.",
   "birthDate": "2001-02-02",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -243,7 +243,7 @@ const SPA_BODY = `
   <aside class="home-side">
     <div class="home-head">
       <h1 class="home-name">Paul Hanna</h1>
-      <div class="home-tag">Director, writer, and artist</div>
+      <div class="home-tag">Director, writer, artist</div>
       <nav class="home-nav" aria-label="Sections">
         <a class="nav-label" id="nav-film" href="/film" data-section="film">Film</a>
         <a class="nav-label" id="nav-multimedia" href="/multimedia" data-section="multimedia">Multimedia</a>
@@ -271,11 +271,6 @@ const SPA_BODY = `
     </button>
     <div class="home-reel-cap">Director reel &mdash; click for sound</div>
   </main>
-</div>
-<div class="panel-overlay" id="panel-overlay"></div>
-<div class="panel" id="panel">
-  <button class="panel-close" id="panel-close">&larr; back to frog</button>
-  <div id="panel-content"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -488,7 +483,7 @@ const aboutDir = path.join(ROOT, 'about');
 fs.mkdirSync(aboutDir, { recursive: true });
 fs.writeFileSync(path.join(aboutDir, 'index.html'), pageHtml({
   title: 'About — Paul Hanna',
-  description: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, and artist based in New York City.',
+  description: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, artist based in New York City.',
   canonical: DOMAIN + '/about',
   ogImage: OG_IMAGE,
   ogType: 'profile',
@@ -609,7 +604,7 @@ if (journalGroup) {
 
   let rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n`;
   rss += `<title>Paul Hanna — Journal</title>\n<link>${DOMAIN}/writing</link>\n`;
-  rss += `<description>Journal entries by Paul Hanna — director, writer, and artist.</description>\n`;
+  rss += `<description>Journal entries by Paul Hanna — director, writer, artist.</description>\n`;
   rss += `<language>en-us</language>\n`;
   rss += `<atom:link href="${DOMAIN}/feed.xml" rel="self" type="application/rss+xml"/>\n`;
   for (const { item, iso } of entries) {
