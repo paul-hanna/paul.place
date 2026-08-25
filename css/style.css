@@ -281,7 +281,6 @@ canvas { display: block; }
 .about-portrait {
   width: 140px;
   flex-shrink: 0;
-  border-radius: 4px;
 }
 .about-bio {
   font-size: var(--text-read);
