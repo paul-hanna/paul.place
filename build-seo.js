@@ -93,7 +93,7 @@ function getDescription(item) {
   if (item.description) return truncate(stripHtml(stripContactParagraph(item.description)), 160);
   if (item.body) return truncate(stripHtml(stripContactParagraph(item.body)), 160);
   if (item.sub) return item.sub;
-  return 'By Paul Hanna — director, writer, producer, and multimedia artist based in NYC.';
+  return 'By Paul Hanna — director, writer, and artist based in NYC.';
 }
 
 function getImage(item) {
@@ -115,7 +115,7 @@ const PERSON_LD = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Paul Hanna",
-  "jobTitle": "Director, Producer, Writer, Multimedia Artist",
+  "jobTitle": "Director, writer, and artist",
   "url": DOMAIN,
   "@id": DOMAIN + "#paulhanna",
   "image": DOMAIN + '/' + OG_IMAGE,
@@ -135,7 +135,7 @@ const PERSON_LD = JSON.stringify({
     "https://www.wikidata.org/wiki/Q139032793",
     "https://orcid.org/0009-0000-8347-679X"
   ],
-  "description": "NYC-based director, producer, writer, and multimedia artist.",
+  "description": "NYC-based director, writer, and artist.",
   "birthDate": "2001-02-02",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -243,7 +243,7 @@ const SPA_BODY = `
 <div class="corner-tl">paul.place</div>
 <div class="center-name" id="center-name">
   Paul Hanna
-  <div class="center-sub">Director / Writer / Producer / Multimedia Artist</div>
+  <div class="center-sub">Director, writer, and artist</div>
 </div>
 <a class="nav-label" id="nav-film" href="/film" data-idx="01" data-section="film">Film</a>
 <a class="nav-label" id="nav-multimedia" href="/multimedia" data-idx="02" data-section="multimedia">Multimedia</a>
@@ -473,7 +473,7 @@ const aboutDir = path.join(ROOT, 'about');
 fs.mkdirSync(aboutDir, { recursive: true });
 fs.writeFileSync(path.join(aboutDir, 'index.html'), pageHtml({
   title: 'About — Paul Hanna',
-  description: 'Paul Hanna is a first-generation Iraqi-Assyrian-American filmmaker, writer, director, and multimedia artist based in New York City.',
+  description: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, and artist based in New York City.',
   canonical: DOMAIN + '/about',
   ogImage: OG_IMAGE,
   ogType: 'profile',
@@ -594,7 +594,7 @@ if (journalGroup) {
 
   let rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n`;
   rss += `<title>Paul Hanna — Journal</title>\n<link>${DOMAIN}/writing</link>\n`;
-  rss += `<description>Journal entries by Paul Hanna — director, writer, and multimedia artist.</description>\n`;
+  rss += `<description>Journal entries by Paul Hanna — director, writer, and artist.</description>\n`;
   rss += `<language>en-us</language>\n`;
   rss += `<atom:link href="${DOMAIN}/feed.xml" rel="self" type="application/rss+xml"/>\n`;
   for (const { item, iso } of entries) {

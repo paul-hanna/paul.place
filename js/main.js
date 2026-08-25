@@ -1071,7 +1071,7 @@ of your body and slink silently down your gizzard` },
     title: 'About',
     custom: true,
     portrait: 'images/works/paul-portrait.png',
-    bio: 'Paul Hanna is a first-generation Iraqi-Assyrian-American filmmaker, writer, director, and multimedia artist based in New York City. His work spans narrative films and television, experimental video, music videos, web art, installation art, and interactive art. His films and installations have been featured in festivals, galleries, and public exhibitions.',
+    bio: 'Paul Hanna is a first-generation Iraqi-Assyrian-American director, writer, and artist based in New York City. His work spans narrative films and television, experimental video, music videos, web art, installation art, and interactive art. His films and installations have been featured in festivals, galleries, and public exhibitions.',
     education: [
       { school: 'Columbia University', degree: 'B.A. in Film and Philosophy' },
       { school: 'NYU Tisch School of the Arts', degree: 'M.P.S. in New Media Art' },
@@ -1520,7 +1520,7 @@ function closePanel(skipPush) {
   }
 
   track('panel_close', { section: currentSection });
-  trackPageView('', 'Paul Hanna — Director, Writer, Producer, Multimedia Artist | paul.place');
+  trackPageView('', 'Paul Hanna — Director, writer, and artist | paul.place');
   startViewTimer('home');
   currentSection = null;
 }
