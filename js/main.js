@@ -89,7 +89,6 @@ const sections = {
         tags: ['Music Video', 'Director'],
         embed: 'https://www.youtube.com/embed/FrSuiM0eRH8?autoplay=1',
         image: 'images/works/rightwhereyouwantme.png',
-        images: ['images/works/right-where-you-want-me-gallery-1.JPG','images/works/right-where-you-want-me-gallery-2.JPG','images/works/right-where-you-want-me-gallery-3.JPG','images/works/right-where-you-want-me-gallery-4.JPG','images/works/right-where-you-want-me-gallery-5.JPG','images/works/right-where-you-want-me-gallery-6.JPG','images/works/right-where-you-want-me-gallery-7.JPG','images/works/right-where-you-want-me-gallery-8.JPG','images/works/right-where-you-want-me-gallery-9.JPG','images/works/right-where-you-want-me-gallery-10.JPG','images/works/right-where-you-want-me-gallery-11.JPG','images/works/right-where-you-want-me-gallery-12.JPG'],
       },
       {
         title: 'Creative Liberties',
@@ -1651,10 +1650,14 @@ function mmShowDetail(idx, skipPush) {
   mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
 
+  // gallery works skip the 16:9 pane and show every image at size
+  const galleryOnly = !item.video && !item.embed && item.images && item.images.length;
+  mmView.classList.toggle('gallery', !!galleryOnly);
+
   let media = '';
   if (item.video) media = `<video src="${item.video}" controls playsinline preload="metadata"></video>`;
   else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-  else if (mmPreviewSrc(item)) media = `<img src="${mmPreviewSrc(item)}" alt="${item.title}">`;
+  else if (!galleryOnly && mmPreviewSrc(item)) media = `<img src="${mmPreviewSrc(item)}" alt="${item.title}">`;
   mmPlayerEl.innerHTML = media;
   mmView.classList.add('detail');
 
@@ -1679,7 +1682,7 @@ function mmShowDetail(idx, skipPush) {
 function mmShowIndex(skipPush) {
   if (!skipPush) history.pushState({ section: 'multimedia' }, '', '/multimedia');
   mmDetailIdx = null;
-  mmView.classList.remove('detail');
+  mmView.classList.remove('detail', 'gallery');
   mmPlayerEl.innerHTML = '';
   mmCaptionEl.innerHTML = '';
   const current = mmGridEl.querySelector('.mm-tile.current') || mmGridEl.querySelector('.mm-tile');
@@ -1810,7 +1813,7 @@ function closeSectionViews(except) {
   }
   if (except !== 'writing') writingView.classList.remove('open', 'detail');
   if (except !== 'multimedia') {
-    mmView.classList.remove('open', 'detail');
+    mmView.classList.remove('open', 'detail', 'gallery');
     mmPlayerEl.innerHTML = '';
     mmDetailIdx = null;
   }
@@ -2139,9 +2142,7 @@ function aimAtCursor() {
   const dy = lookTarget.y - headY;
   const dz = Math.max(lookTarget.z - frogGroup.position.z, 0.001);
   targetRotY = clampAngle(Math.atan2(dx, dz), 0.9);
-  // asymmetric pitch: tipping forward pushes the hands below the frame fast,
-  // so allow less downward travel than upward
-  targetRotX = Math.max(-0.6, Math.min(0.26, -Math.atan2(dy, dz)));
+  targetRotX = clampAngle(-Math.atan2(dy, dz), 0.55);
 }
 
 // ─── ANIMATE ───

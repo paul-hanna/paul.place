@@ -656,17 +656,21 @@ canvas { display: block; }
   margin-top: 0.8rem;
 }
 .film-caption-gallery {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
 }
 .film-caption-gallery img {
-  height: 64px;
-  width: auto;
+  width: 100%;
+  height: auto;
   cursor: pointer;
   display: block;
 }
+
+/* gallery-only works: no 16:9 pane, the images ARE the piece */
+.film-view.gallery .film-pane { display: none; }
+.film-view.gallery .film-caption { margin-top: 0; margin-bottom: 0; }
 
 /* mobile: single-column stack — no inner scroll areas, no cropped images */
 @media (max-width: 900px) {
