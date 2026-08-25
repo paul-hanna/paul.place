@@ -50,7 +50,7 @@ const sections = {
   film: {
     title: 'Film',
     description: 'Narrative, experimental, and commercial directing work.',
-    filterTags: ['Narrative', 'Commercial', 'Music Video'],
+    filterTags: ['Commercial', 'Music Video', 'Narrative'],
     items: [
       {
         title: 'Vellum - Find time for you',
@@ -1755,6 +1755,23 @@ function openAboutView(skipPush) {
   trackPageView('about', 'About — Paul Hanna');
   startViewTimer('section/about');
 }
+
+// ─── SCROLL HINTS (fade at the bottom of anything scrollable) ───
+function attachScrollHint(el) {
+  const update = () => {
+    const scrollable = el.scrollHeight > el.clientHeight + 2;
+    const atEnd = el.scrollHeight - el.scrollTop - el.clientHeight < 8;
+    el.classList.toggle('has-more', scrollable && !atEnd);
+  };
+  el.addEventListener('scroll', update, { passive: true });
+  el.addEventListener('load', update, true); // images finishing load change scrollHeight
+  new MutationObserver(update).observe(el, { childList: true, subtree: true });
+  if (window.ResizeObserver) new ResizeObserver(update).observe(el);
+  update();
+}
+[filmView, writingView, mmView, aboutView].forEach(v => {
+  v.querySelectorAll('.side-scroll, .film-stage').forEach(attachScrollHint);
+});
 
 // ─── SECTION VIEW TEARDOWN ───
 function closeSectionViews(except) {

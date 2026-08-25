@@ -603,9 +603,12 @@ canvas { display: block; }
   min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   overflow-y: auto;
 }
+/* safe vertical centering: auto margins collapse to 0 when content overflows,
+   unlike justify-content:center which clips the top */
+.film-stage > .film-pane { margin-top: auto; }
+.film-stage > .film-caption { margin-bottom: auto; }
 .film-pane {
   position: relative;
   width: 100%;
@@ -887,3 +890,23 @@ canvas { display: block; }
   overscroll-behavior: contain;
 }
 .side-scroll::-webkit-scrollbar, .film-stage::-webkit-scrollbar { display: none; }
+
+/* ─── SCROLL HINT ─── */
+.side-scroll::after, .film-stage::after {
+  content: '';
+  display: block;
+  position: sticky;
+  bottom: -1px;
+  height: 52px;
+  margin-top: -52px;
+  flex-shrink: 0;
+  background: linear-gradient(to top, var(--paper), rgba(248, 247, 244, 0));
+  opacity: 0;
+  transition: opacity var(--dur) ease;
+  pointer-events: none;
+}
+.side-scroll.has-more::after, .film-stage.has-more::after { opacity: 1; }
+
+/* paragraph rhythm inside pane descriptions */
+.film-caption-desc p { margin-bottom: 1.2em; }
+.film-caption-desc p:last-child { margin-bottom: 0; }
