@@ -1311,16 +1311,18 @@ function buildFilmView() {
   bindSide(filmView, 'film', () => filmShowIndex());
   filmView.querySelector('.pane-back').addEventListener('click', () => filmShowIndex());
 
-  const rows = [];
-  const extras = [];
-  filmItems().forEach((item, idx) => {
-    if ((item.roles || []).includes('Director')) {
-      rows.push(`
+  const rowHtml = (item, idx) => `
       <button class="film-row" data-idx="${idx}">
         <img class="film-row-img" src="${getThumb(item) || ''}" alt="" loading="lazy" width="1600" height="900">
         <span class="film-row-title">${item.title}</span>
         <span class="film-row-year">${item.year || ''}</span>
-      </button>`);
+      </button>`;
+
+  const directed = [];
+  const extras = [];
+  filmItems().forEach((item, idx) => {
+    if ((item.roles || []).includes('Director')) {
+      directed.push([item, idx]);
     } else {
       const sub = [(item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
       extras.push(`
@@ -1330,6 +1332,19 @@ function buildFilmView() {
       </button>`);
     }
   });
+
+  // demarcate directed work by format; reverse-chron order holds within each
+  const formats = sections.film.filterTags || [];
+  const fmtOf = item => formats.find(f => (item.tags || []).includes(f));
+  const rows = [];
+  formats.forEach(fmt => {
+    const inFmt = directed.filter(([item]) => fmtOf(item) === fmt);
+    if (!inFmt.length) return;
+    rows.push(`<div class="film-format-label">${fmt}</div>`);
+    inFmt.forEach(([item, idx]) => rows.push(rowHtml(item, idx)));
+  });
+  directed.filter(([item]) => !fmtOf(item))
+    .forEach(([item, idx]) => rows.push(rowHtml(item, idx)));
   filmListEl.innerHTML = rows.join('');
   filmExtraEl.innerHTML = extras.join('');
 

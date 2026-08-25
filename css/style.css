@@ -542,7 +542,15 @@ canvas { display: block; }
   color: var(--ink);
   transition: color var(--dur);
 }
-.film-row:first-child { border-top: 1px solid var(--hairline); }
+.film-format-label + .film-row { border-top: 1px solid var(--hairline); }
+.film-format-label {
+  margin: 2rem 0 0.5rem;
+  font-size: var(--text-small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.film-format-label:first-child { margin-top: 0; }
 .film-row-img { display: none; }
 .film-row-title {
   font-family: var(--font-sans);
@@ -643,7 +651,6 @@ canvas { display: block; }
   font-size: var(--text-body);
   line-height: 1.65;
   margin-top: 0.8rem;
-  max-width: 60ch;
 }
 .film-caption-gallery {
   display: flex;
@@ -761,7 +768,7 @@ canvas { display: block; }
   overflow-y: auto;
   padding-right: 0.5rem;
 }
-.wr-read { max-width: 62ch; padding-bottom: 4rem; }
+.wr-read { max-width: 75ch; padding-bottom: 4rem; }
 .wr-title {
   font-family: var(--font-serif);
   font-style: italic;
@@ -872,7 +879,7 @@ canvas { display: block; }
   overflow-y: auto;
   padding-right: 0.5rem;
 }
-.about-read { max-width: 62ch; padding-bottom: 4rem; }
+.about-read { max-width: 75ch; margin-top: auto; margin-bottom: auto; padding: 2rem 0; }
 
 /* quiet scrolling: no visible scrollbars inside the views, no scroll chaining */
 .side-scroll, .film-stage {
