@@ -282,7 +282,7 @@ const sections = {
         year: 2023,
         tags: ['Sculpture', 'Installation'],
         image: 'images/works/i-know-it-when-i-see-it.jpg',
-        images: ['images/works/i-know-it-when-i-see-it-gallery-1.jpg','images/works/i-know-it-when-i-see-it-gallery-2.jpg','images/works/i-know-it-when-i-see-it-gallery-3.jpg','images/works/i-know-it-when-i-see-it-gallery-4.jpg','images/works/i-know-it-when-i-see-it-gallery-5.jpg','images/works/i-know-it-when-i-see-it-gallery-6.jpg','images/works/i-know-it-when-i-see-it-gallery-7.jpg','images/works/i-know-it-when-i-see-it-gallery-8.jpg','images/works/i-know-it-when-i-see-it-gallery-9.jpg','images/works/i-know-it-when-i-see-it-gallery-10.jpg'],
+        images: ['images/works/i-know-it-when-i-see-it-gallery-1.jpg','images/works/i-know-it-when-i-see-it-gallery-3.jpg','images/works/i-know-it-when-i-see-it-gallery-4.jpg','images/works/i-know-it-when-i-see-it-gallery-5.jpg','images/works/i-know-it-when-i-see-it-gallery-6.jpg','images/works/i-know-it-when-i-see-it-gallery-7.jpg','images/works/i-know-it-when-i-see-it-gallery-8.jpg','images/works/i-know-it-when-i-see-it-gallery-9.jpg','images/works/i-know-it-when-i-see-it-gallery-10.jpg','images/works/i-know-it-when-i-see-it-gallery-2.jpg'],
       },
       {
         title: 'Tower of Babel',
