@@ -910,3 +910,45 @@ canvas { display: block; }
 /* paragraph rhythm inside pane descriptions */
 .film-caption-desc p { margin-bottom: 1.2em; }
 .film-caption-desc p:last-child { margin-bottom: 0; }
+
+/* ─── BROWSER-NATIVE PERSONALITY ─── */
+::selection { background: var(--accent); color: var(--paper); }
+
+/* index rows are real links; the browser's history paints seen work purple */
+a.film-row, a.film-extra-row, a.wr-row, a.mm-tile { text-decoration: none; }
+a.film-row:visited, a.film-extra-row:visited, a.wr-row:visited, a.mm-tile:visited { color: #551A8B; }
+a.film-row:visited:hover, a.film-row:visited:focus-visible, a.film-row.current:visited,
+a.film-extra-row:visited:hover, a.film-extra-row:visited:focus-visible,
+a.wr-row:visited:hover, a.wr-row:visited:focus-visible, a.wr-row.current:visited,
+a.mm-tile:visited:hover, a.mm-tile:visited:focus-visible, a.mm-tile.current:visited { color: var(--accent); }
+
+/* ─── 404 ─── */
+.film-view.nf-view.open {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 3.5vw;
+}
+.nf-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.nf-code {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 11vw, 9rem);
+  line-height: 1;
+}
+.nf-frog {
+  width: min(70vw, 360px);
+  height: min(38vh, 320px);
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .film-view.nf-view.open { display: flex; }
+  .nf-view .view-frog { display: block; }
+}

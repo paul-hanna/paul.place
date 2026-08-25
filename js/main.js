@@ -1311,12 +1311,13 @@ function buildFilmView() {
   bindSide(filmView, 'film', () => filmShowIndex());
   filmView.querySelector('.pane-back').addEventListener('click', () => filmShowIndex());
 
+  // real anchors so the browser's own :visited history marks seen work
   const rowHtml = (item, idx) => `
-      <button class="film-row" data-idx="${idx}">
+      <a class="film-row" href="/${item._slug}" data-idx="${idx}">
         <img class="film-row-img" src="${getThumb(item) || ''}" alt="" loading="lazy" width="1600" height="900">
         <span class="film-row-title">${item.title}</span>
         <span class="film-row-year">${item.year || ''}</span>
-      </button>`;
+      </a>`;
 
   const directed = [];
   const extras = [];
@@ -1325,11 +1326,12 @@ function buildFilmView() {
       directed.push([item, idx]);
     } else {
       const sub = [(item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
+      const ext = isLinkOnly(item);
       extras.push(`
-      <button class="film-extra-row" data-idx="${idx}">
+      <a class="film-extra-row" data-idx="${idx}" href="${ext ? item.link : '/' + item._slug}"${ext ? ' target="_blank" rel="noopener"' : ''}>
         <span class="film-extra-title">${item.title}${item.link ? ' <span class="item-ext">↗︎</span>' : ''}</span>
         <span class="film-extra-sub">${sub}</span>
-      </button>`);
+      </a>`);
     }
   });
 
@@ -1358,17 +1360,17 @@ function buildFilmView() {
     };
     el.addEventListener('mouseenter', intent);
     el.addEventListener('focus', intent);
-    el.addEventListener('click', () => filmShowDetail(idx));
+    el.addEventListener('click', (e) => { e.preventDefault(); filmShowDetail(idx); });
   });
 
   filmExtraEl.querySelectorAll('.film-extra-row').forEach(el => {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (e) => {
       const idx = parseInt(el.dataset.idx);
       const item = filmItems()[idx];
-      if (isLinkOnly(item)) {
-        window.open(item.link, '_blank', 'noopener');
+      if (isLinkOnly(item)) { // real external link — let the browser take it
         track('external_link', { section: 'film', item: item.title, url: item.link });
       } else {
+        e.preventDefault();
         filmShowDetail(idx);
       }
     });
@@ -1497,12 +1499,12 @@ function wrSelectGroup(gi, andShowFirst) {
     t.classList.toggle('on', parseInt(t.dataset.gi) === gi));
   const group = sections.writing.items[gi];
   wrListEl.innerHTML = group.children.map((c, ci) => `
-    <button class="wr-row" data-ci="${ci}">
+    <a class="wr-row" href="/${c._slug}" data-ci="${ci}">
       <span class="wr-row-title">${c.title}</span>
       <span class="wr-row-sub">${c.sub || ''}</span>
-    </button>`).join('');
+    </a>`).join('');
   wrListEl.querySelectorAll('.wr-row').forEach(el => {
-    el.addEventListener('click', () => wrShowChild(gi, parseInt(el.dataset.ci)));
+    el.addEventListener('click', (e) => { e.preventDefault(); wrShowChild(gi, parseInt(el.dataset.ci)); });
   });
   if (andShowFirst && !filmMQ.matches && group.children.length) wrShowChild(gi, 0, true);
 }
@@ -1597,10 +1599,10 @@ function buildMmView() {
     const thumb = getThumb(item);
     const ext = isLinkOnly(item);
     return `
-    <button class="mm-tile${ext ? ' is-external' : ''}" data-idx="${idx}">
+    <a class="mm-tile${ext ? ' is-external' : ''}" data-idx="${idx}" href="${ext ? item.link : '/' + item._slug}"${ext ? ' target="_blank" rel="noopener"' : ''}>
       <span class="mm-tile-img">${thumb ? `<img src="${thumb}" alt="" loading="lazy">` : ''}</span>
       <span class="mm-tile-title">${item.title}${ext ? ' <span class="item-ext">↗︎</span>' : ''}</span>
-    </button>`;
+    </a>`;
   }).join('');
 
   const tiles = [...mmGridEl.querySelectorAll('.mm-tile')];
@@ -1609,12 +1611,12 @@ function buildMmView() {
     const intent = () => mmShowPreview(idx);
     el.addEventListener('mouseenter', intent);
     el.addEventListener('focus', intent);
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (e) => {
       const item = mmItems()[idx];
-      if (isLinkOnly(item)) {
-        window.open(item.link, '_blank', 'noopener');
+      if (isLinkOnly(item)) { // real external link — let the browser take it
         track('external_link', { section: 'multimedia', item: item.title, url: item.link });
       } else {
+        e.preventDefault();
         mmShowDetail(idx);
       }
     });
@@ -1756,6 +1758,32 @@ function openAboutView(skipPush) {
   startViewTimer('section/about');
 }
 
+// ── 404 (frog centered, big number) ──
+const notFoundView = document.createElement('div');
+notFoundView.className = 'film-view nf-view';
+notFoundView.innerHTML = `
+  <div class="nf-top">${BRAND_HTML}</div>
+  <div class="nf-wrap">
+    <div class="nf-code">404</div>
+    <div class="view-frog nf-frog" aria-hidden="true"></div>
+  </div>
+`;
+document.body.appendChild(notFoundView);
+let nfBuilt = false;
+
+function openNotFound() {
+  if (!nfBuilt) {
+    nfBuilt = true;
+    notFoundView.querySelector('.brand').addEventListener('click', (e) => {
+      e.preventDefault();
+      closePanel();
+    });
+  }
+  openSectionShell(notFoundView, '404');
+  trackPageView(window.location.pathname.replace(/^\//, ''), '404 — Paul Hanna');
+  startViewTimer('404');
+}
+
 // ─── SCROLL HINTS (fade at the bottom of anything scrollable) ───
 function attachScrollHint(el) {
   const update = () => {
@@ -1787,6 +1815,7 @@ function closeSectionViews(except) {
     mmDetailIdx = null;
   }
   if (except !== 'about') aboutView.classList.remove('open');
+  if (except !== '404') notFoundView.classList.remove('open');
 }
 
 // ─── LIGHTBOX ───
@@ -1874,7 +1903,7 @@ document.addEventListener('keydown', (e) => {
       if (mmDetailIdx !== null) mmShowIndex();
       else closePanel();
     }
-    else if (writingView.classList.contains('open') || aboutView.classList.contains('open')) closePanel();
+    else if (writingView.classList.contains('open') || aboutView.classList.contains('open') || notFoundView.classList.contains('open')) closePanel();
   } else if (lightboxIsOpen()) {
     if (e.key === 'ArrowLeft') lbStep(-1);
     if (e.key === 'ArrowRight') lbStep(1);
@@ -1933,8 +1962,8 @@ window.addEventListener('popstate', () => {
   if (!routeFromPath()) closePanel(true);
 });
 
-// Open deep link on initial load
-routeFromPath();
+// Open deep link on initial load; unknown paths get the frog and a 404
+if (!routeFromPath() && window.location.pathname !== '/') openNotFound();
 
 // ─── MOBILE DETECTION ───
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
