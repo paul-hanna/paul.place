@@ -1395,6 +1395,36 @@ async function filmShowPreview(idx) {
   filmFront = 1 - filmFront;
 }
 
+// ─── TOUCH MEDIA SHIELD ───
+// On touch devices a cross-origin iframe (and a native video's control layer)
+// swallows a drag that starts on it, so the page behind it won't scroll. Cover
+// the media with a transparent shield that passes vertical drags through and
+// activates the player on a tap. CSS keeps the shield inert wherever the
+// pointer is precise, so nothing changes on desktop.
+function shieldPlayer(playerEl) {
+  playerEl.classList.remove('shielded');
+  const media = playerEl.querySelector('iframe, video');
+  if (!media) return;
+  playerEl.classList.add('shielded');
+  const shield = document.createElement('button');
+  shield.type = 'button';
+  shield.className = 'media-shield';
+  shield.setAttribute('aria-label', 'Tap to play');
+  shield.addEventListener('click', () => {
+    playerEl.classList.remove('shielded');
+    shield.remove();
+    // carry the tap through to playback so activating still costs one gesture
+    if (media.tagName === 'VIDEO') media.play().catch(() => {});
+    else media.src += (media.src.includes('?') ? '&' : '?') + 'autoplay=1';
+  });
+  playerEl.appendChild(shield);
+}
+
+function clearPlayer(playerEl) {
+  playerEl.innerHTML = '';
+  playerEl.classList.remove('shielded');
+}
+
 function filmShowDetail(idx, skipPush) {
   const item = filmItems()[idx];
   if (!skipPush) history.pushState({ slug: item._slug }, '', '/' + item._slug);
@@ -1408,6 +1438,7 @@ function filmShowDetail(idx, skipPush) {
   else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   else if (item.image) media = `<img src="${item.image}" alt="${item.title}">`;
   filmPlayerEl.innerHTML = media;
+  shieldPlayer(filmPlayerEl);
   filmView.classList.add('detail');
 
   const meta = [item.client, (item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
@@ -1433,7 +1464,7 @@ function filmShowIndex(skipPush) {
   if (!skipPush) history.pushState({ section: 'film' }, '', '/film');
   filmDetailIdx = null;
   filmView.classList.remove('detail');
-  filmPlayerEl.innerHTML = '';
+  clearPlayer(filmPlayerEl);
   filmCaptionEl.innerHTML = '';
   const current = filmListEl.querySelector('.film-row.current') || filmListEl.querySelector('.film-row');
   if (current) filmShowPreview(parseInt(current.dataset.idx));
@@ -1659,6 +1690,7 @@ function mmShowDetail(idx, skipPush) {
   else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   else if (!galleryOnly && mmPreviewSrc(item)) media = `<img src="${mmPreviewSrc(item)}" alt="${item.title}">`;
   mmPlayerEl.innerHTML = media;
+  shieldPlayer(mmPlayerEl);
   mmView.classList.add('detail');
 
   let cap = `<div class="film-caption-title">${item.title}</div>`;
@@ -1683,7 +1715,7 @@ function mmShowIndex(skipPush) {
   if (!skipPush) history.pushState({ section: 'multimedia' }, '', '/multimedia');
   mmDetailIdx = null;
   mmView.classList.remove('detail', 'gallery');
-  mmPlayerEl.innerHTML = '';
+  clearPlayer(mmPlayerEl);
   mmCaptionEl.innerHTML = '';
   const current = mmGridEl.querySelector('.mm-tile.current') || mmGridEl.querySelector('.mm-tile');
   if (current) mmShowPreview(parseInt(current.dataset.idx));
@@ -1808,13 +1840,13 @@ function attachScrollHint(el) {
 function closeSectionViews(except) {
   if (except !== 'film') {
     filmView.classList.remove('open', 'detail');
-    filmPlayerEl.innerHTML = '';
+    clearPlayer(filmPlayerEl);
     filmDetailIdx = null;
   }
   if (except !== 'writing') writingView.classList.remove('open', 'detail');
   if (except !== 'multimedia') {
     mmView.classList.remove('open', 'detail', 'gallery');
-    mmPlayerEl.innerHTML = '';
+    clearPlayer(mmPlayerEl);
     mmDetailIdx = null;
   }
   if (except !== 'about') aboutView.classList.remove('open');

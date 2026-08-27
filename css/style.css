@@ -173,16 +173,8 @@ canvas { display: block; }
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none; /* the wrapping button takes the click; a drag scrolls */
 }
-.home-reel-cap {
-  font-size: var(--text-small);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 0.9rem;
-  transition: color var(--dur);
-}
-.home-stage:hover .home-reel-cap { color: var(--accent); }
 
 /* ─── DETAIL PIECES (reused by views) ─── */
 .detail-hero {
@@ -288,9 +280,13 @@ canvas { display: block; }
   color: var(--ink);
   font-weight: var(--w-regular);
 }
-@media (max-width: 500px) {
-  .about-header { flex-direction: column; }
-  .about-portrait { width: 120px; }
+@media (max-width: 768px) {
+  .about-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+  }
+  .about-portrait { width: min(72%, 320px); }
 }
 .about-section {
   margin-bottom: 1.25rem;
@@ -352,35 +348,81 @@ canvas { display: block; }
 @media (max-width: 768px) {
   body { overflow: auto; }
   .home {
+    /* two clusters, one screen. --step holds a cluster together; --break is the
+       single separation between them. There is no third value: anything that
+       needs its own gap probably belongs in one of the two clusters instead. */
+    --gut: 1.5rem;
+    --step: 1.5rem;
+    --break: 2rem;
+
     position: static;
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-    padding: 1.5rem 1.2rem 2.5rem;
+    padding: 1.5rem var(--gut) var(--step);
   }
-  .home-side { display: contents; } /* name → reel → frog → footer order */
-  .home-head { order: 1; }
-  .home-stage { order: 2; margin-top: 1.75rem; }
-  .home-frog { order: 3; }
-  .home-foot { order: 4; }
+  /* both wrappers dissolve so the reel can join the name in the cover cluster:
+     [name → tag → reel] → break → [nav → frog → footer] */
+  .home-side, .home-head { display: contents; }
+  .home-name { order: 1; }
+  .home-tag { order: 2; }
+  .home-stage { order: 3; }
+  .home-nav { order: 4; }
+  .home-frog { order: 5; }
+  .home-foot { order: 6; }
+
+  /* ── cover ── */
+  .home-name { font-size: 3rem; }
+  .home-tag { margin-top: 0.5rem; }
+  .home-stage {
+    margin-top: var(--step);
+    margin-inline: calc(var(--gut) * -1); /* the reel runs to both edges */
+  }
+
+  /* ── index ── */
   .home-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.2rem 1.2rem;
-    margin-top: 1.5rem;
+    display: block;
+    margin-top: var(--break);
+    border-top: 1px solid var(--hairline);
   }
-  .nav-label { min-height: 44px; display: flex; align-items: center; }
+  .nav-label {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem; /* 44px — the tap-target floor */
+    padding: 0;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  /* a flourish, not a block: small, right-aligned, and the first thing to give
+     up height when the page runs past a screen */
   .home-frog {
-    flex: none;
-    height: 220px;
+    flex: 0 1 4.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    min-height: 2.5rem;
     max-height: none;
-    margin: 1.75rem 0;
+    margin: 0.75rem auto 0;
   }
-  .home-foot { padding-bottom: env(safe-area-inset-bottom); }
+
+  .home-foot {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr; /* representation carries more text */
+    gap: 0 var(--step);
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--step);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .home-foot-block { margin-bottom: 0; }
+  .home-foot-loc {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+  }
 }
 
 @media (max-width: 400px) {
-  .home-name { font-size: 2.2rem; }
+  .home-name { font-size: 2.6rem; }
 }
 
 /* ─── LIGHTBOX ─── */
@@ -637,6 +679,38 @@ canvas { display: block; }
   object-fit: contain;
   display: block;
 }
+/* transparent tap-to-activate cover — see shieldPlayer() in js/main.js.
+   Inert by default: only coarse pointers, which are the ones that can't drag
+   past an iframe, ever see it. */
+.media-shield { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .media-shield {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    touch-action: pan-y; /* a vertical drag scrolls the page instead */
+  }
+  .media-shield::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-40%, -50%);
+    border-left: 20px solid rgba(248, 247, 244, 0.92);
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.5));
+  }
+  .film-player.shielded iframe,
+  .film-player.shielded video { pointer-events: none; }
+}
+
 .film-caption { margin-top: 1.1rem; }
 .film-caption-title {
   font-family: var(--font-serif);
@@ -684,7 +758,7 @@ canvas { display: block; }
   .film-side { overflow: visible; }
   .side-scroll { overflow: visible; flex: none; min-height: auto; padding-right: 0; }
   .view-frog { display: none; }
-  .film-nav { flex-wrap: wrap; gap: 1rem 1.2rem; }
+  .film-nav { flex-wrap: wrap; gap: 1rem 1.2rem; margin-bottom: 1.75rem; }
   .film-list { gap: 2.25rem; }
   .film-row { display: block; border: none; padding: 0; }
   .film-row:first-child { border: none; }
@@ -704,14 +778,17 @@ canvas { display: block; }
   .film-view.detail .pane-back { display: flex; }
   .film-pane { aspect-ratio: auto; background: none; }
   .film-fade { display: none; }
-  .film-player { position: static; }
+  .film-player { position: relative; }
   .film-player iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; background: #000; }
   .film-player video { width: 100%; height: auto; object-fit: unset; background: #000; }
   .film-player img { width: 100%; height: auto; object-fit: unset; }
   .film-caption { margin-top: 1rem; }
 
   /* about always shows its content */
-  .about-view .film-stage { display: block; margin-top: 0.5rem; }
+  .about-view .film-stage { display: block; }
+  /* .about-read's padding and auto margins centre it in a desktop column; in
+     the mobile stack they only push the portrait down the page */
+  .about-view .about-read { padding: 0; margin-top: 0; margin-bottom: 0; }
 }
 
 /* ─── WRITING VIEW (two-tier tabs + reading pane) ─── */
@@ -845,7 +922,9 @@ canvas { display: block; }
 }
 .mm-tile:hover .mm-tile-img img { opacity: 0.85; }
 .mm-tile:hover, .mm-tile:focus-visible, .mm-tile.current { color: var(--accent); }
-.mm-tile.current .mm-tile-img { outline: 1px solid var(--accent); outline-offset: 2px; }
+/* drawn inside the tile: .side-scroll is a scroll container, so an outline
+   offset outwards gets clipped on the first tile's top and left edges */
+.mm-tile.current .mm-tile-img { outline: 2px solid var(--accent); outline-offset: -2px; }
 .mm-tile-title {
   display: block;
   margin-top: 0.5rem;
@@ -858,9 +937,14 @@ canvas { display: block; }
 @media (max-width: 900px) {
   .wr-row, .wr-tab { min-height: 44px; }
   .film-view.detail .film-player { background: none; }
-  /* multimedia tiles: natural image proportions, no crop */
-  .mm-tile-img { aspect-ratio: auto; }
-  .mm-tile-img img { height: auto; object-fit: unset; }
+  /* tiles keep the desktop 4/3 crop. Letting them run to natural height is
+     what left a hole under every short tile, and no layout fixes that without
+     giving up either the crop or the curated left-to-right order. */
+  .mm-tile { align-self: start; } /* a wrapped title shouldn't stretch its tile */
+  /* no preview pane here, so a "current" tile marks nothing — drop the
+     selection outline and its accent title rather than show a stray highlight */
+  .mm-tile.current, a.mm-tile.current:visited { color: inherit; }
+  .mm-tile.current .mm-tile-img { outline: none; }
 }
 
 /* ─── SHARED VIEW PIECES ─── */
