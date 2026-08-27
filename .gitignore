@@ -6,3 +6,6 @@ Thumbs.db
 node_modules/
 frog-original.glb
 reel-original.mp4
+
+# Claude Code local state
+.claude/
