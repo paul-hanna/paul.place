@@ -9,3 +9,6 @@ reel-original.mp4
 
 # Claude Code local state
 .claude/
+
+# Working notes — specs, plans, session docs stay local
+docs/
