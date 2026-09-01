@@ -655,7 +655,9 @@ canvas { display: block; }
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--hairline);
+  /* transparent, not hairline: 16:9 stills cover the pane completely, but a
+     narrower image would otherwise show the fill as bars either side of it */
+  background: transparent;
   overflow: hidden;
   flex-shrink: 0;
 }
