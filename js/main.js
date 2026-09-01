@@ -50,7 +50,7 @@ const sections = {
   film: {
     title: 'Film',
     description: 'Narrative, experimental, and commercial directing work.',
-    filterTags: ['Commercial', 'Music Video', 'Narrative'],
+    filterTags: ['Commercial', 'Music Video', 'Narrative', 'Photography'],
     items: [
       {
         title: 'Vellum - Find time for you',
@@ -58,7 +58,7 @@ const sections = {
         tags: ['Commercial', 'Director', 'Writer', 'Producer'],
         embed: 'https://player.vimeo.com/video/1176290293?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-find-time-for-you.png',
-        related: ['vellum-product-launch'],
+        related: ['vellum-product-launch', 'vellum-campaign-shoot'],
       },
       {
         title: 'Vellum Product Launch',
@@ -66,7 +66,15 @@ const sections = {
         tags: ['Commercial', 'Director', 'Writer'],
         embed: 'https://player.vimeo.com/video/1154409548?badge=0&autopause=0&player_id=0&app_id=58479',
         image: 'images/works/vellum-product-launch.png',
-        related: ['vellum-find-time-for-you'],
+        related: ['vellum-find-time-for-you', 'vellum-campaign-shoot'],
+      },
+      {
+        title: 'Vellum Campaign Shoot',
+        roles: ['Creative Director', 'Editor'], year: 2026,
+        tags: ['Photography', 'Creative Director', 'Editor'],
+        image: 'images/works/vellum-campaign-shoot-1.jpg',
+        images: ['images/works/vellum-campaign-shoot-1.jpg','images/works/vellum-campaign-shoot-2.jpg','images/works/vellum-campaign-shoot-3.jpg','images/works/vellum-campaign-shoot-4.jpg'],
+        related: ['vellum-find-time-for-you', 'vellum-product-launch'],
       },
       {
         title: 'FALLOUT',
@@ -1321,7 +1329,8 @@ function buildFilmView() {
   const directed = [];
   const extras = [];
   filmItems().forEach((item, idx) => {
-    if ((item.roles || []).includes('Director')) {
+    // lead-authored work is listed by format; support credits fall to "Additional credits"
+    if ((item.roles || []).some(r => r === 'Director' || r === 'Creative Director')) {
       directed.push([item, idx]);
     } else {
       const sub = [(item.roles || []).join(', '), item.year].filter(Boolean).join(' · ');
@@ -1433,10 +1442,14 @@ function filmShowDetail(idx, skipPush) {
   filmListEl.querySelectorAll('.film-row').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
 
+  // gallery works skip the 16:9 pane and show every image at size
+  const galleryOnly = !item.video && !item.embed && item.images && item.images.length;
+  filmView.classList.toggle('gallery', !!galleryOnly);
+
   let media = '';
   if (item.video) media = `<video src="${item.video}" controls playsinline preload="metadata"></video>`;
   else if (item.embed) media = `<iframe src="${item.embed}" title="${item.title}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-  else if (item.image) media = `<img src="${item.image}" alt="${item.title}">`;
+  else if (!galleryOnly && item.image) media = `<img src="${item.image}" alt="${item.title}">`;
   filmPlayerEl.innerHTML = media;
   shieldPlayer(filmPlayerEl);
   filmView.classList.add('detail');
@@ -1463,7 +1476,7 @@ function filmShowDetail(idx, skipPush) {
 function filmShowIndex(skipPush) {
   if (!skipPush) history.pushState({ section: 'film' }, '', '/film');
   filmDetailIdx = null;
-  filmView.classList.remove('detail');
+  filmView.classList.remove('detail', 'gallery');
   clearPlayer(filmPlayerEl);
   filmCaptionEl.innerHTML = '';
   const current = filmListEl.querySelector('.film-row.current') || filmListEl.querySelector('.film-row');
