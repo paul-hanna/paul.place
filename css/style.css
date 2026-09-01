@@ -659,12 +659,14 @@ canvas { display: block; }
   overflow: hidden;
   flex-shrink: 0;
 }
+/* contain, not cover: 16:9 previews fill the pane either way, but stills of
+   other ratios (the 6x6 photography) must not be cropped to fit it */
 .film-fade {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out);
 }
