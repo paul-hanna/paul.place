@@ -23,10 +23,6 @@
   /* ─── type — swap these two vars for licensed webfonts later ─── */
   --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-display: 'Gasoek One', var(--font-sans);
-  /* reading face for /writing only — system text serifs drawn for screen
-     legibility, so nothing is downloaded. Charter on Apple, Georgia on
-     Windows, the platform serif elsewhere. */
-  --font-read: Charter, Georgia, 'Times New Roman', serif;
 
   /* ─── scale: two UI sizes + one reading size, two weights ─── */
   --text-small: 0.6875rem;
@@ -183,10 +179,10 @@ canvas { display: block; }
 }
 
 .body-prose {
-  font-family: var(--font-read);
+  font-family: var(--font-sans);
   font-size: var(--text-read);
   line-height: 1.85;
-  letter-spacing: normal; /* the 0.01em was tuned for Helvetica; a text serif doesn't want it */
+  letter-spacing: 0.01em;
   font-weight: var(--w-regular);
 }
 .body-prose p {
@@ -198,13 +194,13 @@ canvas { display: block; }
 }
 
 .body-poetry {
-  font-family: var(--font-read);
+  font-family: var(--font-sans);
   /* same size as prose: verse was set smaller to keep authored line breaks
      from wrapping, but at this measure only one line in 303 wraps either way */
   font-size: var(--text-read);
   line-height: 1.9;
   white-space: pre-wrap;
-  letter-spacing: normal;
+  letter-spacing: 0.01em;
   font-weight: var(--w-regular);
 }
 
