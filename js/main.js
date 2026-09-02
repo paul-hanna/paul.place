@@ -72,6 +72,7 @@ const sections = {
         title: 'Vellum Campaign Shoot',
         roles: ['Creative Director', 'Editor'], year: 2026,
         tags: ['Photography', 'Creative Director', 'Editor'],
+        description: 'Campaign photography for Vellum, photographed by Piers Greenan on medium format film.',
         image: 'images/works/vellum-campaign-shoot-1.jpg',
         images: ['images/works/vellum-campaign-shoot-1.jpg','images/works/vellum-campaign-shoot-2.jpg','images/works/vellum-campaign-shoot-3.jpg','images/works/vellum-campaign-shoot-4.jpg'],
         related: ['vellum-find-time-for-you', 'vellum-product-launch'],
