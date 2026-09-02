@@ -704,8 +704,8 @@ canvas { display: block; }
 .film-caption-title {
   font-family: var(--font-sans);
   font-weight: var(--w-medium);
-  font-size: 1.25rem;
-  letter-spacing: 0.01em;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
 }
 .film-caption-meta {
   font-size: var(--text-small);
@@ -718,6 +718,7 @@ canvas { display: block; }
   font-size: var(--text-body);
   line-height: 1.65;
   margin-top: 0.8rem;
+  max-width: 65ch; /* same measure as /writing — a caption is still prose */
 }
 .film-caption-gallery {
   display: grid;
