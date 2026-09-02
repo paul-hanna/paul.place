@@ -488,7 +488,10 @@ canvas { display: block; }
 .film-view.open {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) minmax(0, 62vw);
-  gap: 3vw;
+  /* the reading block is left-aligned in this column, so the gutter is all
+     that separates an essay from the index next to it. 3vw shrank to ~33px
+     on a small laptop — narrower than the list's own row rhythm. */
+  gap: clamp(3.5rem, 5.5vw, 7rem);
   padding: 3rem 3.5vw;
 }
 .film-side {
@@ -749,6 +752,14 @@ canvas { display: block; }
   }
   .film-stage { display: none; }
   .film-side { overflow: visible; }
+  /* stacked, the column runs the full width while .wr-read stays capped at
+     65ch and left-aligned — which dumped every spare pixel on the right.
+     Cap and centre the column itself so the nav and the article agree, and
+     let the reading block fill it. The cap goes here, not on .film-view:
+     that is a fixed inset:0 overlay, and narrowing it exposes the view
+     underneath. */
+  .film-side, .film-stage { max-width: 42rem; margin-inline: auto; }
+  .wr-read, .about-read { max-width: none; }
   .side-scroll { overflow: visible; flex: none; min-height: auto; padding-right: 0; }
   .view-frog { display: none; }
   .film-nav { flex-wrap: wrap; gap: 1rem 1.2rem; margin-bottom: 1.75rem; }
