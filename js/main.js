@@ -1677,12 +1677,13 @@ function buildMmView() {
   });
 }
 
-// link-only works never open a detail pane, so their blurb rides along with the hover preview
-function mmBlurbHtml(item) {
-  if (!item.blurb) return '';
+// the hovered work names itself under the preview; link-only works add their blurb,
+// since they never open a detail pane that could carry it
+function mmHoverHtml(item) {
   let html = `<div class="film-caption-title">${item.title}</div>`;
   if (item.sub) html += `<div class="film-caption-meta">${item.sub}</div>`;
-  return html + `<div class="film-caption-desc">${item.blurb}</div>`;
+  if (item.blurb) html += `<div class="film-caption-desc">${item.blurb}</div>`;
+  return html;
 }
 
 async function mmShowPreview(idx) {
@@ -1692,7 +1693,7 @@ async function mmShowPreview(idx) {
   mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
   if (mmDetailIdx !== null) return;
-  mmCaptionEl.innerHTML = mmBlurbHtml(item);
+  mmCaptionEl.innerHTML = mmHoverHtml(item);
   const token = ++mmPreviewToken;
   const img = preloadImage(src);
   try { if (img.decode) await img.decode(); } catch (e) { /* paint whenever ready */ }
