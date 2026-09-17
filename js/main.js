@@ -211,7 +211,9 @@ const sections = {
       {
         title: 'Dispatch',
         tags: ['Interactive/Web Art'],
-        sub: 'Web art',
+        sub: 'Web art · 2026',
+        year: 2026,
+        blurb: 'A dopamine site for members of the US Military.',
         link: 'https://paul.tube/dispatch',
         linkLabel: 'View',
         image: 'images/works/dispatch.png',
@@ -1675,6 +1677,14 @@ function buildMmView() {
   });
 }
 
+// link-only works never open a detail pane, so their blurb rides along with the hover preview
+function mmBlurbHtml(item) {
+  if (!item.blurb) return '';
+  let html = `<div class="film-caption-title">${item.title}</div>`;
+  if (item.sub) html += `<div class="film-caption-meta">${item.sub}</div>`;
+  return html + `<div class="film-caption-desc">${item.blurb}</div>`;
+}
+
 async function mmShowPreview(idx) {
   const item = mmItems()[idx];
   const src = item && mmPreviewSrc(item);
@@ -1682,6 +1692,7 @@ async function mmShowPreview(idx) {
   mmGridEl.querySelectorAll('.mm-tile').forEach(el =>
     el.classList.toggle('current', parseInt(el.dataset.idx) === idx));
   if (mmDetailIdx !== null) return;
+  mmCaptionEl.innerHTML = mmBlurbHtml(item);
   const token = ++mmPreviewToken;
   const img = preloadImage(src);
   try { if (img.decode) await img.decode(); } catch (e) { /* paint whenever ready */ }

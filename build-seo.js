@@ -92,6 +92,7 @@ function esc(str) {
 function getDescription(item) {
   if (item.description) return truncate(stripHtml(stripContactParagraph(item.description)), 160);
   if (item.body) return truncate(stripHtml(stripContactParagraph(item.body)), 160);
+  if (item.blurb) return item.blurb;
   if (item.sub) return item.sub;
   return 'By Paul Hanna — director, writer, artist based in NYC.';
 }
@@ -352,6 +353,7 @@ for (const [slug, entry] of Object.entries(slugMap)) {
   if (item.sub) nsc += `<p><em>${esc(item.sub)}</em></p>\n`;
   if (item.image) nsc += `<img src="${item.image}" alt="${esc(item.title)}" style="max-width:100%;height:auto">\n`;
   if (item.description) nsc += `<p>${item.description}</p>\n`;
+  else if (item.blurb) nsc += `<p>${esc(item.blurb)}</p>\n`;
   if (item.body) {
     if (item.bodyType === 'poetry') {
       nsc += `<pre style="white-space:pre-wrap;font-family:system-ui,sans-serif">${esc(item.body)}</pre>\n`;
