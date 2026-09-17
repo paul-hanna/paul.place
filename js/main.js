@@ -209,6 +209,14 @@ const sections = {
         description: `<p style="margin-bottom:1.5rem;"><a class="detail-link-btn" href="https://paul.tube/placement" target="_blank" rel="noopener">View project ↗︎</a></p><p>Presented as Paul Hanna's 2026 ITP thesis at NYU Tisch. <a href="https://itp.nyu.edu/thesis/archive/2026/12524-paul-hanna/" target="_blank" rel="noopener">View on the ITP Thesis Archive ↗︎</a></p><p>Commercial cinema has long operated as a dual medium: a vehicle for narrative and, simultaneously, a platform for brand communication. Product placement&mdash;the contractual embedding of logos, products, and corporate identities within the mise-en-scène&mdash;functions through studied inconspicuousness, relying on the viewer's absorption in story to render commerce invisible and subliminal.</p><p><em>Placement</em> isolates and foregrounds this secondary register.</p><p>Employing a custom computer vision pipeline trained on object detection, the piece systematically scans a feature film frame by frame, identifying and extracting every instance of brand presence. The source footage is discarded. What remains is an uninterrupted cropped and sequenced stream composed entirely of product placements.</p><p>Severed from narrative context, these fragments take on an unsettling quality. Logos drift through frameless space; audio exists only in the context of brand presence; corporate insignia recur with the rhythm of a pattern rather than the logic of a scene.</p><p>In doing so, <em>Placement</em> positions itself within a lineage of appropriation and re-contextualization, from the found-footage traditions of structural film to contemporary practices of database cinema, while directing its attention toward the specific economy of attention that underwrites commercial moviemaking.</p><p><strong>Technical:</strong> A YOLOv8 object detection model trained on OpenLogo and LogoDet identifies logos and brands across films; FFMPEG then isolates the matching frames and reassembles them into a continuous, infinite stream.</p>`,
       },
       {
+        title: 'Dispatch',
+        tags: ['Interactive/Web Art'],
+        sub: 'Web art',
+        link: 'https://paul.tube/dispatch',
+        linkLabel: 'View',
+        image: 'images/works/dispatch.png',
+      },
+      {
         title: 'Waiting, Leaving',
         tags: ['Interactive/Web Art'],
         sub: 'Web art',
