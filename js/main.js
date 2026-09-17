@@ -296,7 +296,7 @@ const sections = {
         image: 'images/works/locating.png',
       },
       {
-        title: 'I Know it When I See It',
+        title: 'I Know It When I See It',
         sub: 'Resin cast, Sylvania television, antenna, foam · 2023',
         year: 2023,
         tags: ['Sculpture', 'Installation'],
