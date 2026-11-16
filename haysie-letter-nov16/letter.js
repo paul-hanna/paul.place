@@ -23,7 +23,7 @@ function animatePoems(){
  });
 }
 form.addEventListener('submit',async event=>{
- event.preventDefault();openButton.disabled=true;error.textContent='Opening…';let key,payload,plain;
+ event.preventDefault();openButton.disabled=true;error.textContent='';let key,payload,plain;
  try{
   if(!window.crypto?.subtle)throw new Error('HTTPS is required to unlock this letter.');
   payload=await fetchFile('letter.json','json');
@@ -36,6 +36,11 @@ form.addEventListener('submit',async event=>{
  fetchFile('photo.enc','arrayBuffer').then(data=>crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(payload.imageIv)},key,data)).then(photo=>{
   const url=URL.createObjectURL(new Blob([photo],{type:'image/jpeg'}));document.querySelector('#hotel-photo').src=url;window.addEventListener('pagehide',()=>URL.revokeObjectURL(url),{once:true});
  }).catch(()=>{document.querySelector('#hotel-photo').alt='The hotel photograph could not load. Please reload to try again.';});
+ payload.fennelPhotos.forEach(photo=>{
+  fetchFile(photo.file,'arrayBuffer').then(data=>crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(photo.iv)},key,data)).then(data=>{
+   const url=URL.createObjectURL(new Blob([data],{type:'image/jpeg'}));document.getElementById(photo.id).src=url;window.addEventListener('pagehide',()=>URL.revokeObjectURL(url),{once:true});
+  }).catch(()=>{document.getElementById(photo.id).alt='This photograph could not load. Please reload to try again.';});
+ });
  const play=document.querySelector('#play'),status=document.querySelector('#audio-status');
  play.addEventListener('click',()=>music.play().then(()=>{play.hidden=true;status.textContent='';}).catch(()=>{status.textContent='Use the audio controls to start playback.';}));
  status.textContent='Loading music…';
